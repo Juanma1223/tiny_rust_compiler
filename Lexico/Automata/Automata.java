@@ -9,6 +9,11 @@ public class Automata {
     private int filaActual;
     private int columnaActual;
 
+    public Automata(int filaActual, int columnaActual){
+        this.filaActual = filaActual;
+        this.columnaActual = columnaActual;
+    }
+
     /* Esta funcion recibe como argumento el codigo fuente que aun no se ha leido
      y devuelve el primer token que encuentra con todas sus propiedades, consumiendolo
      del codigo fuente, debe ser reimplementada segun el tipo de token que se quiera reconocer */
