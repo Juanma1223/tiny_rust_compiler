@@ -1,5 +1,8 @@
 package Lexico.Automata;
 
+import java.io.BufferedReader;
+import java.io.File;
+
 import Lexico.Token;
 
 /* Superclase de la cual derivan los automatas encargados de reconocer
@@ -14,10 +17,10 @@ public class Automata {
         this.columnaActual = columnaActual;
     }
 
-    /* Esta funcion recibe como argumento el codigo fuente que aun no se ha leido
-     y devuelve el primer token que encuentra con todas sus propiedades, consumiendolo
-     del codigo fuente, debe ser reimplementada segun el tipo de token que se quiera reconocer */
-    public Token reconocerToken(String codigoFuente){
+    /* Esta funcion recibe como parametro el archivo con el codigo fuente y devuelve el token
+     * que se encuentra en la fila y columna actualmente siendo analizada
+    */
+    public Token reconocerToken(BufferedReader lector){
         return new Token();
     }
 
