@@ -30,8 +30,16 @@ public class Token {
         return this.fila;
     }
 
+    public void establecerFila(int fila){
+        this.fila = fila;
+    }
+
     public int obtenerColumna(){
         return this.columna;
+    }
+
+    public void establecerColumna(int columna){
+        this.columna = columna;
     }
 
 }

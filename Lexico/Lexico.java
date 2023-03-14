@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import Lexico.Automata.Automata;
 import Lexico.Automata.AutomataIdentificador;
+import Lexico.Automata.AutomataOperador;
 
 /* La clase Lexico esta encargada de leer el archivo de codigo fuente y decidir
  * cual de los automatas reconocera cada token que vaya encontrando en el mismo
@@ -57,16 +58,33 @@ public class Lexico {
                 
                 // Insertamos el caracter consumido para multiplexar
                 token.establecerLexema(character + token.obtenerLexema());
+                token.establecerFila(filaActual);
+                token.establecerColumna(columnaActual);
                 
                 // Imprimimos el token con su lexema a modo de prueba
-                System.out.println("Token:" + token.obtenerToken());
-                System.out.println("Lexema:" + token.obtenerLexema());
-                System.out.println("------------");
+                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA " + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+
+                columnaActual = columnaActual + token.obtenerLexema().length();
 
                 break;
             }
 
-            // Implementar el llamado al automata de literales
+            // Si encontramos un caracter que corresponda a un simbolo, se trata de un
+            // operador
+            if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 48)) {
+                Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
+                token = automataOperador.reconocerToken(lector);
+                
+                // Insertamos el caracter consumido para multiplexar
+                token.establecerLexema(character + token.obtenerLexema());
+                token.establecerFila(filaActual);
+                token.establecerColumna(columnaActual);
+                
+                // Imprimimos el token con su lexema a modo de prueba
+                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA " + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+
+                columnaActual = columnaActual + token.obtenerLexema().length();
+            }
 
             // Implementar el llamado al automata
         }
