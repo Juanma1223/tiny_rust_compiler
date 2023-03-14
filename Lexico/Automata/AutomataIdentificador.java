@@ -2,6 +2,7 @@ package Lexico.Automata;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 import Lexico.Token;
 
@@ -12,6 +13,29 @@ public class AutomataIdentificador extends Automata{
     public AutomataIdentificador(int filaActual, int columnaActual){
         super(filaActual, columnaActual);
     }
+
+    private final HashMap<String, String> p_reservadas = new HashMap<String, String>() {{ 
+      put("class","class");
+      put("if","if");
+      put("else","else");
+      put("while","while");
+      put("true","true");
+      put("false","false");
+      put("new","new");
+      put("fn","fn");
+      put("create","create");
+      put("pub","pub");
+      put("static","static");
+      put("return","return");
+      put("self","self");
+      put("void","void");
+      put("Array","Array");
+      put("Int","I32");
+      put("Bool","Bool");
+      put("Char","Char");
+      put("String","Str");
+      put("nil","nil");
+    }};
 
     @Override
     public Token reconocerToken(BufferedReader lector){
