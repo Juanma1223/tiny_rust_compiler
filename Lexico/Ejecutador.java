@@ -9,5 +9,7 @@ public class Ejecutador {
         File file = new File("/home/juanma/Facultad/tiny_rust_compiler/test.txt");
         Lexico anaLexico = new Lexico(file);
         anaLexico.sigToken();
+        anaLexico.sigToken();
+        anaLexico.sigToken();
     }
 }
