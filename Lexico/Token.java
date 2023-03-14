@@ -10,6 +10,10 @@ public class Token {
     private int fila;
     private int columna;
 
+    public Token(){
+        
+    }
+
     public String obtenerToken(){
         return this.tipoToken;
     }
