@@ -14,7 +14,7 @@ public class AutomataOperador extends Automata{
     }
 
     @Override
-    public Token reconocerToken(BufferedReader lector){
+    public Token reconocerToken(BufferedReader lector,boolean sinConsumir){
         Token token = new Token();
         String lexema = "";
         // Leemos hasta encontrar EOF o el fin del token

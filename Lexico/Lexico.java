@@ -55,15 +55,17 @@ public class Lexico {
             if ((c > 64 && c < 91) || (c > 96 && c < 123)) {
                 Automata automataIdentificador = new AutomataIdentificador(filaActual, columnaActual);
                 token = automataIdentificador.reconocerToken(lector);
-                
+
                 // Insertamos el caracter consumido para multiplexar
                 token.establecerLexema(character + token.obtenerLexema());
                 token.establecerFila(filaActual);
                 token.establecerColumna(columnaActual);
-                
-                // Imprimimos el token con su lexema y el numero de linea y columna donde se encuentra
-                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA " + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
-        
+
+                // Imprimimos el token con su lexema y el numero de linea y columna donde se
+                // encuentra
+                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
+                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+
                 columnaActual = columnaActual + token.obtenerLexema().length();
 
                 break;
@@ -71,18 +73,21 @@ public class Lexico {
 
             // Si encontramos un caracter que corresponda a un simbolo, se trata de un
             // operador
-            if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 48) || (c > 57 && c < 65 || (c > 91 && c < 97 || (c > 122 && c < 127)))) {
+            if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 48)
+                    || (c > 57 && c < 65 || (c > 91 && c < 97 || (c > 122 && c < 127)))) {
                 Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                 token = automataOperador.reconocerToken(lector);
-                
+
                 // Insertamos el caracter consumido para multiplexar
                 token.establecerLexema(character + token.obtenerLexema());
                 token.establecerFila(filaActual);
                 token.establecerColumna(columnaActual);
 
-                // Imprimimos el token con su lexema y el numero de linea y columna donde se encuentra
-                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA " + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
-                 
+                // Imprimimos el token con su lexema y el numero de linea y columna donde se
+                // encuentra
+                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
+                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+
                 columnaActual = columnaActual + token.obtenerLexema().length();
             }
 
