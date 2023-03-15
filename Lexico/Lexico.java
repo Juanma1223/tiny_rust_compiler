@@ -90,7 +90,7 @@ public class Lexico {
                 token = automataOperador.reconocerToken(lector,sinConsumir);
 
                 // Insertamos el caracter consumido para multiplexar
-                token.establecerLexema(character + token.obtenerLexema());
+                token.establecerLexema(token.obtenerLexema());
                 token.establecerFila(filaActual);
                 token.establecerColumna(columnaActual);
 

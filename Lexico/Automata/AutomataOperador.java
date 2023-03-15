@@ -66,17 +66,41 @@ public class AutomataOperador extends Automata{
               //Agregar igual
               if(c == 61){
                 lexema = lexema+character;
-                token.establecerToken("op_asignacion");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 61){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_igual");
+                } else{
+                  token.establecerToken("op_asignacion");
+                }
               }
               //Agregar menor o igual
               if(c == 60){
                 lexema = lexema+character;
-                token.establecerToken("op_menor");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 61){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_menor_o_igual");
+                } else{
+                  token.establecerToken("op_menor");
+                }
               }
               //Agregar mayor o igual
               if(c == 62){
                 lexema = lexema+character;
-                token.establecerToken("op_mayor");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 61){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_mayor_o_igual");
+                } else{
+                  token.establecerToken("op_mayor");
+                }
               }
               if(c == 43){
                 lexema = lexema+character;
@@ -85,7 +109,15 @@ public class AutomataOperador extends Automata{
               //Agregar op-flecha
               if(c == 45){
                 lexema = lexema+character;
-                token.establecerToken("op_resta");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 62){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_flecha");
+                } else{
+                  token.establecerToken("op_resta");
+                }
               }
               if(c == 42){
                 lexema = lexema+character;
@@ -102,17 +134,41 @@ public class AutomataOperador extends Automata{
               //Agregar otro &
               if(c == 38){
                 lexema = lexema+character;
-                token.establecerToken("op_and");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 38){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_and");
+                } else{
+                  //Error operador mal formado
+                }
               }
               //Agregar otro |
               if(c == 124){
                 lexema = lexema+character;
-                token.establecerToken("op_or");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 124){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_or");
+                } else{
+                  //Error operador mal formado
+                }
               }
               //Agregar distinto
               if(c == 33){
                 lexema = lexema+character;
-                token.establecerToken("op_not");
+                lector.mark(1);
+                c = lector.read();
+                if(c == 61){
+                  character = (char) c;
+                  lexema = lexema+character;
+                  token.establecerToken("op_distinto");
+                } else{
+                  token.establecerToken("op_not");
+                }
               }
               // Encontramos un espacio, devolvemos el token
               if(c == 32){
