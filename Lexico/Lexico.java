@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import Lexico.Automata.Automata;
 import Lexico.Automata.AutomataIdentificador;
+import Lexico.Automata.AutomataLiteral;
 import Lexico.Automata.AutomataOperador;
 
 /* La clase Lexico esta encargada de leer el archivo de codigo fuente y decidir
@@ -102,7 +103,23 @@ public class Lexico {
                 columnaActual = columnaActual + token.obtenerLexema().length();
             }
 
-            // Implementar el llamado al automata
+            // Si encontramos un caracter que corresponda a un numero o comillas se trata de un
+            // literal
+            if ((c > 47 && c < 58) || (c == 34) || (c == 39)) {
+                Automata automataLiteral = new AutomataLiteral(filaActual, columnaActual);
+                token = automataLiteral.reconocerToken(lector,sinConsumir);
+
+                token.establecerLexema(token.obtenerLexema());
+                token.establecerFila(filaActual);
+                token.establecerColumna(columnaActual);
+
+                // Imprimimos el token con su lexema y el numero de linea y columna donde se
+                // encuentra
+                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
+                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+
+                columnaActual = columnaActual + token.obtenerLexema().length();
+            }
         }
         return token;
     }
