@@ -68,7 +68,6 @@ public class Lexico {
                 Automata automataIdentificador = new AutomataIdentificador(filaActual, columnaActual);
                 token = automataIdentificador.reconocerToken(lector,sinConsumir);
 
-                // Insertamos el caracter consumido para multiplexar
                 token.establecerLexema(token.obtenerLexema());
                 token.establecerFila(filaActual);
                 token.establecerColumna(columnaActual);
@@ -84,13 +83,12 @@ public class Lexico {
             }
 
             // Si encontramos un caracter que corresponda a un simbolo, se trata de un
-            // operador
-            if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 48)
+            // operador o un simbolo invalido
+            if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 47)
                     || (c > 57 && c < 65 || (c > 91 && c < 97 || (c > 122 && c < 127)))) {
                 Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                 token = automataOperador.reconocerToken(lector,sinConsumir);
 
-                // Insertamos el caracter consumido para multiplexar
                 token.establecerLexema(token.obtenerLexema());
                 token.establecerFila(filaActual);
                 token.establecerColumna(columnaActual);
@@ -101,6 +99,11 @@ public class Lexico {
                         + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
 
                 columnaActual = columnaActual + token.obtenerLexema().length();
+            }
+
+            // Si encontramos una / puede ser un operador o un comentario
+            if (c == 47){
+                //implementar
             }
 
             // Si encontramos un caracter que corresponda a un numero o comillas se trata de un
