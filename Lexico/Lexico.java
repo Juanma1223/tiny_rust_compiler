@@ -40,11 +40,22 @@ public class Lexico {
 
     // Este metodo se encarga de leer el archivo fuente e ir derivando los tokens
     // a sus respectivos automatas reconocedores
-    public Token sigToken() throws IOException {
+    public Token sigToken(boolean sinConsumir) throws IOException {
         Token token = new Token();
         int c;
+        boolean leyendo = true;
         // Leemos hasta encontrar EOF o el inicio de un token
-        while ((c = lector.read()) != -1) {
+        while (leyendo) {
+            // Marcamos el lector antes de consumir el caracter para no enviar un caracter menos al automata
+            lector.mark(1);
+            c = lector.read();
+            // Restablecemos el lector un caracter hacia atras para no consumirlo
+            lector.reset();
+            if(c == -1){
+                // Encontramos EOF en lugar de un token
+                leyendo = false;
+            }
+
             char character = (char) c;
             // Segun el caracter que encontramos, multiplexamos en los distintos automatas
             // reconocedores
@@ -54,10 +65,10 @@ public class Lexico {
             // identificador
             if ((c > 64 && c < 91) || (c > 96 && c < 123)) {
                 Automata automataIdentificador = new AutomataIdentificador(filaActual, columnaActual);
-                token = automataIdentificador.reconocerToken(lector);
+                token = automataIdentificador.reconocerToken(lector,sinConsumir);
 
                 // Insertamos el caracter consumido para multiplexar
-                token.establecerLexema(character + token.obtenerLexema());
+                token.establecerLexema(token.obtenerLexema());
                 token.establecerFila(filaActual);
                 token.establecerColumna(columnaActual);
 
@@ -76,7 +87,7 @@ public class Lexico {
             if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 48)
                     || (c > 57 && c < 65 || (c > 91 && c < 97 || (c > 122 && c < 127)))) {
                 Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
-                token = automataOperador.reconocerToken(lector);
+                token = automataOperador.reconocerToken(lector,sinConsumir);
 
                 // Insertamos el caracter consumido para multiplexar
                 token.establecerLexema(character + token.obtenerLexema());

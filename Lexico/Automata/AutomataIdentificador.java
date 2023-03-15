@@ -45,9 +45,13 @@ public class AutomataIdentificador extends Automata {
   public Token reconocerToken(BufferedReader lector, boolean sinConsumir) {
     // Si no queremos avanzar en la lectura y solo queremos ver el siguiente token
     if (sinConsumir) {
-      
+      try {
+        // Marcamos la posicion del lector para luego reiniciarlo
+        lector.mark(0);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
-
     Token token = new Token();
     // Establecemos el tipo de token Identificador
     token.establecerToken("Identificador");
@@ -70,6 +74,14 @@ public class AutomataIdentificador extends Automata {
       }
     } catch (IOException e) {
       e.printStackTrace();
+    }
+    if(sinConsumir){
+      // Reseteamos la posicion del lector ya que no queremos consumir el token, solo leerlo
+      try {
+        lector.reset();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     token.establecerLexema(lexema);
     return token;
