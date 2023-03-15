@@ -61,10 +61,10 @@ public class AutomataIdentificador extends Automata {
       int c;
       while ((c = lector.read()) != -1) {
         char character = (char) c;
-        // Si encontramos un caracter que corresponda a una letra, se trata de un
-        // identificador valido
+        // Si encontramos un caracter que corresponda a una letra, o un _
+        // se trata de un identificador valido
         // y continuamos construyendo el lexema
-        if ((c > 64 && c < 91) || (c > 96 && c < 123)) {
+        if ((c > 64 && c < 91) || (c > 96 && c < 123) || (c > 95)) {
           lexema = lexema + character;
         }
         // Encontramos un espacio, devolvemos el token
