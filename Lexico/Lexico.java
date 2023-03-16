@@ -115,6 +115,11 @@ public class Lexico {
                         Automata automataComentario = new AutomataComentario(filaActual, columnaActual);
                         token = automataComentario.reconocerToken(lector, sinConsumir);
 
+                        // Imprimimos el token con su lexema y el numero de linea y columna donde se
+                        // encuentra
+                        System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
+                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+                        
                         // Obtenemos la fila y columna en la que termino de leer el automata
                         filaActual = automataComentario.obtenerFila();
                         columnaActual = automataComentario.obtenerColumna();
@@ -124,6 +129,11 @@ public class Lexico {
                         Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                         token = automataOperador.reconocerToken(lector, sinConsumir);
 
+                        // Imprimimos el token con su lexema y el numero de linea y columna donde se
+                        // encuentra
+                        System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
+                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+                        
                         // Obtenemos la fila y columna en la que termino de leer el automata
                         filaActual = automataOperador.obtenerFila();
                         columnaActual = automataOperador.obtenerColumna();
