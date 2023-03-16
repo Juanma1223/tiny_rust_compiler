@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import Lexico.ErrorLexico;
 import Lexico.Token;
 
 /* Esta clase se encarga de recorrer el codigo en busqueda de un identificador valido
@@ -16,7 +17,7 @@ public class AutomataIdentificador extends Automata {
     super(filaActual, columnaActual);
   }
 
-  private final HashMap<String, String> p_reservadas = new HashMap<String, String>() {
+  private final HashMap<String, String> pReservadas = new HashMap<String, String>() {
     {
       put("class", "class");
       put("if", "if");
@@ -25,7 +26,7 @@ public class AutomataIdentificador extends Automata {
       put("true", "true");
       put("false", "false");
       put("new", "new");
-      put("fn", "fn");
+      put("fn", "funcion");
       put("create", "create");
       put("pub", "pub");
       put("static", "static");
@@ -33,7 +34,7 @@ public class AutomataIdentificador extends Automata {
       put("self", "self");
       put("void", "void");
       put("Array", "Array");
-      put("Int", "I32");
+      put("I32", "int");
       put("Bool", "Bool");
       put("Char", "Char");
       put("String", "Str");
@@ -59,19 +60,21 @@ public class AutomataIdentificador extends Automata {
     // Leemos hasta encontrar EOF o el fin del token
     try {
       int c;
-      while ((c = lector.read()) != -1) {
+      boolean leyendo = true;
+      while (leyendo) {
+        // Marcamos la posicion antes de consumir el caracter en caso de querer
+        // recuperarlo
+        lector.mark(1);
+        c = lector.read();
         char character = (char) c;
         // Aumentamos en 1 la columna
         super.establecerColumna(super.obtenerColumna() + 1);
-        // Si encontramos un caracter que corresponda a una letra, o un _
-        // se trata de un identificador valido
-        // y continuamos construyendo el lexema
-        if ((c > 64 && c < 91) || (c > 94 && c < 123) || (c > 47 && c < 58)) {
-          lexema = lexema + character;
-        }
 
-        // Encontramos un espacio, devolvemos el token
-        if (c == 32) {
+        // Encontramos un espacio,dos puntos, punto y coma, etc y devolvemos el token
+        if (c == 32 || c == 58 || c == 59 || c == 40) {
+          // No queremos consumir caracteres de mas, por tanto volvemos a la marca del
+          // lector
+          lector.reset();
           break;
         }
         // Si encontramos un salto de linea, actualizamos fila, reiniciamos las columnas
@@ -80,6 +83,22 @@ public class AutomataIdentificador extends Automata {
           super.establecerColumna(0);
           super.establecerFila(super.obtenerFila() + 1);
           break;
+        }
+        // Si encontramos un caracter que corresponda a una letra, o un _
+        // se trata de un identificador valido
+        // y continuamos construyendo el lexema
+        if ((c > 64 && c < 91) || (c > 94 && c < 123) || (c > 47 && c < 58)) {
+          lexema = lexema + character;
+        } else {
+          // Revisamos que no hayamos llegado al EOF
+          if (c == -1) {
+            ErrorLexico newError = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+                "Identificador no valido: Se encontro EOF");
+          } else {
+            // El caracter no es valido, devolvemos error
+            ErrorLexico newError = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+                "Identificador no valido: caracter " + character + " invalido");
+          }
         }
       }
     } catch (IOException e) {
@@ -93,6 +112,11 @@ public class AutomataIdentificador extends Automata {
       } catch (IOException e) {
         e.printStackTrace();
       }
+    }
+    // Revisamos si el lexema es una palabra reservada
+    if (pReservadas.get(lexema) != null) {
+      // Reasignamos el tipo de token
+      token.establecerToken(pReservadas.get(lexema));
     }
     token.establecerLexema(lexema);
     return token;
