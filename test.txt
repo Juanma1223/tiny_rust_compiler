@@ -1,5 +1,5 @@
 123 'a' "hola" 0
-3+5=8p
+3+5=8
 + <= * ==
 class Prueba {
 	I32: a;

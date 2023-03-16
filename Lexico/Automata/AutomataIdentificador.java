@@ -57,6 +57,8 @@ public class AutomataIdentificador extends Automata {
     // Establecemos el tipo de token Identificador
     token.establecerToken("Identificador");
     String lexema = "";
+    token.establecerFila(super.obtenerFila());
+    token.establecerColumna(super.obtenerColumna());
     // Leemos hasta encontrar EOF o el fin del token
     try {
       int c;
