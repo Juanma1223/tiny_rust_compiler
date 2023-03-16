@@ -22,6 +22,8 @@ public class AutomataOperador extends Automata{
             int c;
             c = lector.read();
             char character = (char) c;
+            // Leemos un caracter y aumentamos en uno la columna
+            super.establecerColumna(super.obtenerColumna()+1);
 
             if(c == 40){
               lexema = lexema+character;

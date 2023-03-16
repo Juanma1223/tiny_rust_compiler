@@ -10,9 +10,6 @@ public class Ejecutador {
         Lexico anaLexico = new Lexico(file);
         while (file.canRead()) {
             Token token = anaLexico.sigToken(false);
-            token = anaLexico.sigToken(true);
-            token = anaLexico.sigToken(false);
-            token = anaLexico.sigToken(false);
             // Imprimimos el token con su lexema y el numero de linea y columna donde se
             // encuentra
             // System.out.println("| " + token.obtenerToken() + " | " +

@@ -34,4 +34,12 @@ public class Automata {
     public int obtenerColumna() {
         return this.columnaActual;
     }
+
+    public void establecerFila(int fila){
+        this.filaActual = fila;
+    }
+
+    public void establecerColumna(int columna){
+        this.columnaActual = columna;
+    }
 }
