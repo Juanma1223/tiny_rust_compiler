@@ -1,4 +1,4 @@
-123 0 'a' "hola" 1
+123 'a' "hola" 0
 + <= * ==
 class Prueba {
 	I32: a;

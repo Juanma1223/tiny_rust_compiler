@@ -58,7 +58,7 @@ public class Lexico {
                 // Encontramos EOF en lugar de un token
                 leyendo = false;
             }
-            if (c != 32 && c != 9 && c != 10) {
+            if (c != 32 && c != 9 && c != 10 && c != 11 && c != 13) {
                 // Restablecemos el lector un caracter hacia atras para no consumirlo
                 lector.reset();
 
@@ -140,9 +140,9 @@ public class Lexico {
                     break;
                 }
             } else {
-                // Si encontramos un salto de linea debemos actualizar la fila y reiniciar el
+                // Si encontramos una nueva linea debemos actualizar la fila y reiniciar el
                 // conteo de columna
-                if (c == 10) {
+                if (c == 10 || c==11 || c==13) {
                     this.filaActual += 1;
                     this.columnaActual = 0;
                 } else {

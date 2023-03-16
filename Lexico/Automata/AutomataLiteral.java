@@ -49,6 +49,7 @@ public class AutomataLiteral extends Automata {
                         super.establecerColumna(super.obtenerColumna() + 1);
                     } else {
                         // Revisamos que no hayamos terminado la expresion con punto y coma
+                        //REVISAR QUE NO TERMINE CON UN OPERADOR
                         if(c == 59){
                             // No consumimos el punto y coma y retornamos el token
                             lector.reset();
