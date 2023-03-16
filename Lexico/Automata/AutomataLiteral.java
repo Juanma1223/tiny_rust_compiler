@@ -74,6 +74,7 @@ public class AutomataLiteral extends Automata {
                             c = lector.read();
                             if (c != 39) {
                                 // error caracter sin cerrar
+                                ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter sin cerrar");
                             }
                         }
                     } else {
@@ -92,6 +93,7 @@ public class AutomataLiteral extends Automata {
                     c = lector.read();
                     if (c == 10) { // si c es un salto de linea
                         // error cadena sin cerrar
+                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"String sin cerrar");
                     }
                 }
             }

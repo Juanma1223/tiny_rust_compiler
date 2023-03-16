@@ -147,6 +147,7 @@ public class AutomataOperador extends Automata {
           token.establecerToken("op_and");
         } else {
           // Error operador mal formado
+          ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Operador mal formado");
         }
       }
       // Agregar otro |
@@ -160,6 +161,7 @@ public class AutomataOperador extends Automata {
           token.establecerToken("op_or");
         } else {
           // Error operador mal formado
+          ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Operador mal formado");
         }
       }
       // Agregar distinto
@@ -179,7 +181,7 @@ public class AutomataOperador extends Automata {
       if(lexema == ""){
         // error simbolo invalido
         ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
-            "Caracter invalido: " + character);
+            "Simbolo invalido: " + character);
       }
     } catch (IOException e) {
       e.printStackTrace();
