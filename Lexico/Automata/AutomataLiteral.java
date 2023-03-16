@@ -36,30 +36,27 @@ public class AutomataLiteral extends Automata {
             if (c > 48 && c < 58) {
                 token.establecerToken("lit_ent");
                 lexema = lexema + character;
+                lector.mark(1);
                 c = lector.read();
                 // Leemos un caracter y aumentamos en uno la columna
                 super.establecerColumna(super.obtenerColumna() + 1);
-                while (c != 32 && c != 9 && c != 10 && c != 11 && c != 13) { // mientras c sea distinto de espacios en blanco
-                    if (c > 47 && c < 58) {
-                        character = (char) c;
-                        lexema = lexema + character;
-                        lector.mark(1);
-                        c = lector.read();
-                        // Leemos un caracter y aumentamos en uno la columna
-                        super.establecerColumna(super.obtenerColumna() + 1);
-                    } else {
-                        // Revisamos que no hayamos terminado la expresion con punto y coma
-                        //REVISAR QUE NO TERMINE CON UN OPERADOR
-                        if(c == 59){
-                            // No consumimos el punto y coma y retornamos el token
-                            lector.reset();
-                            // Leemos un caracter y no lo consumimos, disminuimos la columna
-                            super.establecerColumna(super.obtenerColumna() - 1);
-                            break;
-                        }
-                        // error número inválido
-                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Numero invalido: "+character);
-                    }
+                while (c > 47 && c < 58) { // mientras c sea un numero
+                    character = (char) c;
+                    lexema = lexema + character;
+                    lector.mark(1);
+                    c = lector.read();
+                    // Leemos un caracter y aumentamos en uno la columna
+                    super.establecerColumna(super.obtenerColumna() + 1);
+                }
+                if ((c > 64 && c < 91) || (c > 96 && c < 123)){ //si sigue una letra
+                    // error número inválido
+                    ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Numero invalido: "+character);
+                }
+                else {
+                    // No consumimos el caracter y retornamos el token
+                    lector.reset();
+                    // Como leimos un caracter y no lo consumimos, disminuimos la columna
+                    super.establecerColumna(super.obtenerColumna() - 1);
                 }
             }
 
