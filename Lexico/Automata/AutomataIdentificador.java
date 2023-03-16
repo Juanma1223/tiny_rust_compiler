@@ -71,7 +71,7 @@ public class AutomataIdentificador extends Automata {
         super.establecerColumna(super.obtenerColumna() + 1);
 
         // Encontramos un espacio,dos puntos, punto y coma, etc y devolvemos el token
-        if (c == 32 || c == 58 || c == 59 || c == 40) {
+        if (c == 32 || c == 58 || c == 59 || (c < 48 && c > 39) || c == 91 || c == 93) {
           // No queremos consumir caracteres de mas, por tanto volvemos a la marca del
           // lector
           lector.reset();
@@ -92,11 +92,11 @@ public class AutomataIdentificador extends Automata {
         } else {
           // Revisamos que no hayamos llegado al EOF
           if (c == -1) {
-            ErrorLexico newError = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+            ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
                 "Identificador no valido: Se encontro EOF");
           } else {
             // El caracter no es valido, devolvemos error
-            ErrorLexico newError = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+            ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
                 "Identificador no valido: caracter " + character + " invalido");
           }
         }

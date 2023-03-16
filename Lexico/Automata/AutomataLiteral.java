@@ -3,6 +3,7 @@ package Lexico.Automata;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import Lexico.ErrorLexico;
 import Lexico.Token;
 
 /* Esta clase se encarga de recorrer el codigo en busqueda de un literal valido
@@ -37,9 +38,17 @@ public class AutomataLiteral extends Automata {
                     if (c > 47 && c < 58) {
                         character = (char) c;
                         lexema = lexema + character;
+                        lector.mark(1);
                         c = lector.read();
                     } else {
+                        // Revisamos que no hayamos terminado la expresion con punto y coma
+                        if(c == 59){
+                            // No consumimos el punto y coma y retornamos el token
+                            lector.reset();
+                            break;
+                        }
                         // error número inválido
+                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Numero invalido: "+character);
                     }
                 }
             }
@@ -54,6 +63,7 @@ public class AutomataLiteral extends Automata {
                     c = lector.read();
                     if (c != 39) {
                         // error caracter sin cerrar
+                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter sin cerrar");
                     }
                 } else {
                     if (c == 92) { // c es la barra invertida
@@ -68,6 +78,7 @@ public class AutomataLiteral extends Automata {
                         }
                     } else {
                         // caracter invalido
+                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter invalido: "+character);
                     }
                 }
             }

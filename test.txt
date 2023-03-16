@@ -5,7 +5,7 @@ class Prueba {
 	Char: d;
 	Bool: e;
 	create(){
-		a = 42;
+		a.name = 42;
 	}
 	fn get_a() -> I32 {
 		return a;

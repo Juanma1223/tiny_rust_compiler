@@ -51,6 +51,7 @@ public class Lexico {
             // menos al automata
             lector.mark(1);
             c = lector.read();
+            char character = (char) c;
             // En caso de encontrar espacios o tabulaciones, las ignoramos y no reseteamos
             // el lector
             if (c == -1) {
@@ -61,7 +62,6 @@ public class Lexico {
                 // Restablecemos el lector un caracter hacia atras para no consumirlo
                 lector.reset();
 
-                char character = (char) c;
                 // Segun el caracter que encontramos, multiplexamos en los distintos automatas
                 // reconocedores
                 // de Tokens
@@ -137,7 +137,8 @@ public class Lexico {
                     break;
                 }
             } else {
-                // Si encontramos un salto de linea debemos actualizar la fila y reiniciar el conteo de columna
+                // Si encontramos un salto de linea debemos actualizar la fila y reiniciar el
+                // conteo de columna
                 if (c == 10) {
                     this.filaActual += 1;
                     this.columnaActual = 0;
