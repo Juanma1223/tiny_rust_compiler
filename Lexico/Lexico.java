@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import Lexico.Automata.Automata;
+import Lexico.Automata.AutomataComentario;
 import Lexico.Automata.AutomataIdentificador;
 import Lexico.Automata.AutomataLiteral;
 import Lexico.Automata.AutomataOperador;
@@ -107,7 +108,26 @@ public class Lexico {
 
                 // Si encontramos una / puede ser un operador o un comentario
                 if (c == 47) {
-                    // implementar
+                    lector.mark(1);
+                    c = lector.read();
+                    if (c==47 || c==42){ //si sigue otra / o un * es un comentario
+                        lector.reset();
+                        Automata automataComentario = new AutomataComentario(filaActual, columnaActual);
+                        token = automataComentario.reconocerToken(lector, sinConsumir);
+
+                        // Obtenemos la fila y columna en la que termino de leer el automata
+                        filaActual = automataComentario.obtenerFila();
+                        columnaActual = automataComentario.obtenerColumna();
+                    }
+                    else{ //sino es un operador
+                        lector.reset();
+                        Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
+                        token = automataOperador.reconocerToken(lector, sinConsumir);
+
+                        // Obtenemos la fila y columna en la que termino de leer el automata
+                        filaActual = automataOperador.obtenerFila();
+                        columnaActual = automataOperador.obtenerColumna();
+                    }
                 }
 
                 // Si encontramos un caracter que corresponda a un numero o comillas se trata de
@@ -126,7 +146,7 @@ public class Lexico {
                     // Obtenemos la fila y columna en la que termino de leer el automata
                     filaActual = automataLiteral.obtenerFila();
                     columnaActual = automataLiteral.obtenerColumna();
-                    
+
                     break;
                 }
             } else {
