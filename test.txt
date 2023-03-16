@@ -1,3 +1,5 @@
+123 0 'a' "hola" 1
++ <= * ==
 class Prueba {
 	I32: a;
 	pub Str: b;

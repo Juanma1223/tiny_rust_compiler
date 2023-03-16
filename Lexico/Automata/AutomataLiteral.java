@@ -18,6 +18,9 @@ public class AutomataLiteral extends Automata {
     public Token reconocerToken(BufferedReader lector, boolean sinConsumir) {
         Token token = new Token();
         String lexema = "";
+        token.establecerFila(super.obtenerFila());
+        token.establecerColumna(super.obtenerColumna());
+
         try {
             int c;
             c = lector.read();
@@ -34,17 +37,23 @@ public class AutomataLiteral extends Automata {
                 token.establecerToken("lit_ent");
                 lexema = lexema + character;
                 c = lector.read();
-                while (c != 32) { // mientras c sea distinto de espacio
+                // Leemos un caracter y aumentamos en uno la columna
+                super.establecerColumna(super.obtenerColumna() + 1);
+                while (c != 32 && c != 9 && c != 10 && c != 11 && c != 13) { // mientras c sea distinto de espacios en blanco
                     if (c > 47 && c < 58) {
                         character = (char) c;
                         lexema = lexema + character;
                         lector.mark(1);
                         c = lector.read();
+                        // Leemos un caracter y aumentamos en uno la columna
+                        super.establecerColumna(super.obtenerColumna() + 1);
                     } else {
                         // Revisamos que no hayamos terminado la expresion con punto y coma
                         if(c == 59){
                             // No consumimos el punto y coma y retornamos el token
                             lector.reset();
+                            // Leemos un caracter y no lo consumimos, disminuimos la columna
+                            super.establecerColumna(super.obtenerColumna() - 1);
                             break;
                         }
                         // error número inválido
@@ -56,11 +65,15 @@ public class AutomataLiteral extends Automata {
             if (c == 39) {
                 token.establecerToken("lit_car");
                 c = lector.read();
+                // Leemos un caracter y aumentamos en uno la columna
+                super.establecerColumna(super.obtenerColumna() + 1);
                 if (c != 92 && c != 10 && c != 39) { // si c no es la barra invertida, un salto de linea o una comilla
                                                      // simple
                     character = (char) c;
                     lexema = lexema + character;
                     c = lector.read();
+                    // Leemos un caracter y aumentamos en uno la columna
+                    super.establecerColumna(super.obtenerColumna() + 1);
                     if (c != 39) {
                         // error caracter sin cerrar
                         ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter sin cerrar");
@@ -68,10 +81,14 @@ public class AutomataLiteral extends Automata {
                 } else {
                     if (c == 92) { // c es la barra invertida
                         c = lector.read();
+                        // Leemos un caracter y aumentamos en uno la columna
+                        super.establecerColumna(super.obtenerColumna() + 1);
                         if (c != 110 && c != 116) { // c es dintinto de n o t
                             character = (char) c;
                             lexema = lexema + character;
                             c = lector.read();
+                            // Leemos un caracter y aumentamos en uno la columna
+                            super.establecerColumna(super.obtenerColumna() + 1);
                             if (c != 39) {
                                 // error caracter sin cerrar
                                 ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter sin cerrar");
@@ -87,11 +104,15 @@ public class AutomataLiteral extends Automata {
             if (c == 34) {
                 token.establecerToken("lit_cad");
                 c = lector.read();
+                // Leemos un caracter y aumentamos en uno la columna
+                super.establecerColumna(super.obtenerColumna() + 1);
                 while (c != 34) { // mientras c sea distinto de "
                     character = (char) c;
                     lexema = lexema + character;
                     c = lector.read();
-                    if (c == 10) { // si c es un salto de linea
+                    // Leemos un caracter y aumentamos en uno la columna
+                    super.establecerColumna(super.obtenerColumna() + 1);
+                    if (c == 10 || c==13) { // si c es un salto de linea o un retorno de carro
                         // error cadena sin cerrar
                         ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"String sin cerrar");
                     }

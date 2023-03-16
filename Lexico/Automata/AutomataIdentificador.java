@@ -97,7 +97,7 @@ public class AutomataIdentificador extends Automata {
           } else {
             // El caracter no es valido, devolvemos error
             ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
-                "Identificador no valido: caracter " + character + " invalido");
+                "Identificador mal formado: caracter " + character + " invalido");
           }
         }
       }
