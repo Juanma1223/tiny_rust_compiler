@@ -86,10 +86,10 @@ public class AutomataIdentificador extends Automata {
           super.establecerFila(super.obtenerFila() + 1);
           break;
         }
-        // Si encontramos un caracter que corresponda a una letra, o un _
-        // se trata de un identificador valido
+        // Si encontramos un caracter que corresponda a una letra,
+        // un numero o un _, se trata de un identificador valido
         // y continuamos construyendo el lexema
-        if ((c > 64 && c < 91) || (c > 94 && c < 123) || (c > 47 && c < 58)) {
+        if ((c > 64 && c < 91) || (c == 95) ||(c > 96 && c < 123) || (c > 47 && c < 58)) {
           lexema = lexema + character;
         } else {
           // Revisamos que no hayamos llegado al EOF
@@ -115,10 +115,16 @@ public class AutomataIdentificador extends Automata {
         e.printStackTrace();
       }
     }
-    // Revisamos si el lexema es una palabra reservada
+    // Revisamos si el lexema es una palabra reservada o un id de clase u objeto
     if (pReservadas.get(lexema) != null) {
       // Reasignamos el tipo de token
       token.establecerToken(pReservadas.get(lexema));
+    } else {
+        if (Character.isUpperCase(lexema.charAt(0))) {
+          token.establecerToken("id_clase");
+        } else {
+          token.establecerToken("id_objeto");
+        }
     }
     token.establecerLexema(lexema);
     return token;
