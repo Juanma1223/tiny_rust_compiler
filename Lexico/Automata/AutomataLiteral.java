@@ -50,7 +50,7 @@ public class AutomataLiteral extends Automata {
                 }
                 if ((c > 64 && c < 91) || (c > 96 && c < 123)){ //si sigue una letra
                     // error número inválido
-                    ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Numero invalido: "+character);
+                    ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Numero invalido: "+lexema+(char) c);
                 }
                 else {
                     // No consumimos el caracter y retornamos el token
@@ -74,7 +74,7 @@ public class AutomataLiteral extends Automata {
                     super.establecerColumna(super.obtenerColumna() + 1);
                     if (c != 39) {
                         // error caracter sin cerrar
-                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter sin cerrar");
+                        ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter sin cerrar");
                     }
                 } else {
                     if (c == 92) { // c es la barra invertida
@@ -89,12 +89,12 @@ public class AutomataLiteral extends Automata {
                             super.establecerColumna(super.obtenerColumna() + 1);
                             if (c != 39) {
                                 // error caracter sin cerrar
-                                ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter sin cerrar");
+                                ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter sin cerrar");
                             }
                         }
                     } else {
                         // caracter invalido
-                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Caracter invalido: "+character);
+                        ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter invalido: "+character);
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class AutomataLiteral extends Automata {
                     super.establecerColumna(super.obtenerColumna() + 1);
                     if (c == 10 || c==13) { // si c es un salto de linea o un retorno de carro
                         // error cadena sin cerrar
-                        ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"String sin cerrar");
+                        ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"String sin cerrar");
                     }
                 }
             }

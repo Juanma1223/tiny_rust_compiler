@@ -160,7 +160,7 @@ public class AutomataOperador extends Automata {
           token.establecerToken("op_and");
         } else {
           // Error operador mal formado
-          ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Operador mal formado");
+          ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Operador mal formado: "+lexema+(char) c);
         }
       }
       else if (c == 124) {
@@ -175,7 +175,7 @@ public class AutomataOperador extends Automata {
           token.establecerToken("op_or");
         } else {
           // Error operador mal formado
-          ErrorLexico err = new ErrorLexico(super.obtenerFila(),super.obtenerColumna(),"Operador mal formado");
+          ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Operador mal formado: "+lexema+(char) c);
         }
       }
       else if (c == 33) {
@@ -197,7 +197,7 @@ public class AutomataOperador extends Automata {
       // No encontramos ningun caso valido
       if(lexema == ""){
         // error simbolo invalido
-        ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+        ErrorLexico err = new ErrorLexico(token.obtenerFila(), token.obtenerColumna(),
             "Simbolo invalido: " + character);
       }
     } catch (IOException e) {

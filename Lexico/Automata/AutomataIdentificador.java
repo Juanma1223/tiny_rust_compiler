@@ -81,12 +81,12 @@ public class AutomataIdentificador extends Automata {
           // Si sigue un simbolo invalido
           if ((c == 35) || (c == 36) || (c == 63) || (c == 64) || (c == 92) ||(c == 94) || (c == 96) || (c == 126)) {
             // El caracter no es valido, devolvemos error
-            ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+            ErrorLexico err = new ErrorLexico(token.obtenerFila(), token.obtenerColumna(),
                 "Identificador mal formado: caracter " + character + " invalido");
           } else{
             // Revisamos que no hayamos llegado al EOF
             if (c == -1) {
-              ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+              ErrorLexico err = new ErrorLexico(token.obtenerFila(), token.obtenerColumna(),
                   "Identificador no valido: Se encontro EOF");
             } else {
               // No queremos consumir caracteres de mas, por tanto volvemos a la marca del

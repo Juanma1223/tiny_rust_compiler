@@ -3,5 +3,5 @@ class Prueba {
 	pub Str: b;
 }
 fn main () {
-	b = “hola;
+	b = "hola;
 }
