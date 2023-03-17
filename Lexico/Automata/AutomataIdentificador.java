@@ -82,7 +82,7 @@ public class AutomataIdentificador extends Automata {
         // Si encontramos un salto de linea, actualizamos fila, reiniciamos las columnas
         // y pasamos y devolvemos token
         if (c == 10) {
-          super.establecerColumna(0);
+          super.establecerColumna(1);
           super.establecerFila(super.obtenerFila() + 1);
           break;
         }

@@ -3,6 +3,7 @@ package Lexico.Automata;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import Lexico.ErrorLexico;
 import Lexico.Token;
 
 public class AutomataComentario extends Automata {
@@ -23,32 +24,63 @@ public class AutomataComentario extends Automata {
         }
         Token token = new Token();
         // Establecemos el tipo de token Identificador
-        token.establecerToken("Identificador");
+        token.establecerToken("Comentario");
         String lexema = "";
-        // Leemos hasta encontrar EOF o el fin del token
+        boolean leyendo = true;
+        // Guardamos la columna y fila inicial en caso de error
+        int filaInicio = super.obtenerFila();
+        int columnaInicio = super.obtenerColumna();
+        
         try {
+            // Establecemos si es un comentario multilinea o simple
+            boolean simple = false;
+            boolean multilinea = false;
             int c;
-            while ((c = lector.read()) != -1) {
-                char character = (char) c;
+            // Consumimos dos veces para saber si el comentario es simple o multilinea
+            c = lector.read();
+            c = lector.read();
+            if(c == 42){
+                multilinea = true;
+            }else{
+                if(c == 47){
+                    simple = true;
+                }
+            }
+            while (leyendo) {
+                c = lector.read();
+                if(c == -1){
+                    leyendo = false;
+                    // Encontramos EOF y el comentario no se cerro
+                    ErrorLexico err = new ErrorLexico(filaInicio, columnaInicio, "Comentario multilinea no cerrado");
+                }
                 // Aumentamos en 1 la columna
                 super.establecerColumna(super.obtenerColumna() + 1);
-                // Si encontramos un caracter que corresponda a una letra, o un _
-                // se trata de un identificador valido
-                // y continuamos construyendo el lexema
-                if ((c > 64 && c < 91) || (c > 94 && c < 123) || (c > 47 && c < 58)) {
-                    lexema = lexema + character;
+
+                if (c == 10) {
+                    if(multilinea){
+                        // Por ser multilinea continuamos leyendo
+                        super.establecerColumna(1);
+                        super.establecerFila(super.obtenerFila() + 1);
+                    }else{
+                        // Al ser simple, devolvemos las columnas y filas actualizadas
+                        super.establecerColumna(1);
+                        super.establecerFila(super.obtenerFila() + 1);
+                        leyendo = false;
+                    }
                 }
 
-                // Encontramos un espacio, devolvemos el token
-                if (c == 32) {
-                    break;
-                }
-                // Si encontramos un salto de linea, actualizamos fila, reiniciamos las columnas
-                // y pasamos y devolvemos token
-                if (c == 10) {
-                    super.establecerColumna(0);
-                    super.establecerFila(super.obtenerFila() + 1);
-                    break;
+                // Posible cierre de comentario multilinea
+                if(c == 42 && multilinea){
+                    // Leemos el siguiente caracter sin consumir
+                    lector.mark(1);
+                    c = lector.read();
+                    if(c == 47){
+                        // Cerro el comentario
+                        leyendo = false;
+                    }else{
+                        // Continuamos leyendo el comentario
+                        lector.reset();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -63,7 +95,6 @@ public class AutomataComentario extends Automata {
                 e.printStackTrace();
             }
         }
-        token.establecerLexema(lexema);
         return token;
     }
 }

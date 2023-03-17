@@ -27,8 +27,8 @@ public class Lexico {
     private ArrayList<Token> pilaTokens;
     // Llevamos un conteo de la fila y columna que estamos revisando actualmente en
     // el archivo fuente
-    private int filaActual;
-    private int columnaActual;
+    private int filaActual = 1;
+    private int columnaActual = 1;
 
     // Tenemos un unico lector que conserva el estado de lectura en el que estamos
     private BufferedReader lector;
@@ -89,7 +89,7 @@ public class Lexico {
                 // Si encontramos un caracter que corresponda a un simbolo, se trata de un
                 // operador o un simbolo invalido
                 if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 47)
-                        || (c > 57 && c < 65 || (c > 91 && c < 97 || (c > 122 && c < 127)))) {
+                        || (c > 57 && c < 65 || (c >= 91 && c < 97 || (c > 122 && c < 127)))) {
                     
                     Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                     token = automataOperador.reconocerToken(lector, sinConsumir);
@@ -114,11 +114,6 @@ public class Lexico {
                         lector.reset();
                         Automata automataComentario = new AutomataComentario(filaActual, columnaActual);
                         token = automataComentario.reconocerToken(lector, sinConsumir);
-
-                        // Imprimimos el token con su lexema y el numero de linea y columna donde se
-                        // encuentra
-                        System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
-                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
                         
                         // Obtenemos la fila y columna en la que termino de leer el automata
                         filaActual = automataComentario.obtenerFila();
@@ -164,7 +159,7 @@ public class Lexico {
                 // conteo de columna
                 if (c == 10 || c==11 || c==13) {
                     this.filaActual += 1;
-                    this.columnaActual = 0;
+                    this.columnaActual = 1;
                 } else {
                     // Encontramos alguna tabulacion o espacio y solo aumentamos el numero de
                     // columna
