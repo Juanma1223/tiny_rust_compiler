@@ -19,26 +19,26 @@ public class AutomataIdentificador extends Automata {
 
   private final HashMap<String, String> pReservadas = new HashMap<String, String>() {
     {
-      put("class", "class");
-      put("if", "if");
-      put("else", "else");
-      put("while", "while");
-      put("true", "true");
-      put("false", "false");
-      put("new", "new");
-      put("fn", "funcion");
-      put("create", "create");
-      put("pub", "pub");
-      put("static", "static");
-      put("return", "return");
-      put("self", "self");
-      put("void", "void");
-      put("Array", "Array");
-      put("I32", "int");
-      put("Bool", "Bool");
-      put("Char", "Char");
-      put("String", "Str");
-      put("nil", "nil");
+      put("class", "p_class");
+      put("if", "p_if");
+      put("else", "p_else");
+      put("while", "p_while");
+      put("true", "p_true");
+      put("false", "p_false");
+      put("new", "p_new");
+      put("fn", "p_fn");
+      put("create", "p_create");
+      put("pub", "p_pub");
+      put("static", "p_static");
+      put("return", "p_return");
+      put("self", "p_self");
+      put("void", "p_void");
+      put("Array", "p_Array");
+      put("I32", "p_Int");
+      put("Bool", "p_Bool");
+      put("Char", "p_Char");
+      put("Str", "p_String");
+      put("nil", "p_nil");
     }
   };
 
