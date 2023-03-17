@@ -72,34 +72,29 @@ public class AutomataIdentificador extends Automata {
         // Aumentamos en 1 la columna
         super.establecerColumna(super.obtenerColumna() + 1);
 
-        // Encontramos un espacio,dos puntos, punto y coma, etc y devolvemos el token
-        if (c == 32 || c == 58 || c == 59 || (c < 48 && c > 39) || c == 91 || c == 93) {
-          // No queremos consumir caracteres de mas, por tanto volvemos a la marca del
-          // lector
-          lector.reset();
-          break;
-        }
-        // Si encontramos un salto de linea, actualizamos fila, reiniciamos las columnas
-        // y pasamos y devolvemos token
-        if (c == 10) {
-          super.establecerColumna(1);
-          super.establecerFila(super.obtenerFila() + 1);
-          break;
-        }
         // Si encontramos un caracter que corresponda a una letra,
         // un numero o un _, se trata de un identificador valido
         // y continuamos construyendo el lexema
         if ((c > 64 && c < 91) || (c == 95) ||(c > 96 && c < 123) || (c > 47 && c < 58)) {
           lexema = lexema + character;
         } else {
-          // Revisamos que no hayamos llegado al EOF
-          if (c == -1) {
-            ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
-                "Identificador no valido: Se encontro EOF");
-          } else {
+          // Si sigue un simbolo invalido
+          if ((c == 35) || (c == 36) || (c == 63) || (c == 64) || (c == 92) ||(c == 94) || (c == 96) || (c == 126)) {
             // El caracter no es valido, devolvemos error
             ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
                 "Identificador mal formado: caracter " + character + " invalido");
+          } else{
+            // Revisamos que no hayamos llegado al EOF
+            if (c == -1) {
+              ErrorLexico err = new ErrorLexico(super.obtenerFila(), super.obtenerColumna(),
+                  "Identificador no valido: Se encontro EOF");
+            } else {
+              // No queremos consumir caracteres de mas, por tanto volvemos a la marca del
+              // lector
+              lector.reset();
+              super.establecerColumna(super.obtenerColumna() - 1);
+              leyendo = false;
+            }
           }
         }
       }

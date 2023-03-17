@@ -1,7 +1,7 @@
 /*CORRECTO*/
 class Prueba {
 	I32: a;
-	pub Str: b;
+	pub Str: b = "";
 	Array I32: c;
 	Char: d;
 	Bool: e;
