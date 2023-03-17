@@ -95,6 +95,7 @@ public class AutomataComentario extends Automata {
                 e.printStackTrace();
             }
         }
+        token.establecerToken("Comentario");
         return token;
     }
 }

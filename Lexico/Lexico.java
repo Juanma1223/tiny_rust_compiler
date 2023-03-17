@@ -70,68 +70,52 @@ public class Lexico {
                 // Si encontramos un caracter que corresponda a una letra, se trata de un
                 // identificador
                 if ((c > 64 && c < 91) || (c > 96 && c < 123)) {
-                    
+
                     Automata automataIdentificador = new AutomataIdentificador(filaActual, columnaActual);
                     token = automataIdentificador.reconocerToken(lector, sinConsumir);
-
-                    // Imprimimos el token con su lexema y el numero de linea y columna donde se
-                    // encuentra
-                    System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
-                            + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
-
                     // Obtenemos la fila y columna en la que termino de leer el automata
                     filaActual = automataIdentificador.obtenerFila();
                     columnaActual = automataIdentificador.obtenerColumna();
-
-                    break;
+                    return token;
                 }
 
                 // Si encontramos un caracter que corresponda a un simbolo, se trata de un
                 // operador o un simbolo invalido
                 if ((c == 33) || (c > 34 && c < 39) || (c > 39 && c < 47)
                         || (c > 57 && c < 65 || (c >= 91 && c < 97 || (c > 122 && c < 127)))) {
-                    
+
                     Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                     token = automataOperador.reconocerToken(lector, sinConsumir);
-
-                    // Imprimimos el token con su lexema y el numero de linea y columna donde se
-                    // encuentra
-                    System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
-                            + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
-
                     // Obtenemos la fila y columna en la que termino de leer el automata
                     filaActual = automataOperador.obtenerFila();
                     columnaActual = automataOperador.obtenerColumna();
-                    
-                    break;
+                    return token;
                 }
 
                 // Si encontramos una / puede ser un operador o un comentario
                 if (c == 47) {
                     lector.mark(1);
                     c = lector.read();
-                    if (c==47 || c==42){ //si sigue otra / o un * es un comentario
+                    if (c == 47 || c == 42) { // si sigue otra / o un * es un comentario
                         lector.reset();
                         Automata automataComentario = new AutomataComentario(filaActual, columnaActual);
                         token = automataComentario.reconocerToken(lector, sinConsumir);
-                        
+
                         // Obtenemos la fila y columna en la que termino de leer el automata
                         filaActual = automataComentario.obtenerFila();
                         columnaActual = automataComentario.obtenerColumna();
-                    }
-                    else{ //sino es un operador
+
+                        return token;
+                    } else { // sino es un operador
                         lector.reset();
                         Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                         token = automataOperador.reconocerToken(lector, sinConsumir);
 
-                        // Imprimimos el token con su lexema y el numero de linea y columna donde se
-                        // encuentra
-                        System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
-                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
-                        
                         // Obtenemos la fila y columna en la que termino de leer el automata
                         filaActual = automataOperador.obtenerFila();
                         columnaActual = automataOperador.obtenerColumna();
+
+                        return token;
                     }
                 }
 
@@ -143,21 +127,16 @@ public class Lexico {
                     Automata automataLiteral = new AutomataLiteral(filaActual, columnaActual);
                     token = automataLiteral.reconocerToken(lector, sinConsumir);
 
-                    // Imprimimos el token con su lexema y el numero de linea y columna donde se
-                    // encuentra
-                    System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
-                            + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
-
                     // Obtenemos la fila y columna en la que termino de leer el automata
                     filaActual = automataLiteral.obtenerFila();
                     columnaActual = automataLiteral.obtenerColumna();
 
-                    break;
+                    return token;
                 }
             } else {
                 // Si encontramos una nueva linea debemos actualizar la fila y reiniciar el
                 // conteo de columna
-                if (c == 10 || c==11 || c==13) {
+                if (c == 10 || c == 11 || c == 13) {
                     this.filaActual += 1;
                     this.columnaActual = 1;
                 } else {

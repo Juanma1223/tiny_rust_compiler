@@ -8,13 +8,19 @@ public class Ejecutador {
         // Abrimos el archivo y almacenamos su informacion
         File file = new File("test.txt");
         Lexico anaLexico = new Lexico(file);
-        while (file.canRead()) {
+       while(true) {
             Token token = anaLexico.sigToken(false);
             // Imprimimos el token con su lexema y el numero de linea y columna donde se
             // encuentra
-            // System.out.println("| " + token.obtenerToken() + " | " +
-            // token.obtenerLexema() + " |" + " LINEA " + token.obtenerFila() + " (COLUMNA "
-            // + token.obtenerColumna() + ") |");
+            // Imprimimos el token con su lexema y el numero de linea y columna donde se
+            // encuentra
+            if (token.obtenerToken() == null){
+                break;
+            }
+            if(token.obtenerToken() != "Comentario"){
+                System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "
+                        + token.obtenerFila() + " (COLUMNA " + token.obtenerColumna() + ") |");
+            }
         }
     }
 }
