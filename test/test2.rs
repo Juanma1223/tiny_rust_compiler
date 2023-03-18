@@ -1,4 +1,4 @@
-/*ERROR: Número inválido en línea 6 columna 8*/
+/*ERROR: Número inválido en línea 6 columna 6*/
 class Prueba {
 	I32: a;
 }

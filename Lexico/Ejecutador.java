@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Ejecutador {
     public static void main(String[] args) throws IOException {
         // Abrimos el archivo y almacenamos su informacion
-        File file = new File("test/test3.rs");
+        File file = new File("test/test8.rs");
         Lexico anaLexico = new Lexico(file);
         // Pila en la que guardamos los tokens para posteriormente imprimirlos por
         // pantalla
@@ -25,6 +25,8 @@ public class Ejecutador {
                tokens.add(token);
             }
         }
+        System.out.println("CORRECTO: ANALISIS LEXICO");
+        System.out.println("| TOKEN | LEXEMA | NUMERO DE LINEA (NUMERO DE COLUMNA) |");
         // Imprimimos los tokens
         for(Token token:tokens){
             System.out.println("| " + token.obtenerToken() + " | " + token.obtenerLexema() + " |" + " LINEA "

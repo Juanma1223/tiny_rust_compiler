@@ -1,4 +1,4 @@
-/*ERROR: Identificador mal formado en línea 3 columna 12*/
+/*ERROR: Identificador mal formado en línea 3 columna 11*/
 class Prueba {
 	pub Str: a@x;
 }

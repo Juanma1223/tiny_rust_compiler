@@ -1,4 +1,4 @@
-/*ERROR: Caracter no cerrado en línea 6 columna 8*/
+/*ERROR: Caracter no cerrado en línea 6 columna 6*/
 class Prueba {
 	Char: d;
 }
