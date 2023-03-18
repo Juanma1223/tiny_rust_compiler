@@ -22,9 +22,6 @@ import Lexico.Automata.AutomataOperador;
  */
 public class Lexico {
 
-    // Variable encargada de almacenar todos los tokens que el analizador encuentre
-    // en el archivo fuente
-    private ArrayList<Token> pilaTokens;
     // Llevamos un conteo de la fila y columna que estamos revisando actualmente en
     // el archivo fuente
     private int filaActual = 1;
@@ -53,12 +50,14 @@ public class Lexico {
             lector.mark(1);
             c = lector.read();
             char character = (char) c;
+
             // En caso de encontrar espacios o tabulaciones, las ignoramos y no reseteamos
             // el lector
             if (c == -1) {
                 // Encontramos EOF en lugar de un token
                 leyendo = false;
             }
+
             if (c != 32 && c != 9 && c != 10 && c != 11 && c != 13) {
                 // Restablecemos el lector un caracter hacia atras para no consumirlo
                 lector.reset();
@@ -76,7 +75,7 @@ public class Lexico {
                     // Obtenemos la fila y columna en la que termino de leer el automata
                     filaActual = automataIdentificador.obtenerFila();
                     columnaActual = automataIdentificador.obtenerColumna();
-                    return token;
+                    leyendo = false;
                 }
 
                 // Si encontramos un caracter que corresponda a un simbolo, se trata de un
@@ -89,7 +88,7 @@ public class Lexico {
                     // Obtenemos la fila y columna en la que termino de leer el automata
                     filaActual = automataOperador.obtenerFila();
                     columnaActual = automataOperador.obtenerColumna();
-                    return token;
+                    leyendo = false;
                 }
 
                 // Si encontramos una / puede ser un operador o un comentario
@@ -105,8 +104,9 @@ public class Lexico {
                         filaActual = automataComentario.obtenerFila();
                         columnaActual = automataComentario.obtenerColumna();
 
-                        return token;
-                    } else { // sino es un operador
+                        leyendo = false;
+                    }
+                    else { // sino es un operador
                         lector.reset();
                         Automata automataOperador = new AutomataOperador(filaActual, columnaActual);
                         token = automataOperador.reconocerToken(lector, sinConsumir);
@@ -115,7 +115,7 @@ public class Lexico {
                         filaActual = automataOperador.obtenerFila();
                         columnaActual = automataOperador.obtenerColumna();
 
-                        return token;
+                        leyendo = false;
                     }
                 }
 
@@ -131,15 +131,17 @@ public class Lexico {
                     filaActual = automataLiteral.obtenerFila();
                     columnaActual = automataLiteral.obtenerColumna();
 
-                    return token;
+                    leyendo = false;
                 }
-            } else {
+            }
+            else {
                 // Si encontramos una nueva linea debemos actualizar la fila y reiniciar el
                 // conteo de columna
                 if (c == 10) { //sacamos || c == 11 || c == 13
                     this.filaActual += 1;
                     this.columnaActual = 1;
-                } else {
+                }
+                else {
                     // Encontramos alguna tabulacion o espacio y solo aumentamos el numero de
                     // columna
                     this.columnaActual += 1;

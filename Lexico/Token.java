@@ -3,8 +3,8 @@ package Lexico;
 /* La clase Token es la encargada de representar los tokens del lenguaje
  * en conjunto con todas las propiedades necesarias para posteriores fases del compilador
  */
-
 public class Token {
+    
     private String tipoToken;
     private String lexema;
     private int fila;

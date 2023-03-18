@@ -78,7 +78,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_igual");
-        } else {
+        }
+        else {
           token.establecerToken("op_asignacion");
           // No consumimos el siguiente caracter
           lector.reset();
@@ -94,7 +95,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_menor_o_igual");
-        } else {
+        }
+        else {
           token.establecerToken("op_menor");
           // No consumimos el siguiente caracter
           lector.reset();
@@ -110,7 +112,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_mayor_o_igual");
-        } else {
+        }
+        else {
           token.establecerToken("op_mayor");
           // No consumimos el siguiente caracter
           lector.reset();
@@ -130,7 +133,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_flecha");
-        } else {
+        }
+        else {
           token.establecerToken("op_resta");
           // No consumimos el siguiente caracter
           lector.reset();
@@ -158,7 +162,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_and");
-        } else {
+        }
+        else {
           // Error operador mal formado
           ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Operador mal formado: "+lexema+(char) c);
         }
@@ -173,7 +178,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_or");
-        } else {
+        }
+        else {
           // Error operador mal formado
           ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Operador mal formado: "+lexema+(char) c);
         }
@@ -188,7 +194,8 @@ public class AutomataOperador extends Automata {
           super.establecerColumna(super.obtenerColumna() + 1);
           lexema = lexema + character;
           token.establecerToken("op_distinto");
-        } else {
+        }
+        else {
           token.establecerToken("op_not");
           // No consumimos el siguiente caracter
           lector.reset();

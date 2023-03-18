@@ -76,7 +76,8 @@ public class AutomataLiteral extends Automata {
                         // error caracter sin cerrar
                         ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter sin cerrar");
                     }
-                } else {
+                }
+                else {
                     if (c == 92) { // c es la barra invertida
                         c = lector.read();
                         // Leemos un caracter y aumentamos en uno la columna
@@ -92,7 +93,8 @@ public class AutomataLiteral extends Automata {
                                 ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter sin cerrar");
                             }
                         }
-                    } else {
+                    }
+                    else {
                         // caracter invalido
                         ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter invalido: "+character);
                     }

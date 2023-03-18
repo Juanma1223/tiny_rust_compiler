@@ -41,7 +41,8 @@ public class AutomataComentario extends Automata {
             c = lector.read();
             if(c == 42){
                 multilinea = true;
-            }else{
+            }
+            else{
                 if(c == 47){
                     simple = true;
                 }
@@ -61,7 +62,8 @@ public class AutomataComentario extends Automata {
                         // Por ser multilinea continuamos leyendo
                         super.establecerColumna(1);
                         super.establecerFila(super.obtenerFila() + 1);
-                    }else{
+                    }
+                    else{
                         // Al ser simple, devolvemos las columnas y filas actualizadas
                         super.establecerColumna(1);
                         super.establecerFila(super.obtenerFila() + 1);
@@ -77,7 +79,8 @@ public class AutomataComentario extends Automata {
                     if(c == 47){
                         // Cerro el comentario
                         leyendo = false;
-                    }else{
+                    }
+                    else{
                         // Continuamos leyendo el comentario
                         lector.reset();
                     }

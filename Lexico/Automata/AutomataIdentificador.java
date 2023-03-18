@@ -77,18 +77,21 @@ public class AutomataIdentificador extends Automata {
         // y continuamos construyendo el lexema
         if ((c > 64 && c < 91) || (c == 95) ||(c > 96 && c < 123) || (c > 47 && c < 58)) {
           lexema = lexema + character;
-        } else {
+        }
+        else {
           // Si sigue un simbolo invalido
           if ((c == 35) || (c == 36) || (c == 63) || (c == 64) || (c == 92) ||(c == 94) || (c == 96) || (c == 126)) {
             // El caracter no es valido, devolvemos error
             ErrorLexico err = new ErrorLexico(token.obtenerFila(), token.obtenerColumna(),
                 "Identificador mal formado: caracter " + character + " invalido");
-          } else{
+          }
+          else{
             // Revisamos que no hayamos llegado al EOF
             if (c == -1) {
               ErrorLexico err = new ErrorLexico(token.obtenerFila(), token.obtenerColumna(),
                   "Identificador no valido: Se encontro EOF");
-            } else {
+            }
+            else {
               // No queremos consumir caracteres de mas, por tanto volvemos a la marca del
               // lector
               lector.reset();
@@ -114,10 +117,12 @@ public class AutomataIdentificador extends Automata {
     if (pReservadas.get(lexema) != null) {
       // Reasignamos el tipo de token
       token.establecerToken(pReservadas.get(lexema));
-    } else {
+    }
+    else {
         if (Character.isUpperCase(lexema.charAt(0))) {
           token.establecerToken("id_clase");
-        } else {
+        }
+        else {
           token.establecerToken("id_objeto");
         }
     }
