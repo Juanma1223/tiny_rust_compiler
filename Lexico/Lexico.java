@@ -136,7 +136,7 @@ public class Lexico {
             } else {
                 // Si encontramos una nueva linea debemos actualizar la fila y reiniciar el
                 // conteo de columna
-                if (c == 10 || c == 11 || c == 13) {
+                if (c == 10) { //sacamos || c == 11 || c == 13
                     this.filaActual += 1;
                     this.columnaActual = 1;
                 } else {

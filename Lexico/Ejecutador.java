@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Ejecutador {
     public static void main(String[] args) throws IOException {
         // Abrimos el archivo y almacenamos su informacion
-        File file = new File("test/test8.rs");
+        File file = new File("test/test.rs");
         Lexico anaLexico = new Lexico(file);
         // Pila en la que guardamos los tokens para posteriormente imprimirlos por
         // pantalla
