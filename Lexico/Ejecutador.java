@@ -6,8 +6,15 @@ import java.util.ArrayList;
 
 public class Ejecutador {
     public static void main(String[] args) throws IOException {
+
+        // Leemos el argumento que es pasado por stdin
+        if(args.length == 0){
+            // No recibimos nombre de archivo y por tanto no podemos proceder
+            new ErrorLexico(0, 0, "No se ingreso ningun archivo!");
+        }
+
         // Abrimos el archivo y almacenamos su informacion
-        File file = new File("test/test.rs");
+        File file = new File(args[0]);
         Lexico anaLexico = new Lexico(file);
         // Pila en la que guardamos los tokens para posteriormente imprimirlos por
         // pantalla
