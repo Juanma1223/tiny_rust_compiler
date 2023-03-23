@@ -1,5 +1,7 @@
 package Sintactico;
 
+import java.net.http.HttpResponse.PushPromiseHandler;
+
 public class Sintactico {
 
     public void start() {
@@ -50,13 +52,13 @@ public class Sintactico {
         macheo("pub");
         tipo()
         macheo(":");
-        lista_declaracion_variables();
+        listaDeclVariables();
         macheo(":");
     }
 
     public void constructor() {
         macheo("create");
-        argumentos_formales();
+        argumentosFormales();
         bloqueMetodo();
     }
 
@@ -70,5 +72,152 @@ public class Sintactico {
         bloqueMetodo();
     }
 
+    public void bloqueMetodo() {
+        macheo("{");
+        declVarLocalesP();
+        sentenciaP();
+        macheo("}");
+    }
+
+    public void declVarLocalesP() {
+        declVarLocales();
+        declVarLocalesP();
+    }
+
+    public void sentenciaP() {
+        sentencia();
+        sentenciaP();
+    }
+
+    public void declVarLocales() {
+        tipo();
+        macheo(":");
+        listaDeclVariables();
+        macheo(";");
+    }
+
+    public void listaDeclVariables() {
+        macheo("idObjeto");
+        listaDeclVariablesP();
+    }
+
+    public void listaDeclVariablesP() {
+        macheo(",");
+        listaDeclVariables();
+    }
+
+    public void argumentosFormales() {
+        macheo("(");
+        listaArgumentosFormalesP();
+    }
+
+    public void listaArgumentosFormalesP() {
+        listaArgumentosFormales();
+        macheo(")");
+    }
+
+    public void listaArgumentosFormales() {
+        argumentoFormal();
+        listaArgumentosFormales2();
+    }
+
+    public void listaArgumentosFormales2() {
+        macheo(",");
+        listaArgumentosFormales();
+    }
+
+    public void argumentoFormal() {
+        tipo();
+        macheo(":");
+        macheo("idObjeto");
+    }
+
+    public void tipoMetodo() {
+        tipo();
+        macheo("void");
+    }
+
+    public void tipo() {
+        tipoPrimitivo();
+        tipoReferencia();
+        tipoArray();
+    }
+
+    public void tipoPrimitivo() {
+        macheo("tipoPrimitivo");
+    }
+
+    public void tipoReferencia() {
+        macheo("idClase");
+    }
+
+    public void tipoArray() {
+        macheo("Array");
+        tipoPrimitivo();
+    }
+
+    public void sentencia() {
+
+    }
+
+    public void sentencia2() {
+        macheo("else");
+        sentencia();
+    }
+
+    public void expresionP() {
+        expresion();
+        macheo(";");
+    }
+
+    public void bloque() {
+        macheo("{");
+        sentenciaP();
+        macheo("}");
+    }
+
+    public void asignacion() {
+        asignacionVarSimple();
+        macheo("=");
+        expresion();
+
+        asignacionSelfSimple();
+        macheo("=");
+        expresion();
+    }
+
+    public void asignacionVarSimple() {
+        macheo("id");
+        asignacionVarSimpleP();
+    }
+
+    public void asignacionVarSimpleP() {
+        encadenadoSimpleP();
+
+        macheo("[");
+        expresion();
+        macheo("]");
+    }
+
+    public void encadenadoSimpleP() {
+        macheo(".");
+        macheo("id");
+        encadenadoSimpleP();
+    }
+
+    public void asignacionSelfSimple() {
+        macheo("self");
+        encadenadoSimpleP();
+    }
+
+    public void sentenciaSimple() {
+        macheo("(");
+        expresion();
+        macheo(")");
+    }
+
+    public void expresion() {
+
+    }
     
 }
