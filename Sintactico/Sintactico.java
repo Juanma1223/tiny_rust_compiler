@@ -4,14 +4,60 @@ import java.net.http.HttpResponse.PushPromiseHandler;
 
 public class Sintactico {
 
+    public void macheo(String terminal) {
+        if(tokenActual.obtenerLexema() == terminal){
+            tokenActual = analizadorLexico.sigToken();
+        }
+        else{
+            ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: " + terminal + ", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    public void macheoId(String terminal) {
+        if(tokenActual.obtenerToken() == terminal){
+            tokenActual = analizadorLexico.sigToken();
+        }
+        else{
+            ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: " + terminal + ", se encontró: " + tokenActual.obtenerToken());
+        }
+    }
+
+    public  boolean verifico(String t){
+        if((tokenActual.obtenerLexema() == t) || (tokenActual.obtenerToken() == t)){
+            return true;
+        }
+        else{
+            return false;
+        }       
+    }
+
+    public boolean verifico(String[] t){
+        for (String string : t) {
+            if((tokenActual.obtenerLexema() == string) || (tokenActual.obtenerToken() == string)){
+                return true; 
+            }
+        }
+        return false;            
+    }
+    
     public void start() {
         claseP();
         metodoMain();
     }
 
     public void claseP() {
-        clase();
-        claseP();
+        if(verifico("class")){
+            clase();
+            claseP();
+        }
+        else{
+            if(tokenActual.obtenerLexema() != "fn"){
+                ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
 
     public void metodoMain() {
@@ -24,36 +70,64 @@ public class Sintactico {
     
     public void clase() {
         macheo("class");
-        macheo("idClase");
+        macheoId("id_clase");
         restoClase();
     }
 
     public void restoClase() {
-        macheo(":");
-        macheo("idClase");
-        macheo("{");
-        miembro();
-        macheo("}");
+        if(verifico(":")){
+            macheo(":");
+            macheoId("id_clase");
+            macheo("{");
+            miembroP();
+            macheo("}");
+        }
+        if(verifico("{")){
+            macheo("{");
+            miembroP();
+            macheo("}");
+        }
     }
 
     public void miembroP() {
-        miembro();
-        miembroP();
-
+        String[] ter = {"pub", "Bool", "I32", "Str", "Char", "idClase", "Array", "create", "static", "fn"};
+        if(verifico(ter)){
+            miembro();
+            miembroP();
+        }
+        else{
+            if(tokenActual.obtenerLexema() != "}"){
+                ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
 
     public void miembro() {
-        atributo();
-        constructor();
-        metodo();
+        String[] ter = {"pub", "Bool", "I32", "Str", "Char", "id_clase", "Array"};
+        if(verifico(ter)){
+            atributo();
+        }
+        if(verifico("create")){
+            constructor();
+        }
+        String[] ter1 = {"static", "fn"};
+        if(verifico(ter1)){
+            metodo();
+        }
     }
 
     public void atributo() {
-        macheo("pub");
-        tipo()
-        macheo(":");
-        listaDeclVariables();
-        macheo(":");
+        if(verifico("pub")){
+            macheo("pub");
+        }
+        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
+        if(verifico(ter)){
+            tipo();
+            macheo(":");
+            listaDeclVariables();
+            macheo(";");
+        }
     }
 
     public void constructor() {
@@ -63,9 +137,11 @@ public class Sintactico {
     }
 
     public void metodo() {
-        macheo("static");
+        if(verifico("static")){
+            macheo("static");
+        }
         macheo("fn");
-        macheo("id");
+        macheo("id_objeto");
         argumentosFormales();
         macheo("->");
         tipoMetodo();
@@ -79,6 +155,7 @@ public class Sintactico {
         macheo("}");
     }
 
+    //LLEGUE HASTA ACA
     public void declVarLocalesP() {
         declVarLocales();
         declVarLocalesP();
