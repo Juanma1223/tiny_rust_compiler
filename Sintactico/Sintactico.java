@@ -119,7 +119,6 @@ public class Sintactico {
         aux.macheo("}");
     }
 
-    //LLEGUE HASTA ACA
     public void declVarLocalesP() {
         String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
         String[] ter1 = {";", "id_objeto", "self", "(", "if", "while", "{", "return", "}"};
@@ -152,29 +151,43 @@ public class Sintactico {
 
     public void declVarLocales() {
         tipo();
-        macheo(":");
+        aux.macheo(":");
         listaDeclVariables();
-        macheo(";");
+        aux.macheo(";");
     }
 
     public void listaDeclVariables() {
-        macheo("idObjeto");
+        aux.macheo("id_objeto");
         listaDeclVariablesP();
     }
 
     public void listaDeclVariablesP() {
-        macheo(",");
-        listaDeclVariables();
+        if(aux.verifico(",")){
+            aux.macheo(",");
+            listaDeclVariables();
+        }
+        else{
+            if(tokenActual.obtenerLexema() != ";"){
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: ;, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
 
     public void argumentosFormales() {
-        macheo("(");
+        aux.macheo("(");
         listaArgumentosFormalesP();
     }
 
     public void listaArgumentosFormalesP() {
-        listaArgumentosFormales();
-        macheo(")");
+        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
+        if(aux.verifico(ter)){
+            listaArgumentosFormales();
+            aux.macheo(")");
+        }
+        else{
+            aux.macheo(")");
+        }
     }
 
     public void listaArgumentosFormales() {
@@ -183,37 +196,62 @@ public class Sintactico {
     }
 
     public void listaArgumentosFormales2() {
-        macheo(",");
-        listaArgumentosFormales();
+        if(aux.verifico(",")){
+            aux.macheo(",");
+            listaArgumentosFormales();
+        }
+        else{
+            if(tokenActual.obtenerLexema() != ")"){
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: ), se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
 
     public void argumentoFormal() {
         tipo();
-        macheo(":");
-        macheo("idObjeto");
+        aux.macheo(":");
+        aux.macheo("id_objeto");
     }
 
     public void tipoMetodo() {
-        tipo();
-        macheo("void");
+        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
+        if(aux.verifico(ter)){
+            tipo();
+        }
+        else{
+            aux.macheo("void");
+        }
     }
 
     public void tipo() {
-        tipoPrimitivo();
-        tipoReferencia();
-        tipoArray();
+        String[] ter = {"Bool", "I32", "Str", "Char"};
+        if(aux.verifico(ter)){
+            tipoPrimitivo();
+        }
+        if(aux.verifico("id_clase")){
+            tipoReferencia();
+        }
+        if(aux.verifico("Array")){
+            tipoArray();
+        }
+        else{
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+            "Se esperaba un tipo primitivo, referencia o Array, se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
+    //LLEGUE HASTA ACA
     public void tipoPrimitivo() {
-        macheo("tipoPrimitivo");
+        aux.macheo(tokenActual.obtenerLexema());
     }
 
     public void tipoReferencia() {
-        macheo("idClase");
+        aux.macheo("id_clase");
     }
 
     public void tipoArray() {
-        macheo("Array");
+        aux.macheo("Array");
         tipoPrimitivo();
     }
 
