@@ -46,10 +46,14 @@ public class Sintactico {
             miembroP();
             aux.macheo("}");
         }
-        if(aux.verifico("{")){
+        else if(aux.verifico("{")){
             aux.macheo("{");
             miembroP();
             aux.macheo("}");
+        }
+        else{
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: : o (, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
@@ -69,15 +73,19 @@ public class Sintactico {
 
     public void miembro() {
         String[] ter = {"pub", "Bool", "I32", "Str", "Char", "id_clase", "Array"};
+        String[] ter1 = {"static", "fn"};
         if(aux.verifico(ter)){
             atributo();
         }
-        if(aux.verifico("create")){
+        else if(aux.verifico("create")){
             constructor();
         }
-        String[] ter1 = {"static", "fn"};
-        if(aux.verifico(ter1)){
+        else if(aux.verifico(ter1)){
             metodo();
+        }
+        else{
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: atributo, constructor o método, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
@@ -241,9 +249,15 @@ public class Sintactico {
         }
     }
 
-    //LLEGUE HASTA ACA
     public void tipoPrimitivo() {
-        aux.macheo(tokenActual.obtenerLexema());
+        String[] ter = {"Bool", "I32", "Str", "Char"};
+        if(aux.verifico(ter)){
+            aux.macheo(tokenActual.obtenerLexema());
+        }
+        else{
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+            "Se esperaba un tipo primitivo, se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
     public void tipoReferencia() {
@@ -256,56 +270,111 @@ public class Sintactico {
     }
 
     public void sentencia() {
-
+        if(aux.verifico(";")){
+            aux.macheo(";");
+        }
+        else if(aux.verifico("id_objeto") || aux.verifico("self")){
+            asignacion();
+            aux.macheo(";");
+        }
+        else if(aux.verifico("if")){
+            aux.macheo("if");
+            aux.macheo("(");
+            expresion();
+            aux.macheo(")");
+            sentencia();
+            sentencia2();
+        }
+        else if(aux.verifico("while")){
+            aux.macheo("while");
+            aux.macheo("(");
+            expresion();
+            aux.macheo(")");
+            sentencia();
+        }
+        else if(aux.verifico("{")){
+            bloque();
+        }
+        else if(aux.verifico("return")){
+            aux.macheo("return");
+            expresionP();
+        }
+        else{
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+            "Se esperaba el comienzo de una sentencia, se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
+    //DUDA, queda asi o hay que añadir los siguientes?
     public void sentencia2() {
-        macheo("else");
-        sentencia();
+        if(aux.verifico("else")){
+            aux.macheo("else");
+            sentencia();
+        }
     }
 
+    //añadir las opciones en el else de lo que puede venir
     public void expresionP() {
-        expresion();
-        macheo(";");
+        if(aux.verifico(";")){
+            aux.macheo(";");
+        }
+        else{
+            expresion();
+            aux.macheo(";");
+        }
     }
 
     public void bloque() {
-        macheo("{");
+        aux.macheo("{");
         sentenciaP();
-        macheo("}");
+        aux.macheo("}");
     }
 
     public void asignacion() {
-        asignacionVarSimple();
-        macheo("=");
-        expresion();
-
-        asignacionSelfSimple();
-        macheo("=");
-        expresion();
+        if(aux.verifico("id_objeto")){
+            asignacionVarSimple();
+            aux.macheo("=");
+            expresion();
+        }
+        else if(aux.verifico("self")){
+            asignacionSelfSimple();
+            aux.macheo("=");
+            expresion();
+        }
+        else{
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+            "Se esperaba id_objeto o self, se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
     public void asignacionVarSimple() {
-        macheo("id");
+        aux.macheo("id");
         asignacionVarSimpleP();
     }
 
+    //corregir
     public void asignacionVarSimpleP() {
-        encadenadoSimpleP();
-
-        macheo("[");
-        expresion();
-        macheo("]");
+        if(aux.verifico(".")){
+            encadenadoSimpleP();
+        }
+        else{
+            aux.macheo("[");
+            expresion();
+            aux.macheo("]");
+        }
     }
 
     public void encadenadoSimpleP() {
-        macheo(".");
-        macheo("id");
-        encadenadoSimpleP();
+        if(aux.verifico(".")){
+            aux.macheo(".");
+            aux.macheo("id_objeto");
+            encadenadoSimpleP();
+        }
     }
 
+    //LLEGUE HASTA ACA
     public void asignacionSelfSimple() {
-        macheo("self");
+        aux.macheo("self");
         encadenadoSimpleP();
     }
 
