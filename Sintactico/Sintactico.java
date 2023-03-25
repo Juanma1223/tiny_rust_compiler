@@ -4,43 +4,7 @@ import java.net.http.HttpResponse.PushPromiseHandler;
 
 public class Sintactico {
 
-    public void macheo(String terminal) {
-        if(tokenActual.obtenerLexema() == terminal){
-            tokenActual = analizadorLexico.sigToken();
-        }
-        else{
-            ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: " + terminal + ", se encontró: " + tokenActual.obtenerLexema());
-        }
-    }
-
-    public void macheoId(String terminal) {
-        if(tokenActual.obtenerToken() == terminal){
-            tokenActual = analizadorLexico.sigToken();
-        }
-        else{
-            ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: " + terminal + ", se encontró: " + tokenActual.obtenerToken());
-        }
-    }
-
-    public  boolean verifico(String t){
-        if((tokenActual.obtenerLexema() == t) || (tokenActual.obtenerToken() == t)){
-            return true;
-        }
-        else{
-            return false;
-        }       
-    }
-
-    public boolean verifico(String[] t){
-        for (String string : t) {
-            if((tokenActual.obtenerLexema() == string) || (tokenActual.obtenerToken() == string)){
-                return true; 
-            }
-        }
-        return false;            
-    }
+    AuxiliarSintactico aux = new AuxiliarSintactico();
     
     public void start() {
         claseP();
@@ -48,56 +12,56 @@ public class Sintactico {
     }
 
     public void claseP() {
-        if(verifico("class")){
+        if(aux.verifico("class")){
             clase();
             claseP();
         }
         else{
             if(tokenActual.obtenerLexema() != "fn"){
-                ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
 
     public void metodoMain() {
-        macheo("fn");
-        macheo("main");
-        macheo("(");
-        macheo(")");
+        aux.macheo("fn");
+        aux.macheo("main");
+        aux.macheo("(");
+        aux.macheo(")");
         bloqueMetodo();
     }
     
     public void clase() {
-        macheo("class");
-        macheoId("id_clase");
+        aux.macheo("class");
+        aux.macheoId("id_clase");
         restoClase();
     }
 
     public void restoClase() {
-        if(verifico(":")){
-            macheo(":");
-            macheoId("id_clase");
-            macheo("{");
+        if(aux.verifico(":")){
+            aux.macheo(":");
+            aux.macheoId("id_clase");
+            aux.macheo("{");
             miembroP();
-            macheo("}");
+            aux.macheo("}");
         }
-        if(verifico("{")){
-            macheo("{");
+        if(aux.verifico("{")){
+            aux.macheo("{");
             miembroP();
-            macheo("}");
+            aux.macheo("}");
         }
     }
 
     public void miembroP() {
         String[] ter = {"pub", "Bool", "I32", "Str", "Char", "idClase", "Array", "create", "static", "fn"};
-        if(verifico(ter)){
+        if(aux.verifico(ter)){
             miembro();
             miembroP();
         }
         else{
             if(tokenActual.obtenerLexema() != "}"){
-                ErrorSintactico err = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
             }
         }
@@ -105,65 +69,85 @@ public class Sintactico {
 
     public void miembro() {
         String[] ter = {"pub", "Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        if(verifico(ter)){
+        if(aux.verifico(ter)){
             atributo();
         }
-        if(verifico("create")){
+        if(aux.verifico("create")){
             constructor();
         }
         String[] ter1 = {"static", "fn"};
-        if(verifico(ter1)){
+        if(aux.verifico(ter1)){
             metodo();
         }
     }
 
     public void atributo() {
-        if(verifico("pub")){
-            macheo("pub");
+        if(aux.verifico("pub")){
+            aux.macheo("pub");
         }
         String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        if(verifico(ter)){
+        if(aux.verifico(ter)){
             tipo();
-            macheo(":");
+            aux.macheo(":");
             listaDeclVariables();
-            macheo(";");
+            aux.macheo(";");
         }
     }
 
     public void constructor() {
-        macheo("create");
+        aux.macheo("create");
         argumentosFormales();
         bloqueMetodo();
     }
 
     public void metodo() {
-        if(verifico("static")){
-            macheo("static");
+        if(aux.verifico("static")){
+            aux.macheo("static");
         }
-        macheo("fn");
-        macheo("id_objeto");
+        aux.macheo("fn");
+        aux.macheo("id_objeto");
         argumentosFormales();
-        macheo("->");
+        aux.macheo("->");
         tipoMetodo();
         bloqueMetodo();
     }
 
     public void bloqueMetodo() {
-        macheo("{");
+        aux.macheo("{");
         declVarLocalesP();
         sentenciaP();
-        macheo("}");
+        aux.macheo("}");
     }
 
     //LLEGUE HASTA ACA
     public void declVarLocalesP() {
-        declVarLocales();
-        declVarLocalesP();
+        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
+        String[] ter1 = {";", "id_objeto", "self", "(", "if", "while", "{", "return", "}"};
+        if(aux.verifico(ter)){
+            declVarLocales();
+            declVarLocalesP();
+        }
+        else{
+            if(aux.verifico(ter1) == false){
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: ;, id_objeto, self, (, if, while, {, return, }, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
+
     }
 
     public void sentenciaP() {
-        sentencia();
-        sentenciaP();
+        String[] ter = {";", "id_objeto", "self", "(", "if", "while", "{", "return"};
+        if(aux.verifico(ter)){
+            sentencia();
+            sentenciaP();
+        }
+        else{
+            if(tokenActual.obtenerLexema() != "}"){
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                  "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
 
     public void declVarLocales() {
