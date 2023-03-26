@@ -1,11 +1,34 @@
 package Sintactico;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.http.HttpResponse.PushPromiseHandler;
+
+import Lexico.Lexico;
+import Lexico.Token;
 
 public class Sintactico {
 
-    AuxiliarSintactico aux = new AuxiliarSintactico();
+    // Se instancia una unica vez el analizador lexico
+    Lexico analizadorLexico;
+    // Esta clase se encarga de interactual con el analizador lexico
+    // e implementar metodos de ayuda
+    AuxiliarSintactico aux;
     
+    // Este constructor recibe como argumento la ruta en el sistema operativo donde se encuentra el
+    // archivo con codigo fuente
+    public Sintactico(String dirArchivo){
+        try {
+            // File archivo = new File(dirArchivo);
+            File archivo = new File("test/test.rs");
+            this.analizadorLexico = new Lexico(archivo);
+            this.aux = new AuxiliarSintactico(this.analizadorLexico);
+        } catch (FileNotFoundException e) {
+            System.out.println("Error al abrir archivo de entrada!");
+            System.exit(1);
+        }
+    }
+
     public void start() {
         claseP();
         metodoMain();
@@ -17,6 +40,7 @@ public class Sintactico {
             claseP();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             if(tokenActual.obtenerLexema() != "fn"){
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
@@ -25,33 +49,34 @@ public class Sintactico {
     }
 
     public void metodoMain() {
-        aux.macheo("fn");
-        aux.macheo("main");
-        aux.macheo("(");
-        aux.macheo(")");
+        aux.matcheo("fn");
+        aux.matcheo("main");
+        aux.matcheo("(");
+        aux.matcheo(")");
         bloqueMetodo();
     }
     
     public void clase() {
-        aux.macheo("class");
-        aux.macheoId("id_clase");
+        aux.matcheo("class");
+        aux.matcheoId("id_clase");
         restoClase();
     }
 
     public void restoClase() {
         if(aux.verifico(":")){
-            aux.macheo(":");
-            aux.macheoId("id_clase");
-            aux.macheo("{");
+            aux.matcheo(":");
+            aux.matcheoId("id_clase");
+            aux.matcheo("{");
             miembroP();
-            aux.macheo("}");
+            aux.matcheo("}");
         }
         else if(aux.verifico("{")){
-            aux.macheo("{");
+            aux.matcheo("{");
             miembroP();
-            aux.macheo("}");
+            aux.matcheo("}");
         }
         else{
+            Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: : o (, se encontró: " + tokenActual.obtenerLexema());
         }
@@ -64,6 +89,7 @@ public class Sintactico {
             miembroP();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             if(tokenActual.obtenerLexema() != "}"){
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
@@ -84,6 +110,7 @@ public class Sintactico {
             metodo();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: atributo, constructor o método, se encontró: " + tokenActual.obtenerLexema());
         }
@@ -91,40 +118,40 @@ public class Sintactico {
 
     public void atributo() {
         if(aux.verifico("pub")){
-            aux.macheo("pub");
+            aux.matcheo("pub");
         }
         String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
         if(aux.verifico(ter)){
             tipo();
-            aux.macheo(":");
+            aux.matcheo(":");
             listaDeclVariables();
-            aux.macheo(";");
+            aux.matcheo(";");
         }
     }
 
     public void constructor() {
-        aux.macheo("create");
+        aux.matcheo("create");
         argumentosFormales();
         bloqueMetodo();
     }
 
     public void metodo() {
         if(aux.verifico("static")){
-            aux.macheo("static");
+            aux.matcheo("static");
         }
-        aux.macheo("fn");
-        aux.macheo("id_objeto");
+        aux.matcheo("fn");
+        aux.matcheo("id_objeto");
         argumentosFormales();
-        aux.macheo("->");
+        aux.matcheo("->");
         tipoMetodo();
         bloqueMetodo();
     }
 
     public void bloqueMetodo() {
-        aux.macheo("{");
+        aux.matcheo("{");
         declVarLocalesP();
         sentenciaP();
-        aux.macheo("}");
+        aux.matcheo("}");
     }
 
     public void declVarLocalesP() {
@@ -136,6 +163,7 @@ public class Sintactico {
         }
         else{
             if(aux.verifico(ter1) == false){
+                Token tokenActual = aux.tokenActual();
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: ;, id_objeto, self, (, if, while, {, return, }, se encontró: " + tokenActual.obtenerLexema());
             }
@@ -150,6 +178,7 @@ public class Sintactico {
             sentenciaP();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             if(tokenActual.obtenerLexema() != "}"){
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
@@ -159,22 +188,23 @@ public class Sintactico {
 
     public void declVarLocales() {
         tipo();
-        aux.macheo(":");
+        aux.matcheo(":");
         listaDeclVariables();
-        aux.macheo(";");
+        aux.matcheo(";");
     }
 
     public void listaDeclVariables() {
-        aux.macheo("id_objeto");
+        aux.matcheo("id_objeto");
         listaDeclVariablesP();
     }
 
     public void listaDeclVariablesP() {
         if(aux.verifico(",")){
-            aux.macheo(",");
+            aux.matcheo(",");
             listaDeclVariables();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             if(tokenActual.obtenerLexema() != ";"){
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: ;, se encontró: " + tokenActual.obtenerLexema());
@@ -183,7 +213,7 @@ public class Sintactico {
     }
 
     public void argumentosFormales() {
-        aux.macheo("(");
+        aux.matcheo("(");
         listaArgumentosFormalesP();
     }
 
@@ -191,10 +221,10 @@ public class Sintactico {
         String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
         if(aux.verifico(ter)){
             listaArgumentosFormales();
-            aux.macheo(")");
+            aux.matcheo(")");
         }
         else{
-            aux.macheo(")");
+            aux.matcheo(")");
         }
     }
 
@@ -205,10 +235,11 @@ public class Sintactico {
 
     public void listaArgumentosFormales2() {
         if(aux.verifico(",")){
-            aux.macheo(",");
+            aux.matcheo(",");
             listaArgumentosFormales();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             if(tokenActual.obtenerLexema() != ")"){
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                   "Se esperaba: ), se encontró: " + tokenActual.obtenerLexema());
@@ -218,8 +249,8 @@ public class Sintactico {
 
     public void argumentoFormal() {
         tipo();
-        aux.macheo(":");
-        aux.macheo("id_objeto");
+        aux.matcheo(":");
+        aux.matcheo("id_objeto");
     }
 
     public void tipoMetodo() {
@@ -228,7 +259,7 @@ public class Sintactico {
             tipo();
         }
         else{
-            aux.macheo("void");
+            aux.matcheo("void");
         }
     }
 
@@ -244,15 +275,17 @@ public class Sintactico {
             tipoArray();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
             "Se esperaba un tipo primitivo, referencia o Array, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     public void tipoPrimitivo() {
+        Token tokenActual = aux.tokenActual();
         String[] ter = {"Bool", "I32", "Str", "Char"};
         if(aux.verifico(ter)){
-            aux.macheo(tokenActual.obtenerLexema());
+            aux.matcheo(tokenActual.obtenerLexema());
         }
         else{
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -261,45 +294,46 @@ public class Sintactico {
     }
 
     public void tipoReferencia() {
-        aux.macheo("id_clase");
+        aux.matcheo("id_clase");
     }
 
     public void tipoArray() {
-        aux.macheo("Array");
+        aux.matcheo("Array");
         tipoPrimitivo();
     }
 
     public void sentencia() {
         if(aux.verifico(";")){
-            aux.macheo(";");
+            aux.matcheo(";");
         }
         else if(aux.verifico("id_objeto") || aux.verifico("self")){
             asignacion();
-            aux.macheo(";");
+            aux.matcheo(";");
         }
         else if(aux.verifico("if")){
-            aux.macheo("if");
-            aux.macheo("(");
+            aux.matcheo("if");
+            aux.matcheo("(");
             expresion();
-            aux.macheo(")");
+            aux.matcheo(")");
             sentencia();
             sentencia2();
         }
         else if(aux.verifico("while")){
-            aux.macheo("while");
-            aux.macheo("(");
+            aux.matcheo("while");
+            aux.matcheo("(");
             expresion();
-            aux.macheo(")");
+            aux.matcheo(")");
             sentencia();
         }
         else if(aux.verifico("{")){
             bloque();
         }
         else if(aux.verifico("return")){
-            aux.macheo("return");
+            aux.matcheo("return");
             expresionP();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
             "Se esperaba el comienzo de una sentencia, se encontró: " + tokenActual.obtenerLexema());
         }
@@ -308,7 +342,7 @@ public class Sintactico {
     //DUDA, queda asi o hay que añadir los siguientes?
     public void sentencia2() {
         if(aux.verifico("else")){
-            aux.macheo("else");
+            aux.matcheo("else");
             sentencia();
         }
     }
@@ -316,39 +350,40 @@ public class Sintactico {
     //añadir las opciones en el else de lo que puede venir
     public void expresionP() {
         if(aux.verifico(";")){
-            aux.macheo(";");
+            aux.matcheo(";");
         }
         else{
             expresion();
-            aux.macheo(";");
+            aux.matcheo(";");
         }
     }
 
     public void bloque() {
-        aux.macheo("{");
+        aux.matcheo("{");
         sentenciaP();
-        aux.macheo("}");
+        aux.matcheo("}");
     }
 
     public void asignacion() {
         if(aux.verifico("id_objeto")){
             asignacionVarSimple();
-            aux.macheo("=");
+            aux.matcheo("=");
             expresion();
         }
         else if(aux.verifico("self")){
             asignacionSelfSimple();
-            aux.macheo("=");
+            aux.matcheo("=");
             expresion();
         }
         else{
+            Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
             "Se esperaba id_objeto o self, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     public void asignacionVarSimple() {
-        aux.macheo("id");
+        aux.matcheo("id");
         asignacionVarSimpleP();
     }
 
@@ -358,30 +393,30 @@ public class Sintactico {
             encadenadoSimpleP();
         }
         else{
-            aux.macheo("[");
+            aux.matcheo("[");
             expresion();
-            aux.macheo("]");
+            aux.matcheo("]");
         }
     }
 
     public void encadenadoSimpleP() {
         if(aux.verifico(".")){
-            aux.macheo(".");
-            aux.macheo("id_objeto");
+            aux.matcheo(".");
+            aux.matcheo("id_objeto");
             encadenadoSimpleP();
         }
     }
 
     //LLEGUE HASTA ACA
     public void asignacionSelfSimple() {
-        aux.macheo("self");
+        aux.matcheo("self");
         encadenadoSimpleP();
     }
 
     public void sentenciaSimple() {
-        macheo("(");
+        aux.matcheo("(");
         expresion();
-        macheo(")");
+        aux.matcheo(")");
     }
 
     public void expresion() {
