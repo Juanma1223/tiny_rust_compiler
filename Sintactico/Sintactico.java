@@ -14,10 +14,11 @@ public class Sintactico {
     // Esta clase se encarga de interactual con el analizador lexico
     // e implementar metodos de ayuda
     AuxiliarSintactico aux;
-    
-    // Este constructor recibe como argumento la ruta en el sistema operativo donde se encuentra el
+
+    // Este constructor recibe como argumento la ruta en el sistema operativo donde
+    // se encuentra el
     // archivo con codigo fuente
-    public Sintactico(String dirArchivo){
+    public Sintactico(String dirArchivo) {
         try {
             // File archivo = new File(dirArchivo);
             File archivo = new File("test/test.rs");
@@ -35,15 +36,14 @@ public class Sintactico {
     }
 
     public void claseP() {
-        if(aux.verifico("class")){
+        if (aux.verifico("class")) {
             clase();
             claseP();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
-            if(tokenActual.obtenerLexema() != "fn"){
+            if (tokenActual.obtenerLexema() != "fn") {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
@@ -55,7 +55,7 @@ public class Sintactico {
         aux.matcheo(")");
         bloqueMetodo();
     }
-    
+
     public void clase() {
         aux.matcheo("class");
         aux.matcheoId("id_clase");
@@ -63,65 +63,59 @@ public class Sintactico {
     }
 
     public void restoClase() {
-        if(aux.verifico(":")){
+        if (aux.verifico(":")) {
             aux.matcheo(":");
             aux.matcheoId("id_clase");
             aux.matcheo("{");
             miembroP();
             aux.matcheo("}");
-        }
-        else if(aux.verifico("{")){
+        } else if (aux.verifico("{")) {
             aux.matcheo("{");
             miembroP();
             aux.matcheo("}");
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: : o (, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba: : o (, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     public void miembroP() {
-        String[] ter = {"pub", "Bool", "I32", "Str", "Char", "idClase", "Array", "create", "static", "fn"};
-        if(aux.verifico(ter)){
+        String[] ter = { "pub", "Bool", "I32", "Str", "Char", "idClase", "Array", "create", "static", "fn" };
+        if (aux.verifico(ter)) {
             miembro();
             miembroP();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
-            if(tokenActual.obtenerLexema() != "}"){
+            if (tokenActual.obtenerLexema() != "}") {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
 
     public void miembro() {
-        String[] ter = {"pub", "Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        String[] ter1 = {"static", "fn"};
-        if(aux.verifico(ter)){
+        String[] ter = { "pub", "Bool", "I32", "Str", "Char", "id_clase", "Array" };
+        String[] ter1 = { "static", "fn" };
+        if (aux.verifico(ter)) {
             atributo();
-        }
-        else if(aux.verifico("create")){
+        } else if (aux.verifico("create")) {
             constructor();
-        }
-        else if(aux.verifico(ter1)){
+        } else if (aux.verifico(ter1)) {
             metodo();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: atributo, constructor o método, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba: atributo, constructor o método, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     public void atributo() {
-        if(aux.verifico("pub")){
+        if (aux.verifico("pub")) {
             aux.matcheo("pub");
         }
-        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        if(aux.verifico(ter)){
+        String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
+        if (aux.verifico(ter)) {
             tipo();
             aux.matcheo(":");
             listaDeclVariables();
@@ -136,11 +130,11 @@ public class Sintactico {
     }
 
     public void metodo() {
-        if(aux.verifico("static")){
+        if (aux.verifico("static")) {
             aux.matcheo("static");
         }
         aux.matcheo("fn");
-        aux.matcheo("id_objeto");
+        aux.matcheoId("id_objeto");
         argumentosFormales();
         aux.matcheo("->");
         tipoMetodo();
@@ -155,33 +149,32 @@ public class Sintactico {
     }
 
     public void declVarLocalesP() {
-        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        String[] ter1 = {";", "id_objeto", "self", "(", "if", "while", "{", "return", "}"};
-        if(aux.verifico(ter)){
+        String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
+        String[] ter1 = { ";", "id_objeto", "self", "(", "if", "while", "{", "return", "}" };
+        if (aux.verifico(ter)) {
             declVarLocales();
             declVarLocalesP();
-        }
-        else{
-            if(aux.verifico(ter1) == false){
+        } else {
+            if (aux.verifico(ter1) == false) {
                 Token tokenActual = aux.tokenActual();
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: ;, id_objeto, self, (, if, while, {, return, }, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba: ;, id_objeto, self, (, if, while, {, return, }, se encontró: "
+                                + tokenActual.obtenerLexema());
             }
         }
 
     }
 
     public void sentenciaP() {
-        String[] ter = {";", "id_objeto", "self", "(", "if", "while", "{", "return"};
-        if(aux.verifico(ter)){
+        String[] ter = { ";", "id_objeto", "self", "(", "if", "while", "{", "return" };
+        if (aux.verifico(ter)) {
             sentencia();
             sentenciaP();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
-            if(tokenActual.obtenerLexema() != "}"){
+            if (tokenActual.obtenerLexema() != "}") {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
@@ -194,20 +187,19 @@ public class Sintactico {
     }
 
     public void listaDeclVariables() {
-        aux.matcheo("id_objeto");
+        aux.matcheoId("id_objeto");
         listaDeclVariablesP();
     }
 
     public void listaDeclVariablesP() {
-        if(aux.verifico(",")){
+        if (aux.verifico(",")) {
             aux.matcheo(",");
             listaDeclVariables();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
-            if(tokenActual.obtenerLexema() != ";"){
+            if (tokenActual.obtenerLexema() != ";") {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: ;, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba: ;, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
@@ -218,12 +210,11 @@ public class Sintactico {
     }
 
     public void listaArgumentosFormalesP() {
-        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        if(aux.verifico(ter)){
+        String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
+        if (aux.verifico(ter)) {
             listaArgumentosFormales();
             aux.matcheo(")");
-        }
-        else{
+        } else {
             aux.matcheo(")");
         }
     }
@@ -234,15 +225,14 @@ public class Sintactico {
     }
 
     public void listaArgumentosFormales2() {
-        if(aux.verifico(",")){
+        if (aux.verifico(",")) {
             aux.matcheo(",");
             listaArgumentosFormales();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
-            if(tokenActual.obtenerLexema() != ")"){
+            if (tokenActual.obtenerLexema() != ")") {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                  "Se esperaba: ), se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba: ), se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
@@ -250,46 +240,43 @@ public class Sintactico {
     public void argumentoFormal() {
         tipo();
         aux.matcheo(":");
-        aux.matcheo("id_objeto");
+        aux.matcheoId("id_objeto");
     }
 
     public void tipoMetodo() {
-        String[] ter = {"Bool", "I32", "Str", "Char", "id_clase", "Array"};
-        if(aux.verifico(ter)){
+        String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
+        if (aux.verifico(ter)) {
             tipo();
-        }
-        else{
+        } else {
             aux.matcheo("void");
         }
     }
 
     public void tipo() {
-        String[] ter = {"Bool", "I32", "Str", "Char"};
-        if(aux.verifico(ter)){
+        String[] ter = { "Bool", "I32", "Str", "Char" };
+        if (aux.verifico(ter)) {
             tipoPrimitivo();
         }
-        if(aux.verifico("id_clase")){
+        if (aux.verifico("id_clase")) {
             tipoReferencia();
         }
-        if(aux.verifico("Array")){
+        if (aux.verifico("Array")) {
             tipoArray();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-            "Se esperaba un tipo primitivo, referencia o Array, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba un tipo primitivo, referencia o Array, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     public void tipoPrimitivo() {
         Token tokenActual = aux.tokenActual();
-        String[] ter = {"Bool", "I32", "Str", "Char"};
-        if(aux.verifico(ter)){
+        String[] ter = { "Bool", "I32", "Str", "Char" };
+        if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
-        }
-        else{
+        } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-            "Se esperaba un tipo primitivo, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba un tipo primitivo, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
@@ -303,56 +290,49 @@ public class Sintactico {
     }
 
     public void sentencia() {
-        if(aux.verifico(";")){
+        if (aux.verifico(";")) {
             aux.matcheo(";");
-        }
-        else if(aux.verifico("id_objeto") || aux.verifico("self")){
+        } else if (aux.verifico("id_objeto") || aux.verifico("self")) {
             asignacion();
             aux.matcheo(";");
-        }
-        else if(aux.verifico("if")){
+        } else if (aux.verifico("if")) {
             aux.matcheo("if");
             aux.matcheo("(");
             expresion();
             aux.matcheo(")");
             sentencia();
             sentencia2();
-        }
-        else if(aux.verifico("while")){
+        } else if (aux.verifico("while")) {
             aux.matcheo("while");
             aux.matcheo("(");
             expresion();
             aux.matcheo(")");
             sentencia();
-        }
-        else if(aux.verifico("{")){
+        } else if (aux.verifico("{")) {
             bloque();
-        }
-        else if(aux.verifico("return")){
+        } else if (aux.verifico("return")) {
             aux.matcheo("return");
             expresionP();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-            "Se esperaba el comienzo de una sentencia, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba el comienzo de una sentencia, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
-    //DUDA, queda asi o hay que añadir los siguientes?
+    // DUDA, queda asi o hay que añadir los siguientes?
     public void sentencia2() {
-        if(aux.verifico("else")){
+        if (aux.verifico("else")) {
             aux.matcheo("else");
             sentencia();
         }
     }
 
-    //añadir las opciones en el else de lo que puede venir
+    // añadir las opciones en el else de lo que puede venir
     public void expresionP() {
-        if(aux.verifico(";")){
+        if (aux.verifico(";")) {
             aux.matcheo(";");
-        }
-        else{
+        } else {
             expresion();
             aux.matcheo(";");
         }
@@ -365,20 +345,18 @@ public class Sintactico {
     }
 
     public void asignacion() {
-        if(aux.verifico("id_objeto")){
+        if (aux.verifico("id_objeto")) {
             asignacionVarSimple();
             aux.matcheo("=");
             expresion();
-        }
-        else if(aux.verifico("self")){
+        } else if (aux.verifico("self")) {
             asignacionSelfSimple();
             aux.matcheo("=");
             expresion();
-        }
-        else{
+        } else {
             Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-            "Se esperaba id_objeto o self, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba id_objeto o self, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
@@ -387,12 +365,11 @@ public class Sintactico {
         asignacionVarSimpleP();
     }
 
-    //corregir
+    // corregir
     public void asignacionVarSimpleP() {
-        if(aux.verifico(".")){
+        if (aux.verifico(".")) {
             encadenadoSimpleP();
-        }
-        else{
+        } else {
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
@@ -400,14 +377,14 @@ public class Sintactico {
     }
 
     public void encadenadoSimpleP() {
-        if(aux.verifico(".")){
+        if (aux.verifico(".")) {
             aux.matcheo(".");
-            aux.matcheo("id_objeto");
+            aux.matcheoId("id_objeto");
             encadenadoSimpleP();
         }
     }
 
-    //LLEGUE HASTA ACA
+    // LLEGUE HASTA ACA
     public void asignacionSelfSimple() {
         aux.matcheo("self");
         encadenadoSimpleP();
@@ -420,7 +397,138 @@ public class Sintactico {
     }
 
     public void expresion() {
+        expOr();
+    }
+
+    private void expOr() {
+        expAnd();
+        expOrP();
+    }
+
+    private void expAnd() {
+        expIgual();
+        expAndP();
+    }
+
+    private void expIgual() {
+        expCompuesta();
+        expIgualP();
+    }
+
+    private void expCompuesta() {
+        expAdd();
+        expCompuestaP();
+    }
+
+    // LAMBDA
+    private void expCompuestaP() {
+        opCompuesto();
+        expAdd();
+    }
+
+    private void opCompuesto() {
+        Token tokenActual = aux.tokenActual();
+        String[] ter = { "<", ">", "<=", ">=" };
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"<\", \">\", \"<=\", o \">=\", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void expAdd() {
+        expMul();
+        exAddP();
+    }
+
+    private void expMul() {
+        expUn();
+        expMulP();
+    }
+
+    private void expUn() {
+        String[] ter = { "+", "-", "!" };
+        if (aux.verifico(ter)) {
+            opUnario();
+            expUn();
+        } else {
+            operando();
+        }
+    }
+
+    private void operando() {
+        String[] terLiteral = { "nil", "true", "false", "initLiteral", "StrLiteral", "charLiteral" };
+        String[] terPrimario = { "(", "self", "id", "idClase", "new" };
+        if (aux.verifico(terLiteral)) {
+            literal();
+        } else {
+            if (aux.verifico(terPrimario)) {
+                primario();
+            }
+        }
 
     }
-    
+
+    private void literal() {
+        Token tokenActual = aux.tokenActual();
+        boolean match = aux.matcheo(tokenActual.obtenerLexema());
+        if (!match) {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"nil\",\"true\",\"false\",\"initLiteral\",\"StrLiteral\",\"charLiteral\", se encontró: "
+                            + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void primario(){
+        if(aux.verifico("(")){
+            aux.matcheo("(");
+        }else{
+            if(aux.verifico("idClase")){
+                aux.matcheo("idClase");
+            }else{
+                if(aux.verifico("new")){
+                    aux.matcheo("new");
+                }else{
+                    Token tokenActual = aux.tokenActual();
+                    ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"(initLiteral)\",\"new\",\"idClase\", se encontró: "
+                            + tokenActual.obtenerLexema());
+                }
+            }
+        }
+    }
+
+    private void opUnario() {
+        Token tokenActual = aux.tokenActual();
+        boolean match = aux.matcheo(tokenActual.obtenerLexema());
+        if (!match) {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"+\", \"-\"o \"!\", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void expMulP() {
+
+    }
+
+    private void exAddP() {
+
+    }
+
+    private void expIgualP() {
+
+    }
+
+    private void expAndP() {
+
+    }
+
+    // LAMBDA
+    private void expOrP() {
+        aux.matcheo("||");
+        expIgual();
+        expOrP();
+    }
+
 }
