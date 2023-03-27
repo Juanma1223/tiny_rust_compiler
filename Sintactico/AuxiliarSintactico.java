@@ -25,33 +25,31 @@ public class AuxiliarSintactico{
 
     // Esta funcion matchea el siguiente Token que devuelve el analizador lexico
     // tenga el lexema enviado por parametro
-    public Boolean matcheo(String lexema){
+    public void matcheo(String lexema){
         try {
             Token tokenActual = analizadorLexico.sigToken(false);
-            if (tokenActual.obtenerLexema() == lexema){
-                return true;
-            }else{
-                return false;
+            if (tokenActual.obtenerLexema() != lexema){
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                "Se esperaba:"+ lexema + ", se encontró: " + tokenActual.obtenerLexema());
             }
         } catch (IOException e) {
             System.out.println("Error inesperado al obtener un Token");
-            return false;
         }
     }
 
     // Esta funcion "matchea" un token con un token de tipo id, diferenciando
     // entre id de clase o generico
-    public Boolean matcheoId(String tipoId){
+    public void matcheoId(String tipoId){
         try {
-            Token tokenActual = analizadorLexico.sigToken(false);
-            if (tokenActual.obtenerToken() == tipoId){
-                return true;
-            }else{
-                return false;
+            Token tokenActual = analizadorLexico.sigToken(true);
+            if (tokenActual.obtenerToken() != tipoId){
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                "Se esperaba:"+ tipoId + ", se encontró: " + tokenActual.obtenerToken());
             }
+            // Consume el token
+            tokenActual = analizadorLexico.sigToken(false);
         } catch (IOException e) {
             System.out.println("Error inesperado al obtener un Token");
-            return false;
         }
     }
 

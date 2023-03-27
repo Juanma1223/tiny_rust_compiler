@@ -1,10 +1,11 @@
 /*CORRECTO*/
+///comentario
 class Prueba {
 	I32: a;
 	pub Str: b;
 	Array I32: c;
 	Char: d;
-	Bool: e;
+	Bool: hola__mundo;
 	create(){// Esto es un comentario simple
 		a = 42;
 	}
