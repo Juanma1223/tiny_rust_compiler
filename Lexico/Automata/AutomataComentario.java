@@ -51,13 +51,15 @@ public class AutomataComentario extends Automata {
                 c = lector.read();
                 if(c == -1){
                     leyendo = false;
-                    // Encontramos EOF y el comentario no se cerro
-                    ErrorLexico err = new ErrorLexico(filaInicio, columnaInicio, "Comentario multilinea no cerrado");
+                    if(multilinea){
+                        // Encontramos EOF y el comentario no se cerro
+                        ErrorLexico err = new ErrorLexico(filaInicio, columnaInicio, "Comentario multilinea no cerrado");
+                    }
                 }
                 // Aumentamos en 1 la columna
                 super.establecerColumna(super.obtenerColumna() + 1);
 
-                if (c == 10) {
+                if (c == 10 || c == 11) {
                     if(multilinea){
                         // Por ser multilinea continuamos leyendo
                         super.establecerColumna(1);

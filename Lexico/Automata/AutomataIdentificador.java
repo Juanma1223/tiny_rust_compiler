@@ -86,10 +86,8 @@ public class AutomataIdentificador extends Automata {
                 "Identificador mal formado: caracter " + character + " invalido");
           }
           else{
-            // Revisamos que no hayamos llegado al EOF
-            if (c == -1) {
-              ErrorLexico err = new ErrorLexico(token.obtenerFila(), token.obtenerColumna(),
-                  "Identificador no valido: Se encontro EOF");
+            if ( c == 10 || c == 11 | c == 13 | c == -1) {
+              leyendo = false;
             }
             else {
               // No queremos consumir caracteres de mas, por tanto volvemos a la marca del

@@ -1,3 +1,4 @@
+/
 /*CORRECTO*/
 class Prueba {
 	I32: a;
@@ -19,3 +20,4 @@ class Prueba {
 fn main () {
 	c = new I32[1+2];
 }
+///

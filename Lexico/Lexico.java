@@ -93,7 +93,8 @@ public class Lexico {
 
                 // Si encontramos una / puede ser un operador o un comentario
                 if (c == 47) {
-                    lector.mark(1);
+                    lector.mark(2);
+                    c = lector.read();
                     c = lector.read();
                     if (c == 47 || c == 42) { // si sigue otra / o un * es un comentario
                         lector.reset();
@@ -133,17 +134,22 @@ public class Lexico {
 
                     leyendo = false;
                 }
-            }
+            } //modificamos el else a continuacion para leer crlf de Windows (ASCII 13 10)
             else {
-                // Si encontramos una nueva linea debemos actualizar la fila y reiniciar el
-                // conteo de columna
-                if (c == 10) { //sacamos || c == 11 || c == 13
+                //si encontramos una nueva linea debemos actualizar la fila y reiniciar el
+                //conteo de columna
+                if (c == 13) {
+                    //si viene un retorno de carro no hacemos nada
+                    //porque después viene siempre una nueva línea (ASCII 10)
+                }
+                if (c == 10 || c == 11) {
+                    //con nueva línea o tab vertical si actualizamos
                     this.filaActual += 1;
                     this.columnaActual = 1;
                 }
-                else {
-                    // Encontramos alguna tabulacion o espacio y solo aumentamos el numero de
-                    // columna
+                if (c == 32 || c == 9) {
+                    //si encontramos alguna tabulacion o espacio
+                    //solo aumentamos el numero de columna
                     this.columnaActual += 1;
                 }
             }
