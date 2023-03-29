@@ -76,7 +76,7 @@ public class Sintactico {
         } else {
             Token tokenActual = aux.tokenActual();
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba: : o (, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba: : o {, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
@@ -114,13 +114,10 @@ public class Sintactico {
         if (aux.verifico("pub")) {
             aux.matcheo("pub");
         }
-        String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
-        if (aux.verifico(ter)) {
-            tipo();
-            aux.matcheo(":");
-            listaDeclVariables();
-            aux.matcheo(";");
-        }
+        tipo();
+        aux.matcheo(":");
+        listaDeclVariables();
+        aux.matcheo(";");
     }
 
     public void constructor() {
@@ -158,7 +155,7 @@ public class Sintactico {
             if (aux.verifico(ter1) == false) {
                 Token tokenActual = aux.tokenActual();
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                        "Se esperaba: ;, id_objeto, self, (, if, while, {, return, }, se encontró: "
+                        "Se esperaba el comienzo de una sentencia: ;, id_objeto, self, (, if, while, {, return o }, se encontró: "
                                 + tokenActual.obtenerLexema());
             }
         }
@@ -295,6 +292,8 @@ public class Sintactico {
         } else if (aux.verifico("id_objeto") || aux.verifico("self")) {
             asignacion();
             aux.matcheo(";");
+        } else if (aux.verifico("(")) {
+            sentenciaSimple();
         } else if (aux.verifico("if")) {
             aux.matcheo("if");
             aux.matcheo("(");
@@ -328,13 +327,20 @@ public class Sintactico {
         }
     }
 
-    // añadir las opciones en el else de lo que puede venir
     public void expresionP() {
+        String[] ter = {"+", "-", "!", "nil","true","false","lit_ent","lit_cad","lit_car","(","self","id","id_clase","new"};
         if (aux.verifico(";")) {
             aux.matcheo(";");
         } else {
-            expresion();
-            aux.matcheo(";");
+            if (aux.verifico(ter)) {
+                expresion();
+                aux.matcheo(";");
+            }
+            else{
+                Token tokenActual = aux.tokenActual();
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                "Se esperaba el comienzo de una expresion, se encontró: " + tokenActual.obtenerLexema());
+            }
         }
     }
 
@@ -365,9 +371,8 @@ public class Sintactico {
         asignacionVarSimpleP();
     }
 
-    // corregir
     public void asignacionVarSimpleP() {
-        if (aux.verifico(".")) {
+        if (aux.verifico(".") || aux.verifico("=")) {
             encadenadoSimpleP();
         } else {
             aux.matcheo("[");
@@ -375,7 +380,8 @@ public class Sintactico {
             aux.matcheo("]");
         }
     }
-
+    
+    // DUDA, queda asi o hay que añadir los siguientes?
     public void encadenadoSimpleP() {
         if (aux.verifico(".")) {
             aux.matcheo(".");
