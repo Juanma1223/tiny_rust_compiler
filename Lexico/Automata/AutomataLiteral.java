@@ -83,12 +83,18 @@ public class AutomataLiteral extends Automata {
                         // Leemos un caracter y aumentamos en uno la columna
                         super.establecerColumna(super.obtenerColumna() + 1);
                         if (c != 110 && c != 116 && c != 48) { // c es dintinto de n o t o 0
-                            character = (char) c;
-                            lexema = lexema + character;
-                            c = lector.read();
-                            // Leemos un caracter y aumentamos en uno la columna
-                            super.establecerColumna(super.obtenerColumna() + 1);
-                            if (c != 39) {
+                            if (c != 10 && c != 11 && c != 13 && c != -1) {
+                                character = (char) c;
+                                lexema = lexema + character;
+                                c = lector.read();
+                                // Leemos un caracter y aumentamos en uno la columna
+                                super.establecerColumna(super.obtenerColumna() + 1);
+                                if (c != 39) {
+                                    // error caracter sin cerrar
+                                    ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter sin cerrar");
+                                }
+                            }
+                            else{
                                 // error caracter sin cerrar
                                 ErrorLexico err = new ErrorLexico(token.obtenerFila(),token.obtenerColumna(),"Caracter sin cerrar");
                             }
