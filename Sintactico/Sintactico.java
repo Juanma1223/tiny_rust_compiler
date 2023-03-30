@@ -411,16 +411,28 @@ public class Sintactico {
         expOrP();
     }
 
+    // LAMBDA
+    private void expOrP() {
+        aux.matcheo("||");
+        expIgual();
+        expOrP();
+    }
     private void expAnd() {
         expIgual();
         expAndP();
     }
 
+    private void expAndP() {
+
+    }
     private void expIgual() {
         expCompuesta();
         expIgualP();
     }
 
+    private void expIgualP() {
+
+    }
     private void expCompuesta() {
         expAdd();
         expCompuestaP();
@@ -430,6 +442,38 @@ public class Sintactico {
     private void expCompuestaP() {
         opCompuesto();
         expAdd();
+    }
+
+    private void expAdd() {
+        expMul();
+        exAddP();
+    }
+
+    private void exAddP() {
+
+    }
+
+    private void expMul() {
+        expUn();
+        expMulP();
+    }
+
+    private void expMulP() {
+
+    }
+
+    private void expUn() {
+        String[] ter = { "+", "-", "!" };
+        if (aux.verifico(ter)) {
+            opUnario();
+            expUn();
+        } else {
+            operando();
+        }
+    }
+
+    private void opIgual() {
+
     }
 
     private void opCompuesto() {
@@ -443,24 +487,21 @@ public class Sintactico {
         }
     }
 
-    private void expAdd() {
-        expMul();
-        exAddP();
+    private void opAdd() {
+        
     }
 
-    private void expMul() {
-        expUn();
-        expMulP();
-    }
-
-    private void expUn() {
-        String[] ter = { "+", "-", "!" };
-        if (aux.verifico(ter)) {
-            opUnario();
-            expUn();
-        } else {
-            operando();
+    private void opUnario() {
+        Token tokenActual = aux.tokenActual();
+        boolean match = aux.matcheo(tokenActual.obtenerLexema());
+        if (!match) {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"+\", \"-\"o \"!\", se encontró: " + tokenActual.obtenerLexema());
         }
+    }
+
+    private void opMul() {
+        
     }
 
     private void operando() {
@@ -473,6 +514,10 @@ public class Sintactico {
                 primario();
             }
         }
+
+    }
+
+    private void encadenadoP() {
 
     }
 
@@ -505,36 +550,55 @@ public class Sintactico {
         }
     }
 
-    private void opUnario() {
-        Token tokenActual = aux.tokenActual();
-        boolean match = aux.matcheo(tokenActual.obtenerLexema());
-        if (!match) {
-            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba \"+\", \"-\"o \"!\", se encontró: " + tokenActual.obtenerLexema());
-        }
-    }
-
-    private void expMulP() {
+    private void primarioP() {
 
     }
 
-    private void exAddP() {
+    private void expresionParentizada() {
 
     }
 
-    private void expIgualP() {
+    private void accesoSelf() {
 
     }
 
-    private void expAndP() {
+    private void accesoVarP() {
 
     }
 
-    // LAMBDA
-    private void expOrP() {
-        aux.matcheo("||");
-        expIgual();
-        expOrP();
+    private void llamadaMetodoP() {
+
+    }
+    
+    private void llamadaMetodoEstatico() {
+
     }
 
+    private void llamadaConstructor() {
+
+    }
+
+    private void llamadaConstructorP() {
+        
+    }
+    
+    private void argumentosActuales() {
+
+    }
+
+    private void listaExpresionesP() {
+
+    }
+
+    private void listaExpresiones() {
+        
+    }
+
+    private void listaExpresiones2() {
+        
+    }
+
+    private void encadenado2() {
+        
+    }
 }
