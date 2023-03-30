@@ -319,7 +319,6 @@ public class Sintactico {
         }
     }
 
-    // DUDA, queda asi o hay que añadir los siguientes?
     public void sentencia2() {
         if (aux.verifico("else")) {
             aux.matcheo("else");
@@ -372,16 +371,23 @@ public class Sintactico {
     }
 
     public void asignacionVarSimpleP() {
-        if (aux.verifico(".") || aux.verifico("=")) {
+        if (aux.verifico(".")) {
             encadenadoSimpleP();
-        } else {
+        }
+        else if (aux.verifico("[")){
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
         }
+        else{
+            Token tokenActual = aux.tokenActual();
+            if (tokenActual.obtenerLexema() != "=") {
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                        "Se esperaba: =, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
-    
-    // DUDA, queda asi o hay que añadir los siguientes?
+
     public void encadenadoSimpleP() {
         if (aux.verifico(".")) {
             aux.matcheo(".");
@@ -390,7 +396,6 @@ public class Sintactico {
         }
     }
 
-    // LLEGUE HASTA ACA
     public void asignacionSelfSimple() {
         aux.matcheo("self");
         encadenadoSimpleP();
@@ -414,25 +419,35 @@ public class Sintactico {
     // LAMBDA
     private void expOrP() {
         aux.matcheo("||");
-        expIgual();
+        expAnd();
         expOrP();
     }
+
     private void expAnd() {
         expIgual();
         expAndP();
     }
 
+    // LAMBDA
     private void expAndP() {
+        aux.matcheo("&&");
+        expIgual();
+        expAndP();
 
     }
+
     private void expIgual() {
         expCompuesta();
         expIgualP();
     }
 
+    // LAMBDA
     private void expIgualP() {
-
+        opIgual();
+        expCompuesta();
+        expIgualP();
     }
+
     private void expCompuesta() {
         expAdd();
         expCompuestaP();
@@ -446,11 +461,14 @@ public class Sintactico {
 
     private void expAdd() {
         expMul();
-        exAddP();
+        expAddP();
     }
 
-    private void exAddP() {
-
+    // LAMBDA
+    private void expAddP() {
+        opAdd();
+        expMul();
+        expAddP();
     }
 
     private void expMul() {
@@ -458,8 +476,11 @@ public class Sintactico {
         expMulP();
     }
 
+    // LAMBDA
     private void expMulP() {
-
+        opMul();
+        expUn();
+        expMulP();
     }
 
     private void expUn() {
@@ -473,7 +494,14 @@ public class Sintactico {
     }
 
     private void opIgual() {
-
+        Token tokenActual = aux.tokenActual();
+        String[] ter = {"==", "!="};
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"==\" o \"!=\", se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
     private void opCompuesto() {
@@ -488,49 +516,66 @@ public class Sintactico {
     }
 
     private void opAdd() {
-        
+        Token tokenActual = aux.tokenActual();
+        String[] ter = {"+", "-"};
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"+\" o \"-\", se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
     private void opUnario() {
         Token tokenActual = aux.tokenActual();
-        boolean match = aux.matcheo(tokenActual.obtenerLexema());
-        if (!match) {
+        String[] ter = {"+", "-", "!"};
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba \"+\", \"-\"o \"!\", se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba \"+\", \"-\" o \"!\", se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     private void opMul() {
-        
+        Token tokenActual = aux.tokenActual();
+        String[] ter = {"*", "/", "%"};
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"*\", \"/\" o \"%\", se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
     private void operando() {
-        String[] terLiteral = { "nil", "true", "false", "initLiteral", "StrLiteral", "charLiteral" };
-        String[] terPrimario = { "(", "self", "id", "idClase", "new" };
+        String[] terLiteral = { "nil", "true", "false", "lit_ent", "lit_cad", "lit_car" };
+        String[] terPrimario = { "(", "self", "id_objeto", "id_clase", "new" };
         if (aux.verifico(terLiteral)) {
             literal();
-        } else {
-            if (aux.verifico(terPrimario)) {
-                primario();
-            }
         }
-
+        else if (aux.verifico(terPrimario)) {
+            primario();
+            encadenadoP();
+        }
+        else{
+            Token tokenActual = aux.tokenActual();
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+            "Se esperaba literal o primario, se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
+    // LAMBDA
     private void encadenadoP() {
 
     }
 
     private void literal() {
         Token tokenActual = aux.tokenActual();
-        boolean match = aux.matcheo(tokenActual.obtenerLexema());
-        if (!match) {
-            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba \"nil\",\"true\",\"false\",\"initLiteral\",\"StrLiteral\",\"charLiteral\", se encontró: "
-                            + tokenActual.obtenerLexema());
-        }
+        aux.matcheo(tokenActual.obtenerLexema());
     }
 
+    //HASTA ACA LLEGUE
     private void primario(){
         if(aux.verifico("(")){
             aux.matcheo("(");
@@ -599,6 +644,6 @@ public class Sintactico {
     }
 
     private void encadenado2() {
-        
+
     }
 }
