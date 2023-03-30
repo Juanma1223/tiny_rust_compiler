@@ -575,55 +575,90 @@ public class Sintactico {
         aux.matcheo(tokenActual.obtenerLexema());
     }
 
-    //HASTA ACA LLEGUE
     private void primario(){
         if(aux.verifico("(")){
-            aux.matcheo("(");
-        }else{
-            if(aux.verifico("idClase")){
-                aux.matcheo("idClase");
-            }else{
-                if(aux.verifico("new")){
-                    aux.matcheo("new");
-                }else{
-                    Token tokenActual = aux.tokenActual();
-                    ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba \"(initLiteral)\",\"new\",\"idClase\", se encontró: "
-                            + tokenActual.obtenerLexema());
-                }
-            }
+            expresionParentizada();
+        }
+        else if(aux.verifico("self")){
+            accesoSelf();
+        }
+        else if(aux.verifico("id_objeto")){
+            aux.matcheo("id_objeto");
+            primarioP();
+        }
+        else if(aux.verifico("id_clase")){
+            llamadaMetodoEstatico();
+        }
+        else if(aux.verifico("new")){
+            llamadaConstructor();
+        }
+        else{
+            Token tokenActual = aux.tokenActual();
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+            "Se esperaba \"(\",\"self\",\"new\",\"id_clase\",\"id_objeto\" se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
+    //FALTA
     private void primarioP() {
 
     }
 
     private void expresionParentizada() {
-
+        aux.matcheo("(");
+        expresion();
+        aux.matcheo(")");
+        encadenadoP();
     }
 
     private void accesoSelf() {
-
+        aux.matcheo("self");
+        encadenadoP();
     }
 
+    //FALTA
     private void accesoVarP() {
 
     }
 
+    // REVISAR!!
     private void llamadaMetodoP() {
+        argumentosActuales();
+        encadenadoP();
+
+    }
+
+    // REVISAR!!
+    private void llamadaMetodo() {
+        aux.matcheoId("id_objeto");
+        argumentosActuales();
+        encadenadoP();
 
     }
     
+    // REVISAR!!
     private void llamadaMetodoEstatico() {
-
+        aux.matcheoId("id_clase");
+        aux.matcheo(".");
+        llamadaMetodo();
+        encadenadoP();
     }
 
     private void llamadaConstructor() {
-
+        aux.matcheo("new");
+        llamadaConstructorP();
     }
 
+    // FALTA
     private void llamadaConstructorP() {
+        aux.matcheoId("id_clase");
+        argumentosActuales();
+        encadenadoP();
+
+        tipoPrimitivo();
+        aux.matcheo("[");
+        expresion();
+        aux.matcheo("]");
         
     }
     
