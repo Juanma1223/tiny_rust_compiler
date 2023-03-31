@@ -27,11 +27,13 @@ public class AuxiliarSintactico{
     // tenga el lexema enviado por parametro
     public void matcheo(String lexema){
         try {
-            Token tokenActual = analizadorLexico.sigToken(false);
+            Token tokenActual = analizadorLexico.sigToken(true);
             if (tokenActual.obtenerLexema() != lexema){
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                 "Se esperaba:"+ lexema + ", se encontró: " + tokenActual.obtenerLexema());
             }
+            // Consume el token
+            tokenActual = analizadorLexico.sigToken(false);
         } catch (IOException e) {
             System.out.println("Error inesperado al obtener un Token");
         }
@@ -53,13 +55,13 @@ public class AuxiliarSintactico{
         }
     }
 
-    // Esta funcion se utiliza para verificar que el lexema del token actual 
+    // Esta funcion se utiliza para verificar que el lexema o tipo del token actual 
     // sea el correcto en base a una lista de posibles terminos, lo hace sin consumir dicho token
     public Boolean verifico(String[] terminos){
         try {
             Token tokenActual = analizadorLexico.sigToken(true);
             for(String termino : terminos){
-                if (tokenActual.obtenerLexema() == termino){
+                if (tokenActual.obtenerLexema() == termino || (tokenActual.obtenerToken() == termino)){
                     // Solo retorna verdadero si alguno de los terminos es el correcto
                     return true;
                 }
@@ -71,13 +73,13 @@ public class AuxiliarSintactico{
         }
     }
 
-    // Esta funcion se utiliza para verificar que el lexema del token actual 
+    // Esta funcion se utiliza para verificar que el lexema o tipo del token actual 
     // sea el correcto en base a un unico termino, lo hace sin consumir dicho token
     // Este metodo es una sobrecarga
     public Boolean verifico(String termino){
         try {
             Token tokenActual = analizadorLexico.sigToken(true);
-                if (tokenActual.obtenerLexema() == termino){
+                if ((tokenActual.obtenerLexema() == termino) || (tokenActual.obtenerToken() == termino)){
                     // Solo retorna verdadero si alguno de los terminos es el correcto
                     return true;
                 }else{
