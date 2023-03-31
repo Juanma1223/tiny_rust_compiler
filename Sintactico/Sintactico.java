@@ -278,7 +278,7 @@ public class Sintactico {
     }
 
     public void tipoReferencia() {
-        aux.matcheo("id_clase");
+        aux.matcheoId("id_clase");
     }
 
     public void tipoArray() {
@@ -366,7 +366,7 @@ public class Sintactico {
     }
 
     public void asignacionVarSimple() {
-        aux.matcheo("id");
+        aux.matcheoId("id_objeto");
         asignacionVarSimpleP();
     }
 
@@ -418,9 +418,11 @@ public class Sintactico {
 
     // LAMBDA
     private void expOrP() {
-        aux.matcheo("||");
-        expAnd();
-        expOrP();
+        if(aux.verifico("||")){
+            aux.matcheo("||");
+            expAnd();
+            expOrP();
+        }
     }
 
     private void expAnd() {
@@ -430,10 +432,11 @@ public class Sintactico {
 
     // LAMBDA
     private void expAndP() {
-        aux.matcheo("&&");
-        expIgual();
-        expAndP();
-
+        if(aux.verifico("&&")){
+            aux.matcheo("&&");
+            expIgual();
+            expAndP();
+        }
     }
 
     private void expIgual() {
@@ -443,9 +446,12 @@ public class Sintactico {
 
     // LAMBDA
     private void expIgualP() {
-        opIgual();
-        expCompuesta();
-        expIgualP();
+        String[] terOpIgual = {"==","!="};
+        if(aux.verifico(terOpIgual)){
+            opIgual();
+            expCompuesta();
+            expIgualP();
+        }
     }
 
     private void expCompuesta() {
@@ -455,8 +461,11 @@ public class Sintactico {
 
     // LAMBDA
     private void expCompuestaP() {
-        opCompuesto();
-        expAdd();
+        String[] terOpCompuesto = {"<",">","<=",">="};
+        if(aux.verifico(terOpCompuesto)){
+            opCompuesto();
+            expAdd();
+        }
     }
 
     private void expAdd() {
@@ -466,9 +475,12 @@ public class Sintactico {
 
     // LAMBDA
     private void expAddP() {
-        opAdd();
-        expMul();
-        expAddP();
+        String[] terOpAdd = {"+","-"};
+        if(aux.verifico(terOpAdd)){
+            opAdd();
+            expMul();
+            expAddP();
+        }
     }
 
     private void expMul() {
@@ -478,9 +490,12 @@ public class Sintactico {
 
     // LAMBDA
     private void expMulP() {
-        opMul();
-        expUn();
-        expMulP();
+        String[] terOpMul = {"*","/","%"};
+        if(aux.verifico(terOpMul)){
+            opMul();
+            expUn();
+            expMulP();
+        }
     }
 
     private void expUn() {
@@ -567,6 +582,11 @@ public class Sintactico {
 
     // LAMBDA
     private void encadenadoP() {
+        if(aux.verifico(".")){
+            aux.matcheo(".");
+            aux.matcheoId("id_objeto");
+            encadenado2();
+        }
 
     }
 
@@ -583,7 +603,7 @@ public class Sintactico {
             accesoSelf();
         }
         else if(aux.verifico("id_objeto")){
-            aux.matcheo("id_objeto");
+            aux.matcheoId("id_objeto");
             primarioP();
         }
         else if(aux.verifico("id_clase")){
@@ -601,6 +621,12 @@ public class Sintactico {
 
     //FALTA
     private void primarioP() {
+        if(aux.verifico("(")){
+            llamadaMetodoP();
+        }
+        else{
+            accesoVarP();
+        }
 
     }
 
@@ -618,6 +644,14 @@ public class Sintactico {
 
     //FALTA
     private void accesoVarP() {
+        if(aux.verifico("[")){
+            aux.matcheo("[");
+            expresion();
+            aux.matcheo("]");
+        }
+        else{
+            encadenadoP();
+        }
 
     }
 
@@ -649,36 +683,59 @@ public class Sintactico {
         llamadaConstructorP();
     }
 
-    // FALTA
     private void llamadaConstructorP() {
-        aux.matcheoId("id_clase");
-        argumentosActuales();
-        encadenadoP();
-
-        tipoPrimitivo();
-        aux.matcheo("[");
-        expresion();
-        aux.matcheo("]");
-        
+        if(aux.verifico("id_clase")){
+            aux.matcheoId("id_clase");
+            argumentosActuales();
+            encadenadoP();
+        }
+        else{
+            tipoPrimitivo();
+            aux.matcheo("[");
+            expresion();
+            aux.matcheo("]");
+        }
     }
     
     private void argumentosActuales() {
-
+        aux.matcheo("(");
+        listaExpresionesP();
     }
 
     private void listaExpresionesP() {
-
+        if(aux.verifico(")")){
+            aux.matcheo(")");
+        }
+        else{
+            listaExpresiones();
+            aux.matcheo(")");
+        }
     }
 
     private void listaExpresiones() {
-        
+        expresion();
+        listaExpresiones2();
     }
 
     private void listaExpresiones2() {
-        
+        if(aux.verifico(",")){
+            aux.matcheo(",");
+            listaExpresiones();
+        }
     }
 
     private void encadenado2() {
-
+        if(aux.verifico("[")){
+            aux.matcheo("[");
+            expresion();
+            aux.matcheo("]");
+        }
+        else if(aux.verifico("(")){
+            argumentosActuales();
+            encadenadoP();
+        }
+        else{
+            encadenadoP();
+        }
     }
 }
