@@ -154,6 +154,9 @@ public class Lexico {
                 }
             }
         }
+        if(token.obtenerToken() == "Comentario"){
+            return sigToken(sinConsumir);
+        }
         return token;
     }
 }

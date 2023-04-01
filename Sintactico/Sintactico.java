@@ -20,10 +20,12 @@ public class Sintactico {
     // archivo con codigo fuente
     public Sintactico(String dirArchivo) {
         try {
-            // File archivo = new File(dirArchivo);
-            File archivo = new File("test/test.rs");
+            File archivo = new File(dirArchivo);
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);
+
+            // Iniciamos el analizis sintactico
+            this.start();
         } catch (FileNotFoundException e) {
             System.out.println("Error al abrir archivo de entrada!");
             System.exit(1);
@@ -40,8 +42,8 @@ public class Sintactico {
             clase();
             claseP();
         } else {
-            Token tokenActual = aux.tokenActual();
-            if (tokenActual.obtenerLexema() != "fn") {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals("fn")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
             }
@@ -74,7 +76,7 @@ public class Sintactico {
             miembroP();
             aux.matcheo("}");
         } else {
-            Token tokenActual = aux.tokenActual();
+            Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba: : o {, se encontró: " + tokenActual.obtenerLexema());
         }
@@ -86,8 +88,8 @@ public class Sintactico {
             miembro();
             miembroP();
         } else {
-            Token tokenActual = aux.tokenActual();
-            if (tokenActual.obtenerLexema() != "}") {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals("}")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
             }
@@ -99,14 +101,18 @@ public class Sintactico {
         String[] ter1 = { "static", "fn" };
         if (aux.verifico(ter)) {
             atributo();
-        } else if (aux.verifico("create")) {
-            constructor();
-        } else if (aux.verifico(ter1)) {
-            metodo();
         } else {
-            Token tokenActual = aux.tokenActual();
-            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba: atributo, constructor o método, se encontró: " + tokenActual.obtenerLexema());
+            if (aux.verifico("create")) {
+                constructor();
+            } else {
+                if (aux.verifico(ter1)) {
+                    metodo();
+                } else {
+                    Token tokenActual = aux.tokenActual;
+                    ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                            "Se esperaba: atributo, constructor o método, se encontró: " + tokenActual.obtenerLexema());
+                }
+            }
         }
     }
 
@@ -153,7 +159,7 @@ public class Sintactico {
             declVarLocalesP();
         } else {
             if (aux.verifico(ter1) == false) {
-                Token tokenActual = aux.tokenActual();
+                Token tokenActual = aux.tokenActual;
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba el comienzo de una sentencia: ;, id_objeto, self, (, if, while, {, return o }, se encontró: "
                                 + tokenActual.obtenerLexema());
@@ -168,8 +174,8 @@ public class Sintactico {
             sentencia();
             sentenciaP();
         } else {
-            Token tokenActual = aux.tokenActual();
-            if (tokenActual.obtenerLexema() != "}") {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals("}")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
             }
@@ -193,8 +199,8 @@ public class Sintactico {
             aux.matcheo(",");
             listaDeclVariables();
         } else {
-            Token tokenActual = aux.tokenActual();
-            if (tokenActual.obtenerLexema() != ";") {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals(";")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: ;, se encontró: " + tokenActual.obtenerLexema());
             }
@@ -226,8 +232,8 @@ public class Sintactico {
             aux.matcheo(",");
             listaArgumentosFormales();
         } else {
-            Token tokenActual = aux.tokenActual();
-            if (tokenActual.obtenerLexema() != ")") {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals(")")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: ), se encontró: " + tokenActual.obtenerLexema());
             }
@@ -253,21 +259,24 @@ public class Sintactico {
         String[] ter = { "Bool", "I32", "Str", "Char" };
         if (aux.verifico(ter)) {
             tipoPrimitivo();
+            return;
         }
         if (aux.verifico("id_clase")) {
             tipoReferencia();
+            return;
         }
         if (aux.verifico("Array")) {
             tipoArray();
+            return;
         } else {
-            Token tokenActual = aux.tokenActual();
+            Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba un tipo primitivo, referencia o Array, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     public void tipoPrimitivo() {
-        Token tokenActual = aux.tokenActual();
+        Token tokenActual = aux.tokenActual;
         String[] ter = { "Bool", "I32", "Str", "Char" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
@@ -287,6 +296,7 @@ public class Sintactico {
     }
 
     public void sentencia() {
+        
         if (aux.verifico(";")) {
             aux.matcheo(";");
         } else if (aux.verifico("id_objeto") || aux.verifico("self")) {
@@ -313,7 +323,7 @@ public class Sintactico {
             aux.matcheo("return");
             expresionP();
         } else {
-            Token tokenActual = aux.tokenActual();
+            Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba el comienzo de una sentencia, se encontró: " + tokenActual.obtenerLexema());
         }
@@ -327,18 +337,18 @@ public class Sintactico {
     }
 
     public void expresionP() {
-        String[] ter = {"+", "-", "!", "nil","true","false","lit_ent","lit_cad","lit_car","(","self","id","id_clase","new"};
+        String[] ter = { "+", "-", "!", "nil", "true", "false", "lit_ent", "lit_cad", "lit_car", "(", "self", "id_objeto",
+                "id_clase", "new" };
         if (aux.verifico(";")) {
             aux.matcheo(";");
         } else {
             if (aux.verifico(ter)) {
                 expresion();
                 aux.matcheo(";");
-            }
-            else{
-                Token tokenActual = aux.tokenActual();
+            } else {
+                Token tokenActual = aux.tokenActual;
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "Se esperaba el comienzo de una expresion, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba el comienzo de una expresion, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
@@ -359,7 +369,7 @@ public class Sintactico {
             aux.matcheo("=");
             expresion();
         } else {
-            Token tokenActual = aux.tokenActual();
+            Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba id_objeto o self, se encontró: " + tokenActual.obtenerLexema());
         }
@@ -373,15 +383,13 @@ public class Sintactico {
     public void asignacionVarSimpleP() {
         if (aux.verifico(".")) {
             encadenadoSimpleP();
-        }
-        else if (aux.verifico("[")){
+        } else if (aux.verifico("[")) {
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
-        }
-        else{
-            Token tokenActual = aux.tokenActual();
-            if (tokenActual.obtenerLexema() != "=") {
+        } else {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals("=")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: =, se encontró: " + tokenActual.obtenerLexema());
             }
@@ -418,7 +426,7 @@ public class Sintactico {
 
     // LAMBDA
     private void expOrP() {
-        if(aux.verifico("||")){
+        if (aux.verifico("||")) {
             aux.matcheo("||");
             expAnd();
             expOrP();
@@ -432,7 +440,7 @@ public class Sintactico {
 
     // LAMBDA
     private void expAndP() {
-        if(aux.verifico("&&")){
+        if (aux.verifico("&&")) {
             aux.matcheo("&&");
             expIgual();
             expAndP();
@@ -446,8 +454,8 @@ public class Sintactico {
 
     // LAMBDA
     private void expIgualP() {
-        String[] terOpIgual = {"==","!="};
-        if(aux.verifico(terOpIgual)){
+        String[] terOpIgual = { "==", "!=" };
+        if (aux.verifico(terOpIgual)) {
             opIgual();
             expCompuesta();
             expIgualP();
@@ -461,8 +469,8 @@ public class Sintactico {
 
     // LAMBDA
     private void expCompuestaP() {
-        String[] terOpCompuesto = {"<",">","<=",">="};
-        if(aux.verifico(terOpCompuesto)){
+        String[] terOpCompuesto = { "<", ">", "<=", ">=" };
+        if (aux.verifico(terOpCompuesto)) {
             opCompuesto();
             expAdd();
         }
@@ -475,8 +483,8 @@ public class Sintactico {
 
     // LAMBDA
     private void expAddP() {
-        String[] terOpAdd = {"+","-"};
-        if(aux.verifico(terOpAdd)){
+        String[] terOpAdd = { "+", "-" };
+        if (aux.verifico(terOpAdd)) {
             opAdd();
             expMul();
             expAddP();
@@ -490,8 +498,8 @@ public class Sintactico {
 
     // LAMBDA
     private void expMulP() {
-        String[] terOpMul = {"*","/","%"};
-        if(aux.verifico(terOpMul)){
+        String[] terOpMul = { "*", "/", "%" };
+        if (aux.verifico(terOpMul)) {
             opMul();
             expUn();
             expMulP();
@@ -509,8 +517,8 @@ public class Sintactico {
     }
 
     private void opIgual() {
-        Token tokenActual = aux.tokenActual();
-        String[] ter = {"==", "!="};
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "==", "!=" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
         } else {
@@ -520,7 +528,7 @@ public class Sintactico {
     }
 
     private void opCompuesto() {
-        Token tokenActual = aux.tokenActual();
+        Token tokenActual = aux.tokenActual;
         String[] ter = { "<", ">", "<=", ">=" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
@@ -531,8 +539,8 @@ public class Sintactico {
     }
 
     private void opAdd() {
-        Token tokenActual = aux.tokenActual();
-        String[] ter = {"+", "-"};
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "+", "-" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
         } else {
@@ -542,8 +550,8 @@ public class Sintactico {
     }
 
     private void opUnario() {
-        Token tokenActual = aux.tokenActual();
-        String[] ter = {"+", "-", "!"};
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "+", "-", "!" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
         } else {
@@ -553,8 +561,8 @@ public class Sintactico {
     }
 
     private void opMul() {
-        Token tokenActual = aux.tokenActual();
-        String[] ter = {"*", "/", "%"};
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "*", "/", "%" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
         } else {
@@ -568,21 +576,19 @@ public class Sintactico {
         String[] terPrimario = { "(", "self", "id_objeto", "id_clase", "new" };
         if (aux.verifico(terLiteral)) {
             literal();
-        }
-        else if (aux.verifico(terPrimario)) {
+        } else if (aux.verifico(terPrimario)) {
             primario();
             encadenadoP();
-        }
-        else{
-            Token tokenActual = aux.tokenActual();
+        } else {
+            Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-            "Se esperaba literal o primario, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba literal o primario, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
     // LAMBDA
     private void encadenadoP() {
-        if(aux.verifico(".")){
+        if (aux.verifico(".")) {
             aux.matcheo(".");
             aux.matcheoId("id_objeto");
             encadenado2();
@@ -591,40 +597,35 @@ public class Sintactico {
     }
 
     private void literal() {
-        Token tokenActual = aux.tokenActual();
+        Token tokenActual = aux.tokenActual;
         aux.matcheo(tokenActual.obtenerLexema());
     }
 
-    private void primario(){
-        if(aux.verifico("(")){
+    private void primario() {
+        if (aux.verifico("(")) {
             expresionParentizada();
-        }
-        else if(aux.verifico("self")){
+        } else if (aux.verifico("self")) {
             accesoSelf();
-        }
-        else if(aux.verifico("id_objeto")){
+        } else if (aux.verifico("id_objeto")) {
             aux.matcheoId("id_objeto");
             primarioP();
-        }
-        else if(aux.verifico("id_clase")){
+        } else if (aux.verifico("id_clase")) {
             llamadaMetodoEstatico();
-        }
-        else if(aux.verifico("new")){
+        } else if (aux.verifico("new")) {
             llamadaConstructor();
-        }
-        else{
-            Token tokenActual = aux.tokenActual();
+        } else {
+            Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-            "Se esperaba \"(\",\"self\",\"new\",\"id_clase\",\"id_objeto\" se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba \"(\",\"self\",\"new\",\"id_clase\",\"id_objeto\" se encontró: "
+                            + tokenActual.obtenerLexema());
         }
     }
 
-    //FALTA
+    // FALTA
     private void primarioP() {
-        if(aux.verifico("(")){
+        if (aux.verifico("(")) {
             llamadaMetodoP();
-        }
-        else{
+        } else {
             accesoVarP();
         }
 
@@ -642,14 +643,13 @@ public class Sintactico {
         encadenadoP();
     }
 
-    //FALTA
+    // FALTA
     private void accesoVarP() {
-        if(aux.verifico("[")){
+        if (aux.verifico("[")) {
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
-        }
-        else{
+        } else {
             encadenadoP();
         }
 
@@ -669,7 +669,7 @@ public class Sintactico {
         encadenadoP();
 
     }
-    
+
     // REVISAR!!
     private void llamadaMetodoEstatico() {
         aux.matcheoId("id_clase");
@@ -684,29 +684,27 @@ public class Sintactico {
     }
 
     private void llamadaConstructorP() {
-        if(aux.verifico("id_clase")){
+        if (aux.verifico("id_clase")) {
             aux.matcheoId("id_clase");
             argumentosActuales();
             encadenadoP();
-        }
-        else{
+        } else {
             tipoPrimitivo();
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
         }
     }
-    
+
     private void argumentosActuales() {
         aux.matcheo("(");
         listaExpresionesP();
     }
 
     private void listaExpresionesP() {
-        if(aux.verifico(")")){
+        if (aux.verifico(")")) {
             aux.matcheo(")");
-        }
-        else{
+        } else {
             listaExpresiones();
             aux.matcheo(")");
         }
@@ -718,23 +716,21 @@ public class Sintactico {
     }
 
     private void listaExpresiones2() {
-        if(aux.verifico(",")){
+        if (aux.verifico(",")) {
             aux.matcheo(",");
             listaExpresiones();
         }
     }
 
     private void encadenado2() {
-        if(aux.verifico("[")){
+        if (aux.verifico("[")) {
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
-        }
-        else if(aux.verifico("(")){
+        } else if (aux.verifico("(")) {
             argumentosActuales();
             encadenadoP();
-        }
-        else{
+        } else {
             encadenadoP();
         }
     }
