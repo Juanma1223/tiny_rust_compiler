@@ -12,7 +12,8 @@ class Prueba {
 		return a;
 	}
 	static fn imprimo_algo() -> void {
-		IO.out_string("hola mundo");
+		
+		(IO.out_string("hola mundo"));
 	}
 }
 fn main () {
