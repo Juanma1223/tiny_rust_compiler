@@ -27,6 +27,7 @@ public class AutomataIdentificador extends Automata {
       put("false", "p_false");
       put("new", "p_new");
       put("fn", "p_fn");
+      put("main", "p_main");
       put("create", "p_create");
       put("pub", "p_pub");
       put("static", "p_static");

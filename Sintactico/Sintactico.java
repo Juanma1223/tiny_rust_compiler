@@ -33,8 +33,17 @@ public class Sintactico {
     }
 
     public void start() {
-        claseP();
+        claseP(); 
         metodoMain();
+        exito();
+    }
+
+    public void exito(){
+        Token tokenActual = aux.tokenActual;
+        if (!tokenActual.obtenerLexema().equals("EOF")) {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "NO PUEDE VENIR NADA DESPUÉS DEL MÉTODO MAIN! Se esperaba: EOF, se encontró: " + tokenActual.obtenerLexema());
+        }
     }
 
     public void claseP() {
@@ -45,7 +54,7 @@ public class Sintactico {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals("fn")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                        "Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
+                        "FALTA MÉTODO MAIN! Se esperaba: fn, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }

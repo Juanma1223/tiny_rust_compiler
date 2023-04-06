@@ -1,4 +1,4 @@
-/*ERROR: Se esperaba el comienzo de una sentencia, se encontró  */
+/*ERROR: LINEA 10 | COLUMNA 5 | Se esperaba el comienzo de una sentencia, se encontró: }*/
 class Prueba {
     I32: suma;
     I32: i,j;

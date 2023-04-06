@@ -31,7 +31,7 @@ public class AuxiliarSintactico {
     public void matcheo(String lexema) {
         if(!lexema.equals(tokenActual.obtenerLexema())){
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba:" + lexema + ", se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba: " + lexema + ", se encontró: " + tokenActual.obtenerLexema());
         }
         // Consume el token
         this.sigToken();
@@ -42,7 +42,7 @@ public class AuxiliarSintactico {
     public void matcheoId(String tipoId) {
         if(!tipoId.equals(tokenActual.obtenerToken())){
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba:" + tipoId + ", se encontró: " + tokenActual.obtenerToken());
+                    "Se esperaba: " + tipoId + ", se encontró: " + tokenActual.obtenerToken());
         }
         // Consume el token
         this.sigToken();

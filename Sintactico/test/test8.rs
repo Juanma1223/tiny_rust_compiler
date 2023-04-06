@@ -1,4 +1,4 @@
-/*ERROR: Se esperaba: (, se encontró id_objeto */
+/*ERROR: LINEA 7 | COLUMNA 7 | Se esperaba: (, se encontró: i*/
 class Prueba {
     I32: suma;
     I32: i,j;

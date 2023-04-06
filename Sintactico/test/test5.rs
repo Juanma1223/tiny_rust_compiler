@@ -1,4 +1,4 @@
-/*ERROR: Se esperaba: un operador, se encontró un id_objeto*/
+/*ERROR: LINEA 7 | COLUMNA 8 | Se esperaba: ;, se encontró: b*/
 
 class Prueba {
 	I32: a,b,c;

@@ -1,5 +1,4 @@
-/*ERROR: Se encontró una clase después del método main*/
-//Se esperaba: EOF, se encontró class
+/*ERROR: LINEA 8 | COLUMNA 1 | NO PUEDE VENIR NADA DESPUÉS DEL MÉTODO MAIN! Se esperaba: EOF, se encontró: class*/
 class Prueba {
 
 }

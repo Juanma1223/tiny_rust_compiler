@@ -56,6 +56,9 @@ public class Lexico {
             if (c == -1) {
                 // Encontramos EOF en lugar de un token
                 leyendo = false;
+                token.establecerLexema("EOF");
+                token.establecerFila(filaActual);
+                token.establecerColumna(columnaActual);
             }
 
             if (c != 32 && c != 9 && c != 10 && c != 11 && c != 13) {
