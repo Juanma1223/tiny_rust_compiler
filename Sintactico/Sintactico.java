@@ -2,28 +2,29 @@ package Sintactico;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.http.HttpResponse.PushPromiseHandler;
 
 import Lexico.Lexico;
 import Lexico.Token;
 
+/* La clase Sintactico se encarga de la implementacion de un
+ * Analizador Sintactico Descendente Predictivo Recursivo
+ */
 public class Sintactico {
 
     // Se instancia una unica vez el analizador lexico
     Lexico analizadorLexico;
-    // Esta clase se encarga de interactual con el analizador lexico
+    // Esta clase se encarga de interactuar con el analizador lexico
     // e implementar metodos de ayuda
     AuxiliarSintactico aux;
 
-    // Este constructor recibe como argumento la ruta en el sistema operativo donde
-    // se encuentra el
-    // archivo con codigo fuente
+    // Este constructor recibe como argumento la ruta en el sistema operativo
+    // donde se encuentra el archivo con el codigo fuente
     public Sintactico(File archivo) {
         try {
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);
 
-            // Iniciamos el analizis sintactico
+            // Iniciamos el analisis sintactico
             this.start();
         } catch (FileNotFoundException e) {
             System.out.println("Error al abrir archivo de entrada!");
@@ -31,12 +32,16 @@ public class Sintactico {
         }
     }
 
+    // Cada metodo corresponde a un no terminal de la gramatica
+    // El metodo start es el inicial
     private void start() {
         claseP(); 
         metodoMain();
         exito();
     }
 
+    // Este metodo corrobora que el analisis haya terminado con exito
+    // Para ello, no debe venir nada despues del metodo main
     private void exito(){
         Token tokenActual = aux.tokenActual;
         if (!tokenActual.obtenerLexema().equals("EOF")) {
@@ -629,14 +634,12 @@ public class Sintactico {
         }
     }
 
-    // FALTA
     private void primarioP() {
         if (aux.verifico("(")) {
             llamadaMetodoP();
         } else {
             accesoVarP();
         }
-
     }
 
     private void expresionParentizada() {
@@ -651,7 +654,6 @@ public class Sintactico {
         encadenadoP();
     }
 
-    // FALTA
     private void accesoVarP() {
         if (aux.verifico("[")) {
             aux.matcheo("[");
@@ -660,25 +662,19 @@ public class Sintactico {
         } else {
             encadenadoP();
         }
-
     }
 
-    // REVISAR!!
     private void llamadaMetodoP() {
         argumentosActuales();
         encadenadoP();
-
     }
 
-    // REVISAR!!
     private void llamadaMetodo() {
         aux.matcheoId("id_objeto");
         argumentosActuales();
         encadenadoP();
-
     }
 
-    // REVISAR!!
     private void llamadaMetodoEstatico() {
         aux.matcheoId("id_clase");
         aux.matcheo(".");

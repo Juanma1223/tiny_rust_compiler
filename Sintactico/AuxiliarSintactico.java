@@ -5,6 +5,9 @@ import java.io.IOException;
 import Lexico.Lexico;
 import Lexico.Token;
 
+/* La clase AuxiliarSintactico se encarga de interactuar con el
+ * analizador lexico e implementar metodos de ayuda
+ */
 public class AuxiliarSintactico {
 
     Lexico analizadorLexico;
