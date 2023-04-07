@@ -18,9 +18,8 @@ public class Sintactico {
     // Este constructor recibe como argumento la ruta en el sistema operativo donde
     // se encuentra el
     // archivo con codigo fuente
-    public Sintactico(String dirArchivo) {
+    public Sintactico(File archivo) {
         try {
-            File archivo = new File(dirArchivo);
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);
 
@@ -32,13 +31,13 @@ public class Sintactico {
         }
     }
 
-    public void start() {
+    private void start() {
         claseP(); 
         metodoMain();
         exito();
     }
 
-    public void exito(){
+    private void exito(){
         Token tokenActual = aux.tokenActual;
         if (!tokenActual.obtenerLexema().equals("EOF")) {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -46,7 +45,7 @@ public class Sintactico {
         }
     }
 
-    public void claseP() {
+    private void claseP() {
         if (aux.verifico("class")) {
             clase();
             claseP();
@@ -59,7 +58,7 @@ public class Sintactico {
         }
     }
 
-    public void metodoMain() {
+    private void metodoMain() {
         aux.matcheo("fn");
         aux.matcheo("main");
         aux.matcheo("(");
@@ -67,13 +66,13 @@ public class Sintactico {
         bloqueMetodo();
     }
 
-    public void clase() {
+    private void clase() {
         aux.matcheo("class");
         aux.matcheoId("id_clase");
         restoClase();
     }
 
-    public void restoClase() {
+    private void restoClase() {
         if (aux.verifico(":")) {
             aux.matcheo(":");
             aux.matcheoId("id_clase");
@@ -91,7 +90,7 @@ public class Sintactico {
         }
     }
 
-    public void miembroP() {
+    private void miembroP() {
         String[] ter = { "pub", "Bool", "I32", "Str", "Char", "idClase", "Array", "create", "static", "fn" };
         if (aux.verifico(ter)) {
             miembro();
@@ -105,7 +104,7 @@ public class Sintactico {
         }
     }
 
-    public void miembro() {
+    private void miembro() {
         String[] ter = { "pub", "Bool", "I32", "Str", "Char", "id_clase", "Array" };
         String[] ter1 = { "static", "fn" };
         if (aux.verifico(ter)) {
@@ -125,7 +124,7 @@ public class Sintactico {
         }
     }
 
-    public void atributo() {
+    private void atributo() {
         if (aux.verifico("pub")) {
             aux.matcheo("pub");
         }
@@ -135,13 +134,13 @@ public class Sintactico {
         aux.matcheo(";");
     }
 
-    public void constructor() {
+    private void constructor() {
         aux.matcheo("create");
         argumentosFormales();
         bloqueMetodo();
     }
 
-    public void metodo() {
+    private void metodo() {
         if (aux.verifico("static")) {
             aux.matcheo("static");
         }
@@ -153,14 +152,14 @@ public class Sintactico {
         bloqueMetodo();
     }
 
-    public void bloqueMetodo() {
+    private void bloqueMetodo() {
         aux.matcheo("{");
         declVarLocalesP();
         sentenciaP();
         aux.matcheo("}");
     }
 
-    public void declVarLocalesP() {
+    private void declVarLocalesP() {
         String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
         String[] ter1 = { ";", "id_objeto", "self", "(", "if", "while", "{", "return", "}" };
         if (aux.verifico(ter)) {
@@ -177,7 +176,7 @@ public class Sintactico {
 
     }
 
-    public void sentenciaP() {
+    private void sentenciaP() {
         String[] ter = { ";", "id_objeto", "self", "(", "if", "while", "{", "return" };
         if (aux.verifico(ter)) {
             sentencia();
@@ -191,19 +190,19 @@ public class Sintactico {
         }
     }
 
-    public void declVarLocales() {
+    private void declVarLocales() {
         tipo();
         aux.matcheo(":");
         listaDeclVariables();
         aux.matcheo(";");
     }
 
-    public void listaDeclVariables() {
+    private void listaDeclVariables() {
         aux.matcheoId("id_objeto");
         listaDeclVariablesP();
     }
 
-    public void listaDeclVariablesP() {
+    private void listaDeclVariablesP() {
         if (aux.verifico(",")) {
             aux.matcheo(",");
             listaDeclVariables();
@@ -216,12 +215,12 @@ public class Sintactico {
         }
     }
 
-    public void argumentosFormales() {
+    private void argumentosFormales() {
         aux.matcheo("(");
         listaArgumentosFormalesP();
     }
 
-    public void listaArgumentosFormalesP() {
+    private void listaArgumentosFormalesP() {
         String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
         if (aux.verifico(ter)) {
             listaArgumentosFormales();
@@ -231,12 +230,12 @@ public class Sintactico {
         }
     }
 
-    public void listaArgumentosFormales() {
+    private void listaArgumentosFormales() {
         argumentoFormal();
         listaArgumentosFormales2();
     }
 
-    public void listaArgumentosFormales2() {
+    private void listaArgumentosFormales2() {
         if (aux.verifico(",")) {
             aux.matcheo(",");
             listaArgumentosFormales();
@@ -249,13 +248,13 @@ public class Sintactico {
         }
     }
 
-    public void argumentoFormal() {
+    private void argumentoFormal() {
         tipo();
         aux.matcheo(":");
         aux.matcheoId("id_objeto");
     }
 
-    public void tipoMetodo() {
+    private void tipoMetodo() {
         String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
         if (aux.verifico(ter)) {
             tipo();
@@ -264,7 +263,7 @@ public class Sintactico {
         }
     }
 
-    public void tipo() {
+    private void tipo() {
         String[] ter = { "Bool", "I32", "Str", "Char" };
         if (aux.verifico(ter)) {
             tipoPrimitivo();
@@ -284,7 +283,7 @@ public class Sintactico {
         }
     }
 
-    public void tipoPrimitivo() {
+    private void tipoPrimitivo() {
         Token tokenActual = aux.tokenActual;
         String[] ter = { "Bool", "I32", "Str", "Char" };
         if (aux.verifico(ter)) {
@@ -295,16 +294,16 @@ public class Sintactico {
         }
     }
 
-    public void tipoReferencia() {
+    private void tipoReferencia() {
         aux.matcheoId("id_clase");
     }
 
-    public void tipoArray() {
+    private void tipoArray() {
         aux.matcheo("Array");
         tipoPrimitivo();
     }
 
-    public void sentencia() {
+    private void sentencia() {
         
         if (aux.verifico(";")) {
             aux.matcheo(";");
@@ -338,14 +337,14 @@ public class Sintactico {
         }
     }
 
-    public void sentencia2() {
+    private void sentencia2() {
         if (aux.verifico("else")) {
             aux.matcheo("else");
             sentencia();
         }
     }
 
-    public void expresionP() {
+    private void expresionP() {
         String[] ter = { "+", "-", "!", "nil", "true", "false", "lit_ent", "lit_cad", "lit_car", "(", "self", "id_objeto",
                 "id_clase", "new" };
         if (aux.verifico(";")) {
@@ -362,13 +361,13 @@ public class Sintactico {
         }
     }
 
-    public void bloque() {
+    private void bloque() {
         aux.matcheo("{");
         sentenciaP();
         aux.matcheo("}");
     }
 
-    public void asignacion() {
+    private void asignacion() {
         if (aux.verifico("id_objeto")) {
             asignacionVarSimple();
             aux.matcheo("=");
@@ -384,12 +383,12 @@ public class Sintactico {
         }
     }
 
-    public void asignacionVarSimple() {
+    private void asignacionVarSimple() {
         aux.matcheoId("id_objeto");
         asignacionVarSimpleP();
     }
 
-    public void asignacionVarSimpleP() {
+    private void asignacionVarSimpleP() {
         if (aux.verifico(".")) {
             encadenadoSimpleP();
         } else if (aux.verifico("[")) {
@@ -405,7 +404,7 @@ public class Sintactico {
         }
     }
 
-    public void encadenadoSimpleP() {
+    private void encadenadoSimpleP() {
         if (aux.verifico(".")) {
             aux.matcheo(".");
             aux.matcheoId("id_objeto");
@@ -413,18 +412,18 @@ public class Sintactico {
         }
     }
 
-    public void asignacionSelfSimple() {
+    private void asignacionSelfSimple() {
         aux.matcheo("self");
         encadenadoSimpleP();
     }
 
-    public void sentenciaSimple() {
+    private void sentenciaSimple() {
         aux.matcheo("(");
         expresion();
         aux.matcheo(")");
     }
 
-    public void expresion() {
+    private void expresion() {
         expOr();
     }
 
