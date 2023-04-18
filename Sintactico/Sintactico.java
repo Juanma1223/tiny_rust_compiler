@@ -142,9 +142,13 @@ public class Sintactico {
     }
 
     private void atributo() {
+        boolean visibilidad = false;
         if (aux.verifico("pub")) {
             aux.matcheo("pub");
+            visibilidad = true;
         }
+        //COMO HACEMOS CON LOS TIPOS (ESPECIALMENTE ARRAY)?
+        String tipoVar = aux.tokenActual.obtenerLexema();
         tipo();
         aux.matcheo(":");
         listaDeclVariables();
