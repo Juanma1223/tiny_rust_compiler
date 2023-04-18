@@ -13,11 +13,19 @@ public class TablaDeSimbolos {
         return this.claseActual;
     }
 
+    public void establecerClaseActual(Clase claseActual){
+        this.claseActual = claseActual;
+    }
+
     public Funcion obtenerMetodoActual(){
         return this.metodoActual;
     }
 
-    public Clase obtenerClasePorNombre(String nombreCSlase){
+    public void establecerMetodoActual(Funcion metodoActual){
+        this.metodoActual = metodoActual;
+    }
+
+    public Clase obtenerClasePorNombre(String nombreClase){
         return clases.get("nombreClase");
     }
 

@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 
 import Lexico.Lexico;
 import Lexico.Token;
+import Semantico.Clase;
+import Semantico.TablaDeSimbolos;
 
 /* La clase Sintactico se encarga de la implementacion de un
  * Analizador Sintactico Descendente Predictivo Recursivo
@@ -17,12 +19,15 @@ public class Sintactico {
     // e implementar metodos de ayuda
     AuxiliarSintactico aux;
 
+    TablaDeSimbolos tablaDeSimbolos;
+
     // Este constructor recibe como argumento la ruta en el sistema operativo
     // donde se encuentra el archivo con el codigo fuente
     public Sintactico(File archivo) {
         try {
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);
+            this.tablaDeSimbolos = new TablaDeSimbolos();
 
             // Iniciamos el analisis sintactico
             this.start();
@@ -73,18 +78,25 @@ public class Sintactico {
 
     private void clase() {
         aux.matcheo("class");
+        Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_clase");
+        Clase nuevaClase = new Clase(tokenActual.obtenerLexema());
+        tablaDeSimbolos.establecerClaseActual(nuevaClase);
         restoClase();
+        tablaDeSimbolos.insertarClase(nuevaClase);
     }
 
     private void restoClase() {
         if (aux.verifico(":")) {
             aux.matcheo(":");
+            Token tokenActual = aux.tokenActual;
             aux.matcheoId("id_clase");
+            tablaDeSimbolos.obtenerClaseActual().establecerHerencia(tokenActual.obtenerLexema());
             aux.matcheo("{");
             miembroP();
             aux.matcheo("}");
         } else if (aux.verifico("{")) {
+            tablaDeSimbolos.obtenerClaseActual().establecerHerencia("Object");
             aux.matcheo("{");
             miembroP();
             aux.matcheo("}");

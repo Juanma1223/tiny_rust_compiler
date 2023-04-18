@@ -13,8 +13,16 @@ public class Clase {
     private HashMap<String, Metodo> metodos = new HashMap<String, Metodo>();
     private Constructor constructor;
 
+    public Clase(String nombre){
+        this.nombre = nombre;
+    }
+    
     public String obtenerNombre() {
         return this.nombre;
+    }
+
+    public void establecerHerencia(String heredaDe){
+        this.heredaDe = heredaDe;
     }
 
     public Constructor obtenerConstructor(){
