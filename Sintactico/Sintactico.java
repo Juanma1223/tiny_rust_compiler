@@ -108,7 +108,7 @@ public class Sintactico {
     }
 
     private void miembroP() {
-        String[] ter = { "pub", "Bool", "I32", "Str", "Char", "idClase", "Array", "create", "static", "fn" };
+        String[] ter = { "pub", "Bool", "I32", "Str", "Char", "id_clase", "Array", "create", "static", "fn" };
         if (aux.verifico(ter)) {
             miembro();
             miembroP();
