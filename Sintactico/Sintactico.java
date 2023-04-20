@@ -10,6 +10,10 @@ import Semantico.TablaDeSimbolos;
 import Semantico.Atributo.Parametro;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
+import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoArreglo;
+import Semantico.Tipo.TipoPrimitivo;
+import Semantico.Tipo.TipoReferencia;
 
 /* La clase Sintactico se encarga de la implementacion de un
  * Analizador Sintactico Descendente Predictivo Recursivo
@@ -181,7 +185,7 @@ public class Sintactico {
         argumentosFormales();
         aux.matcheo("->");
         //AGREGAR TIPO RETORNO Y POSICION
-        tipoMetodo();
+        Tipo t = tipoMetodo();
         tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         bloqueMetodo();
     }
@@ -293,53 +297,57 @@ public class Sintactico {
         return p;
     }
 
-    private void tipoMetodo() {
+    private Tipo tipoMetodo() {
         String[] ter = { "Bool", "I32", "Str", "Char", "id_clase", "Array" };
         if (aux.verifico(ter)) {
-            tipo();
+            return tipo();
         } else {
             aux.matcheo("void");
+            return new TipoVoid("void");
         }
     }
 
-    private void tipo() {
+    private Tipo tipo() {
         String[] ter = { "Bool", "I32", "Str", "Char" };
         if (aux.verifico(ter)) {
-            tipoPrimitivo();
-            return;
+            return tipoPrimitivo();
         }
         if (aux.verifico("id_clase")) {
-            tipoReferencia();
-            return;
+            return tipoReferencia();
         }
         if (aux.verifico("Array")) {
-            tipoArray();
-            return;
+            return tipoArray();
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba un tipo primitivo, referencia o Array, se encontró: " + tokenActual.obtenerLexema());
+            return null;
         }
     }
 
-    private void tipoPrimitivo() {
+    private Tipo tipoPrimitivo() {
         Token tokenActual = aux.tokenActual;
         String[] ter = { "Bool", "I32", "Str", "Char" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
+            return new TipoPrimitivo(tokenActual.obtenerLexema());
         } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba un tipo primitivo, se encontró: " + tokenActual.obtenerLexema());
+            return null;
         }
     }
 
-    private void tipoReferencia() {
+    private Tipo tipoReferencia() {
+        Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_clase");
+        return new TipoReferencia(tokenActual.obtenerLexema());
     }
 
-    private void tipoArray() {
+    private Tipo tipoArray() {
         aux.matcheo("Array");
-        tipoPrimitivo();
+        Tipo tArray = tipoPrimitivo();
+        return new TipoArreglo(tArray.obtenerTipo());
     }
 
     private void sentencia() {
