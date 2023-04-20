@@ -1,6 +1,6 @@
 package Semantico.Funcion;
 
-import Semantico.Tipo;
+import Semantico.Tipo.Tipo;
 
 public class Metodo extends Funcion{
     private String nombre;
@@ -11,7 +11,7 @@ public class Metodo extends Funcion{
     public Metodo(String nombre){
         this.nombre = nombre;
     }
-    
+
     public String obtenerNombre(){
         return this.nombre;
     }

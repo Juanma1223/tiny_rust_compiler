@@ -1,6 +1,6 @@
 package Semantico.Atributo;
 
-import Semantico.Tipo;
+import Semantico.Tipo.Tipo;
 
 public class Atributo {
     private String nombre;
