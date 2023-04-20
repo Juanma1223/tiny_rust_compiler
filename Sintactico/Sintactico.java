@@ -14,6 +14,7 @@ import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoReferencia;
+import Semantico.Tipo.TipoVoid;
 
 /* La clase Sintactico se encarga de la implementacion de un
  * Analizador Sintactico Descendente Predictivo Recursivo
@@ -180,12 +181,13 @@ public class Sintactico {
         aux.matcheo("fn");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema());
+        Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(),formaMetodo);
         tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
         argumentosFormales();
         aux.matcheo("->");
-        //AGREGAR TIPO RETORNO Y POSICION
         Tipo t = tipoMetodo();
+        nuevoMetodo.establecerTipoRetorno(t);
+        //AGREGAR POSICION
         tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         bloqueMetodo();
     }
