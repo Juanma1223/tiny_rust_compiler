@@ -155,10 +155,9 @@ public class Sintactico {
             aux.matcheo("pub");
             visibilidad = true;
         }
-        //COMO HACEMOS CON LOS TIPOS (ESPECIALMENTE ARRAY)?
-        String tipoVar = aux.tokenActual.obtenerLexema();
-        tipo();
+        Tipo tVar = tipo();
         aux.matcheo(":");
+        //PASAR TIPO POR PARAMETRO
         listaDeclVariables();
         aux.matcheo(";");
     }
