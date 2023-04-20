@@ -7,6 +7,10 @@ public class Atributo {
     private Tipo tipo;
     private int posicion;
 
+    public Atributo(String nombre){
+        this.nombre = nombre;
+    }
+
     public String obtenerNombre(){
         return this.nombre;
     }

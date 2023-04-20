@@ -1,5 +1,5 @@
 package Semantico.Funcion;
 
-public class Constructor {
+public class Constructor extends Funcion{
     
 }

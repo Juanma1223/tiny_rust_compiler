@@ -7,6 +7,9 @@ import Lexico.Lexico;
 import Lexico.Token;
 import Semantico.Clase;
 import Semantico.TablaDeSimbolos;
+import Semantico.Atributo.Parametro;
+import Semantico.Funcion.Constructor;
+import Semantico.Funcion.Metodo;
 
 /* La clase Sintactico se encarga de la implementacion de un
  * Analizador Sintactico Descendente Predictivo Recursivo
@@ -157,19 +160,29 @@ public class Sintactico {
 
     private void constructor() {
         aux.matcheo("create");
+        Constructor nuevoConstructor = new Constructor();
+        tablaDeSimbolos.establecerMetodoActual(nuevoConstructor);
         argumentosFormales();
+        tablaDeSimbolos.obtenerClaseActual().establecerConstructor(nuevoConstructor);
         bloqueMetodo();
     }
 
     private void metodo() {
+        boolean formaMetodo = false;
         if (aux.verifico("static")) {
             aux.matcheo("static");
+            formaMetodo = true;
         }
         aux.matcheo("fn");
+        Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
+        Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema());
+        tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
         argumentosFormales();
         aux.matcheo("->");
+        //AGREGAR TIPO RETORNO Y POSICION
         tipoMetodo();
+        tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         bloqueMetodo();
     }
 
@@ -252,7 +265,8 @@ public class Sintactico {
     }
 
     private void listaArgumentosFormales() {
-        argumentoFormal();
+        Parametro nuevoParametro = argumentoFormal();
+        tablaDeSimbolos.obtenerMetodoActual().insertarParametro(nuevoParametro);
         listaArgumentosFormales2();
     }
 
@@ -269,10 +283,14 @@ public class Sintactico {
         }
     }
 
-    private void argumentoFormal() {
+    private Parametro argumentoFormal() {
         tipo();
         aux.matcheo(":");
+        Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
+        //AGREGAR TIPO Y POSICION
+        Parametro p = new Parametro(tokenActual.obtenerLexema());
+        return p;
     }
 
     private void tipoMetodo() {

@@ -1,14 +1,15 @@
 package Semantico.Atributo;
 
 public class Variable extends Atributo{
+    
+    public Variable(String nombre) {
+        super(nombre);
+    }
+
     private boolean esPublico;
-    private boolean esEstatico;
 
     public boolean obtenerEsPublico(){
         return this.esPublico;
     }
 
-    public boolean obtenerEsEstatico(){
-        return this.esEstatico;
-    }
 }
