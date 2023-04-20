@@ -1,9 +1,11 @@
-package Semantico.Atributo;
+package Semantico.Variable;
 
-public class Parametro extends Atributo{
+import Semantico.Tipo.Tipo;
 
-    public Parametro(String nombre) {
-        super(nombre);
+public class Parametro extends Variable{
+
+    public Parametro(String nombre, Tipo tipo) {
+        super(nombre, tipo);
     }
     
 }

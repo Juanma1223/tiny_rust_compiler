@@ -7,6 +7,7 @@ import Lexico.Lexico;
 import Lexico.Token;
 import Semantico.Clase;
 import Semantico.TablaDeSimbolos;
+import Semantico.Variable.Atributo;
 import Semantico.Variable.Parametro;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
@@ -155,11 +156,31 @@ public class Sintactico {
             aux.matcheo("pub");
             visibilidad = true;
         }
-        Tipo tVar = tipo();
+        Tipo tAtr = tipo();
         aux.matcheo(":");
-        //PASAR TIPO POR PARAMETRO
-        listaDeclVariables();
+        listaDeclAtributos(visibilidad,tAtr);
         aux.matcheo(";");
+    }
+    //NUEVO METODO
+    private void listaDeclAtributos(boolean visibilidad,Tipo tAtr) {
+        Token tokenActual = aux.tokenActual;
+        aux.matcheoId("id_objeto");
+        Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(),tAtr,visibilidad);
+        tablaDeSimbolos.obtenerClaseActual().insertarAtributo(nuevoAtributo);
+        listaDeclAtributosP(visibilidad,tAtr);
+    }
+    //NUEVO METODO
+    private void listaDeclAtributosP(boolean visibilidad,Tipo tAtr) {
+        if (aux.verifico(",")) {
+            aux.matcheo(",");
+            listaDeclAtributos(visibilidad,tAtr);
+        } else {
+            Token tokenActual = aux.tokenActual;
+            if (!tokenActual.obtenerLexema().equals(";")) {
+                ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                        "Se esperaba: ;, se encontró: " + tokenActual.obtenerLexema());
+            }
+        }
     }
 
     private void constructor() {
@@ -289,12 +310,12 @@ public class Sintactico {
     }
 
     private Parametro argumentoFormal() {
-        tipo();
+        Tipo tPar = tipo();
         aux.matcheo(":");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        //AGREGAR TIPO Y POSICION
-        Parametro p = new Parametro(tokenActual.obtenerLexema());
+        //AGREGAR POSICION
+        Parametro p = new Parametro(tokenActual.obtenerLexema(),tPar);
         return p;
     }
 

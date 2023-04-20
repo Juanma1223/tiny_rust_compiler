@@ -7,8 +7,9 @@ public class Variable {
     private Tipo tipo;
     private int posicion;
 
-    public Variable(String nombre){
+    public Variable(String nombre, Tipo tipo){
         this.nombre = nombre;
+        this.tipo = tipo;
     }
 
     public String obtenerNombre(){
