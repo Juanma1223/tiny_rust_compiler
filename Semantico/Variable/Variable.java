@@ -1,13 +1,13 @@
-package Semantico.Atributo;
+package Semantico.Variable;
 
 import Semantico.Tipo.Tipo;
 
-public class Atributo {
+public class Variable {
     private String nombre;
     private Tipo tipo;
     private int posicion;
 
-    public Atributo(String nombre){
+    public Variable(String nombre){
         this.nombre = nombre;
     }
 

@@ -2,14 +2,14 @@ package Semantico;
 
 import java.util.HashMap;
 
-import Semantico.Atributo.Variable;
+import Semantico.Variable.Atributo;
 import Semantico.Funcion.Metodo;
 import Semantico.Funcion.Constructor;
 
 public class Clase {
     private String nombre;
     private String heredaDe;
-    private HashMap<String, Variable> variables = new HashMap<String, Variable>();
+    private HashMap<String, Atributo> atributos = new HashMap<String, Atributo>();
     private HashMap<String, Metodo> metodos = new HashMap<String, Metodo>();
     private Constructor constructor;
 
@@ -33,8 +33,8 @@ public class Clase {
         this.constructor = constructor;
     }
 
-    public Variable obtenerVariablePorNombre(String nombre){
-        return this.variables.get(nombre);
+    public Atributo obtenerAtributoPorNombre(String nombre){
+        return this.atributos.get(nombre);
     }
 
     public Metodo obtenerMetodoPorNombre(String nombre){
@@ -45,9 +45,8 @@ public class Clase {
         this.metodos.put(metodo.obtenerNombre(), metodo);
     }
 
-    public void insertarVariable(Variable variable){
-        this.variables.put(variable.obtenerNombre(), variable);
+    public void insertarAtributo(Atributo atributo){
+        this.atributos.put(atributo.obtenerNombre(), atributo);
     }
-
 
 }

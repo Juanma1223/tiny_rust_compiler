@@ -7,7 +7,7 @@ import Lexico.Lexico;
 import Lexico.Token;
 import Semantico.Clase;
 import Semantico.TablaDeSimbolos;
-import Semantico.Atributo.Parametro;
+import Semantico.Variable.Parametro;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;

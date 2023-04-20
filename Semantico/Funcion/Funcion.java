@@ -2,7 +2,7 @@ package Semantico.Funcion;
 
 import java.util.HashMap;
 
-import Semantico.Atributo.Parametro;
+import Semantico.Variable.Parametro;
 
 public class Funcion {
 
