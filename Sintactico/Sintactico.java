@@ -9,6 +9,7 @@ import Semantico.Clase;
 import Semantico.TablaDeSimbolos;
 import Semantico.Variable.Atributo;
 import Semantico.Variable.Parametro;
+import Semantico.Variable.Variable;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
@@ -251,21 +252,24 @@ public class Sintactico {
     }
 
     private void declVarLocales() {
-        tipo();
+        Tipo tVar = tipo();
         aux.matcheo(":");
-        listaDeclVariables();
+        listaDeclVariables(tVar);
         aux.matcheo(";");
     }
 
-    private void listaDeclVariables() {
+    private void listaDeclVariables(Tipo tVar) {
+        Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        listaDeclVariablesP();
+        Variable nuevaVariable = new Variable(tokenActual.obtenerLexema(), tVar);
+        tablaDeSimbolos.obtenerMetodoActual().insertarVariable(nuevaVariable);
+        listaDeclVariablesP(tVar);
     }
 
-    private void listaDeclVariablesP() {
+    private void listaDeclVariablesP(Tipo tVar) {
         if (aux.verifico(",")) {
             aux.matcheo(",");
-            listaDeclVariables();
+            listaDeclVariables(tVar);
         } else {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals(";")) {
