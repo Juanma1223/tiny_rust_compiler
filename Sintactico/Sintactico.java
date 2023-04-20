@@ -103,7 +103,7 @@ public class Sintactico {
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "Se esperaba: : o {, se encontró: " + tokenActual.obtenerLexema());
+                    "Se esperaba el comienzo de una clase con: { o :, se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
@@ -116,7 +116,7 @@ public class Sintactico {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals("}")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                        "Se esperaba: }, se encontró: " + tokenActual.obtenerLexema());
+                        "Se esperaba el cierre de una clase con: }, se encontró: " + tokenActual.obtenerLexema());
             }
         }
     }
