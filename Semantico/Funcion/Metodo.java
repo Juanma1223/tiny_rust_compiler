@@ -13,6 +13,12 @@ public class Metodo extends Funcion{
         this.esEstatico = esEstatico;
     }
 
+    public Metodo(String nombre, boolean esEstatico, Tipo tipoRetorno){
+        this.nombre = nombre;
+        this.esEstatico = esEstatico;
+        this.tipoRetorno = tipoRetorno;
+    }
+
     public String obtenerNombre(){
         return this.nombre;
     }

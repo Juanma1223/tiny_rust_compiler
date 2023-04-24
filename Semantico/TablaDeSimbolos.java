@@ -7,6 +7,7 @@ import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
+import Semantico.Tipo.TipoVoid;
 import Semantico.Variable.Parametro;
 
 public class TablaDeSimbolos {
@@ -19,6 +20,7 @@ public class TablaDeSimbolos {
     Tipo tBool = new TipoPrimitivo("Bool");
     Tipo tChar = new TipoPrimitivo("Char");
     Tipo tArray = new TipoArreglo("Array");
+    Tipo tVoid = new TipoVoid("void");
 
     public TablaDeSimbolos(){
         insertarClaseObject();
@@ -60,28 +62,28 @@ public class TablaDeSimbolos {
         Clase cIO = new Clase("IO");
         cIO.establecerHerencia("Object");
 
-        cIO.insertarMetodo(new Metodo("out_string", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("out_string", true, tVoid));
         cIO.obtenerMetodoPorNombre("out_string").insertarParametro(new Parametro("s", tStr));
 
-        cIO.insertarMetodo(new Metodo("out_i32", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("out_i32", true, tVoid));
         cIO.obtenerMetodoPorNombre("out_i32").insertarParametro(new Parametro("i", tI32));
 
-        cIO.insertarMetodo(new Metodo("out_bool", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("out_bool", true, tVoid));
         cIO.obtenerMetodoPorNombre("out_bool").insertarParametro(new Parametro("b", tBool));
 
-        cIO.insertarMetodo(new Metodo("out_char", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("out_char", true, tVoid));
         cIO.obtenerMetodoPorNombre("out_char").insertarParametro(new Parametro("c", tChar));
 
-        cIO.insertarMetodo(new Metodo("out_array", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("out_array", true, tVoid));
         cIO.obtenerMetodoPorNombre("out_array").insertarParametro(new Parametro("a", tArray));
 
-        cIO.insertarMetodo(new Metodo("in_string", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("in_string", true, tStr));
 
-        cIO.insertarMetodo(new Metodo("in_i32", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("in_i32", true, tI32));
 
-        cIO.insertarMetodo(new Metodo("in_bool", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("in_bool", true, tBool));
 
-        cIO.insertarMetodo(new Metodo("in_char", true)); //Agregar tipo retorno
+        cIO.insertarMetodo(new Metodo("in_char", true, tChar));
 
         this.clases.put("IO", cIO);
     }
@@ -101,17 +103,17 @@ public class TablaDeSimbolos {
 
         Clase cStr = new Clase("Str");
         cStr.establecerHerencia("Object");
-        cStr.insertarMetodo(new Metodo("length", true)); //Agregar tipo retorno
-        cStr.insertarMetodo(new Metodo("concat", true)); //Agregar tipo retorno
+        cStr.insertarMetodo(new Metodo("length", true, tI32));
+        cStr.insertarMetodo(new Metodo("concat", true, tStr));
         cStr.obtenerMetodoPorNombre("concat").insertarParametro(new Parametro("s", tStr));
-        cStr.insertarMetodo(new Metodo("substr", true)); //Agregar tipo retorno
+        cStr.insertarMetodo(new Metodo("substr", true, tStr));
         cStr.obtenerMetodoPorNombre("substr").insertarParametro(new Parametro("i", tI32));
         cStr.obtenerMetodoPorNombre("substr").insertarParametro(new Parametro("l", tI32));
         this.clases.put("Str", cStr);
 
         Clase cArray = new Clase("Array");
         cArray.establecerHerencia("Object");
-        cArray.insertarMetodo(new Metodo("length", true)); //Agregar tipo retorno
+        cArray.insertarMetodo(new Metodo("length", true, tI32));
         this.clases.put("Array", cArray);
     }
 }
