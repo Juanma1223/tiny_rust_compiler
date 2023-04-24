@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import Lexico.Lexico;
 import Lexico.Token;
 import Semantico.Clase;
+import Semantico.ErrorSemantico;
 import Semantico.TablaDeSimbolos;
 import Semantico.Variable.Atributo;
 import Semantico.Variable.Parametro;
@@ -90,10 +91,16 @@ public class Sintactico {
         aux.matcheo("class");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_clase");
-        Clase nuevaClase = new Clase(tokenActual.obtenerLexema());
-        tablaDeSimbolos.establecerClaseActual(nuevaClase);
-        restoClase();
-        tablaDeSimbolos.insertarClase(nuevaClase);
+        if (tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema()).equals("null")){
+            Clase nuevaClase = new Clase(tokenActual.obtenerLexema());
+            tablaDeSimbolos.establecerClaseActual(nuevaClase);
+            restoClase();
+            tablaDeSimbolos.insertarClase(nuevaClase);
+        } else{
+            ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                "La clase: " + tokenActual.obtenerLexema() + " ya fue declarada. No puede haber dos clases con el mismo nombre");
+        }
+        
     }
 
     private void restoClase() {
@@ -166,9 +173,14 @@ public class Sintactico {
     private void listaDeclAtributos(boolean visibilidad,Tipo tAtr) {
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(),tAtr,visibilidad);
-        tablaDeSimbolos.obtenerClaseActual().insertarAtributo(nuevoAtributo);
-        listaDeclAtributosP(visibilidad,tAtr);
+        if (tablaDeSimbolos.obtenerClaseActual().obtenerAtributoPorNombre(tokenActual.obtenerLexema()).equals("null")){
+            Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(),tAtr,visibilidad);
+            tablaDeSimbolos.obtenerClaseActual().insertarAtributo(nuevoAtributo);
+            listaDeclAtributosP(visibilidad,tAtr);
+        } else{
+            ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                "El atributo: " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos atributos con el mismo nombre en una misma clase");
+        }
     }
     //NUEVO METODO
     private void listaDeclAtributosP(boolean visibilidad,Tipo tAtr) {
@@ -202,15 +214,20 @@ public class Sintactico {
         aux.matcheo("fn");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(),formaMetodo);
-        tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
-        argumentosFormales();
-        aux.matcheo("->");
-        Tipo t = tipoMetodo();
-        nuevoMetodo.establecerTipoRetorno(t);
-        //AGREGAR POSICION
-        tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
-        bloqueMetodo();
+        if (tablaDeSimbolos.obtenerClaseActual().obtenerMetodoPorNombre(tokenActual.obtenerLexema()).equals("null")){
+            Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(),formaMetodo);
+            tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
+            argumentosFormales();
+            aux.matcheo("->");
+            Tipo t = tipoMetodo();
+            nuevoMetodo.establecerTipoRetorno(t);
+            //AGREGAR POSICION
+            tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
+            bloqueMetodo();
+        } else{
+            ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                "El método: " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos métodos con el mismo nombre en una misma clase");
+        }
     }
 
     private void bloqueMetodo() {
