@@ -98,7 +98,7 @@ public class Sintactico {
             tablaDeSimbolos.insertarClase(nuevaClase);
         } else{
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "La clase: " + tokenActual.obtenerLexema() + " ya fue declarada. No puede haber dos clases con el mismo nombre");
+                "La clase " + tokenActual.obtenerLexema() + " ya fue declarada. No puede haber dos clases con el mismo nombre");
         }
         
     }
@@ -179,7 +179,7 @@ public class Sintactico {
             listaDeclAtributosP(visibilidad,tAtr);
         } else{
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "El atributo: " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos atributos con el mismo nombre en una misma clase");
+                "El atributo " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos atributos con el mismo nombre en una misma clase");
         }
     }
     //NUEVO METODO
@@ -226,7 +226,7 @@ public class Sintactico {
             bloqueMetodo();
         } else{
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "El método: " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos métodos con el mismo nombre en una misma clase");
+                "El método " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos métodos con el mismo nombre en una misma clase");
         }
     }
 
