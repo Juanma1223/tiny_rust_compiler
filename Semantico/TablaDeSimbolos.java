@@ -22,43 +22,68 @@ public class TablaDeSimbolos {
     Tipo tArray = new TipoArreglo("Array");
     Tipo tVoid = new TipoVoid("void");
 
-    public TablaDeSimbolos(){
+    public TablaDeSimbolos() {
         insertarClaseObject();
         insertarClaseIO();
         insertarClasesPrimitivas();
     }
 
-    public Clase obtenerClaseActual(){
+    public String toJson(String nombreArchivo) {
+        StringBuilder sb = new StringBuilder();
+        // Construimos el json de forma recursiva
+        sb.append("{").append(System.lineSeparator());
+        sb.append("\"nombre\":").append("\""+nombreArchivo+"\",").append(System.lineSeparator());
+        sb.append("\"clases\":[").append(System.lineSeparator());
+        int i = 1;
+        for (HashMap.Entry<String, Clase> clase : clases.entrySet()) {
+            if (i < clases.size()) {
+                sb.append(clase.getValue().toJson() + ",").append(System.lineSeparator());
+            } else {
+                sb.append(clase.getValue().toJson()).append(System.lineSeparator());
+            }
+            i++;
+        
+        }
+        sb.append("]").append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        return sb.toString();
+    }
+
+    public Clase obtenerClaseActual() {
         return this.claseActual;
     }
 
-    public void establecerClaseActual(Clase claseActual){
+    public HashMap<String, Clase> obtenerClases() {
+        return clases;
+    }
+
+    public void establecerClaseActual(Clase claseActual) {
         this.claseActual = claseActual;
     }
 
-    public Funcion obtenerMetodoActual(){
+    public Funcion obtenerMetodoActual() {
         return this.metodoActual;
     }
 
-    public void establecerMetodoActual(Funcion metodoActual){
+    public void establecerMetodoActual(Funcion metodoActual) {
         this.metodoActual = metodoActual;
     }
 
-    public Clase obtenerClasePorNombre(String nombreClase){
-        return clases.get("nombreClase");
+    public Clase obtenerClasePorNombre(String nombreClase) {
+        return clases.get(nombreClase);
     }
 
-    public void insertarClase(Clase nuevaClase){
+    public void insertarClase(Clase nuevaClase) {
         this.clases.put(nuevaClase.obtenerNombre(), nuevaClase);
     }
 
-    public void insertarClaseObject(){
+    public void insertarClaseObject() {
         Clase cObject = new Clase("Object");
         cObject.establecerHerencia(null);
         this.clases.put("Object", cObject);
     }
 
-    public void insertarClaseIO(){
+    public void insertarClaseIO() {
         Clase cIO = new Clase("IO");
         cIO.establecerHerencia("Object");
 
@@ -88,7 +113,10 @@ public class TablaDeSimbolos {
         this.clases.put("IO", cIO);
     }
 
-    public void insertarClasesPrimitivas(){
+    public void insertarClasesPrimitivas() {
+        Clase cObject = new Clase("Object");
+        this.clases.put(null, cObject);
+
         Clase cChar = new Clase("Char");
         cChar.establecerHerencia("Object");
         this.clases.put("Char", cChar);

@@ -30,15 +30,15 @@ public class Sintactico {
     // e implementar metodos de ayuda
     AuxiliarSintactico aux;
 
-    TablaDeSimbolos tablaDeSimbolos;
+    public TablaDeSimbolos tablaDeSimbolos;
 
     // Este constructor recibe como argumento la ruta en el sistema operativo
     // donde se encuentra el archivo con el codigo fuente
-    public Sintactico(File archivo) {
+    public Sintactico(File archivo, TablaDeSimbolos tablaDeSimbolos) {
         try {
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);
-            this.tablaDeSimbolos = new TablaDeSimbolos();
+            this.tablaDeSimbolos = tablaDeSimbolos;
 
             // Iniciamos el analisis sintactico
             this.start();
@@ -51,18 +51,19 @@ public class Sintactico {
     // Cada metodo corresponde a un no terminal de la gramatica
     // El metodo start es el inicial
     private void start() {
-        claseP(); 
+        claseP();
         metodoMain();
         exito();
     }
 
     // Este metodo corrobora que el analisis haya terminado con exito
     // Para ello, no debe venir nada despues del metodo main
-    private void exito(){
+    private void exito() {
         Token tokenActual = aux.tokenActual;
         if (!tokenActual.obtenerLexema().equals("EOF")) {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                    "NO PUEDE VENIR NADA DESPUÉS DEL MÉTODO MAIN! Se esperaba: EOF, se encontró: " + tokenActual.obtenerLexema());
+                    "NO PUEDE VENIR NADA DESPUÉS DEL MÉTODO MAIN! Se esperaba: EOF, se encontró: "
+                            + tokenActual.obtenerLexema());
         }
     }
 
@@ -84,6 +85,7 @@ public class Sintactico {
         aux.matcheo("main");
         aux.matcheo("(");
         aux.matcheo(")");
+
         bloqueMetodo();
     }
 
@@ -91,16 +93,18 @@ public class Sintactico {
         aux.matcheo("class");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_clase");
-        if (tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema()).equals("null")){
+        Clase checkeoClase = tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema());
+        if (checkeoClase == null) {
             Clase nuevaClase = new Clase(tokenActual.obtenerLexema());
             tablaDeSimbolos.establecerClaseActual(nuevaClase);
             restoClase();
             tablaDeSimbolos.insertarClase(nuevaClase);
-        } else{
+        } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "La clase " + tokenActual.obtenerLexema() + " ya fue declarada. No puede haber dos clases con el mismo nombre");
+                    "La clase " + tokenActual.obtenerLexema()
+                            + " ya fue declarada. No puede haber dos clases con el mismo nombre");
         }
-        
+
     }
 
     private void restoClase() {
@@ -166,27 +170,32 @@ public class Sintactico {
         }
         Tipo tAtr = tipo();
         aux.matcheo(":");
-        listaDeclAtributos(visibilidad,tAtr);
+        listaDeclAtributos(visibilidad, tAtr);
         aux.matcheo(";");
     }
-    //NUEVO METODO
-    private void listaDeclAtributos(boolean visibilidad,Tipo tAtr) {
+
+    // NUEVO METODO
+    private void listaDeclAtributos(boolean visibilidad, Tipo tAtr) {
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        if (tablaDeSimbolos.obtenerClaseActual().obtenerAtributoPorNombre(tokenActual.obtenerLexema()).equals("null")){
-            Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(),tAtr,visibilidad);
+        Atributo checkeoAtributo = tablaDeSimbolos.obtenerClaseActual()
+                .obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+        if (checkeoAtributo == null) {
+            Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(), tAtr, visibilidad);
             tablaDeSimbolos.obtenerClaseActual().insertarAtributo(nuevoAtributo);
-            listaDeclAtributosP(visibilidad,tAtr);
-        } else{
+            listaDeclAtributosP(visibilidad, tAtr);
+        } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "El atributo " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos atributos con el mismo nombre en una misma clase");
+                    "El atributo " + tokenActual.obtenerLexema()
+                            + " ya fue declarado. No puede haber dos atributos con el mismo nombre en una misma clase");
         }
     }
-    //NUEVO METODO
-    private void listaDeclAtributosP(boolean visibilidad,Tipo tAtr) {
+
+    // NUEVO METODO
+    private void listaDeclAtributosP(boolean visibilidad, Tipo tAtr) {
         if (aux.verifico(",")) {
             aux.matcheo(",");
-            listaDeclAtributos(visibilidad,tAtr);
+            listaDeclAtributos(visibilidad, tAtr);
         } else {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals(";")) {
@@ -214,19 +223,20 @@ public class Sintactico {
         aux.matcheo("fn");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        if (tablaDeSimbolos.obtenerClaseActual().obtenerMetodoPorNombre(tokenActual.obtenerLexema()).equals("null")){
-            Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(),formaMetodo);
+        Metodo checkeMetodo = tablaDeSimbolos.obtenerClaseActual().obtenerMetodoPorNombre(tokenActual.obtenerLexema());
+        if (checkeMetodo == null) {
+            Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(), formaMetodo);
             tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
             argumentosFormales();
             aux.matcheo("->");
             Tipo t = tipoMetodo();
             nuevoMetodo.establecerTipoRetorno(t);
-            //AGREGAR POSICION
             tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
             bloqueMetodo();
-        } else{
+        } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
-                "El método " + tokenActual.obtenerLexema() + " ya fue declarado. No puede haber dos métodos con el mismo nombre en una misma clase");
+                    "El método " + tokenActual.obtenerLexema()
+                            + " ya fue declarado. No puede haber dos métodos con el mismo nombre en una misma clase");
         }
     }
 
@@ -279,6 +289,20 @@ public class Sintactico {
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
         Variable nuevaVariable = new Variable(tokenActual.obtenerLexema(), tVar);
+        // Checkear que no se esta redefiniendo la variable en el metodo
+        if (tablaDeSimbolos.obtenerMetodoActual().variableYaDeclarada(tokenActual.obtenerLexema())) {
+            new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable " +
+                    tokenActual.obtenerLexema() + " en la posicion " + tokenActual.obtenerFila() + ":"
+                    + tokenActual.obtenerColumna() +
+                    " ya esta definida");
+        }
+        // Checkear que no se esta redefiniendo una variable de clase
+        if (tablaDeSimbolos.obtenerClaseActual().atributoYaDeclarado(tokenActual.obtenerLexema())) {
+            new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable " +
+                    tokenActual.obtenerLexema() + " en la posicion " + tokenActual.obtenerFila() + ":"
+                    + tokenActual.obtenerColumna() +
+                    " ya esta definida");
+        }
         tablaDeSimbolos.obtenerMetodoActual().insertarVariable(nuevaVariable);
         listaDeclVariablesP(tVar);
     }
@@ -313,6 +337,13 @@ public class Sintactico {
 
     private void listaArgumentosFormales() {
         Parametro nuevoParametro = argumentoFormal();
+        // Checkear que no se esta redefiniendo una variable de clase
+        if (tablaDeSimbolos.obtenerMetodoActual().parametroYaDeclarado(nuevoParametro.obtenerNombre())) {
+            new ErrorSemantico(aux.tokenActual.obtenerFila(), aux.tokenActual.obtenerColumna(), "El parametro " +
+                    aux.tokenActual.obtenerLexema() + " en la posicion " + aux.tokenActual.obtenerFila() + ":"
+                    + aux.tokenActual.obtenerColumna() +
+                    " ya se esta utilizando en este metodo!");
+        }
         tablaDeSimbolos.obtenerMetodoActual().insertarParametro(nuevoParametro);
         listaArgumentosFormales2();
     }
@@ -335,8 +366,7 @@ public class Sintactico {
         aux.matcheo(":");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        //AGREGAR POSICION
-        Parametro p = new Parametro(tokenActual.obtenerLexema(),tPar);
+        Parametro p = new Parametro(tokenActual.obtenerLexema(), tPar);
         return p;
     }
 
@@ -394,7 +424,7 @@ public class Sintactico {
     }
 
     private void sentencia() {
-        
+
         if (aux.verifico(";")) {
             aux.matcheo(";");
         } else if (aux.verifico("id_objeto") || aux.verifico("self")) {
@@ -435,7 +465,8 @@ public class Sintactico {
     }
 
     private void expresionP() {
-        String[] ter = { "+", "-", "!", "nil", "true", "false", "lit_ent", "lit_cad", "lit_car", "(", "self", "id_objeto",
+        String[] ter = { "+", "-", "!", "nil", "true", "false", "lit_ent", "lit_cad", "lit_car", "(", "self",
+                "id_objeto",
                 "id_clase", "new" };
         if (aux.verifico(";")) {
             aux.matcheo(";");
@@ -459,10 +490,21 @@ public class Sintactico {
 
     private void asignacion() {
         if (aux.verifico("id_objeto")) {
+            // Verificamos que la variable este previamente definida antes de la asignacion
+            // Verificamos si esta definida a nivel de metodo
+            // if(!tablaDeSimbolos.obtenerMetodoActual().variableYaDeclarada(aux.tokenActual.obtenerLexema())){
+            // Token tokenActual = aux.tokenActual;
+            // ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(),
+            // tokenActual.obtenerColumna(),
+            // "La variable \""+tokenActual.obtenerLexema() + "\" en " +
+            // tokenActual.obtenerFila()+", "+tokenActual.obtenerColumna() +
+            // " no esta declarada!");
+            // };
             asignacionVarSimple();
             aux.matcheo("=");
             expresion();
         } else if (aux.verifico("self")) {
+
             asignacionSelfSimple();
             aux.matcheo("=");
             expresion();
