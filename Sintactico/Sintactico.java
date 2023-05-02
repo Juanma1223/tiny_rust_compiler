@@ -81,12 +81,19 @@ public class Sintactico {
     }
 
     private void metodoMain() {
+        Clase nuevaClase = new Clase("Fantasma");
+        nuevaClase.establecerHerencia("Object");
+        tablaDeSimbolos.establecerClaseActual(nuevaClase);
         aux.matcheo("fn");
         aux.matcheo("main");
         aux.matcheo("(");
         aux.matcheo(")");
-
+        Metodo nuevoMetodo = new Metodo("main",false);
+        nuevoMetodo.establecerTipoRetorno(new TipoVoid("void"));
+        tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
         bloqueMetodo();
+        tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
+        tablaDeSimbolos.insertarClase(nuevaClase);
     }
 
     private void clase() {
