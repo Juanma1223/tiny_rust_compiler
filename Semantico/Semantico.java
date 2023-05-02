@@ -47,7 +47,7 @@ public class Semantico {
         HashMap<String, Clase> clasesRevisadas = new HashMap<String, Clase>();
         while (claseActual.obtenerNombre() != "Object") {
             if (clasesRevisadas.get(claseActual.obtenerHerencia()) != null) {
-                new ErrorSemantico(0, 0, "Herencia circular encontrada para la clase " + claseActual.obtenerNombre() +
+                new ErrorSemantico(claseActual.obtenerFila(), claseActual.obtenerColumna(), "Herencia circular encontrada para la clase " + claseActual.obtenerNombre() +
                         " que hereda de " + claseActual.obtenerHerencia());
             }else{
                 // Insertamos la clase como ya revisada

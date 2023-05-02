@@ -1,4 +1,5 @@
-/*ERROR: No puede haber herencia circular*/
+/*ERROR: LINEA 24 | COLUMNA 7 | Herencia circular encontrada para la clase Prueba3 que hereda de Prueba.
+No puede haber herencia circular*/
 class Prueba : Prueba2{
 	I32: a;
 	pub Str: b;
