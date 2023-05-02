@@ -15,6 +15,6 @@ public class EjecutadorSemantico {
         // Abrimos el archivo y almacenamos su informacion
         File archivo = new File(args[0]);
         new Semantico(archivo);
-        System.out.println("CORRECTO: ANALISIS SEMANTICO");
+        System.out.println("CORRECTO: SEMANTICO - DECLARACIONES");
     }
 }
