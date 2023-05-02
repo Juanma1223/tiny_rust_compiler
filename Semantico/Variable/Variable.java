@@ -6,10 +6,18 @@ public class Variable {
     private String nombre;
     private Tipo tipo;
     private int posicion;
+    private int fila, columna;
 
     public Variable(String nombre, Tipo tipo) {
         this.nombre = nombre;
         this.tipo = tipo;
+    }
+
+    public Variable(String nombre, Tipo tipo, int fila, int columna) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.fila = fila;
+        this.columna = columna;
     }
 
     public String toJson() {
@@ -37,5 +45,13 @@ public class Variable {
 
     public void establecerPosicion(int posicion) {
         this.posicion = posicion;
+    }
+
+    public int obtenerFila(){
+        return this.fila;
+    }
+
+    public int obtenerColumna(){
+        return this.columna;
     }
 }

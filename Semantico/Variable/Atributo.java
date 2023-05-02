@@ -11,6 +11,11 @@ public class Atributo extends Variable {
         this.esPublico = esPublico;
     }
 
+    public Atributo(String nombre, Tipo tipo, int fila, int columna, boolean esPublico) {
+        super(nombre, tipo, fila, columna);
+        this.esPublico = esPublico;
+    }
+
     public String toJson() {
         // Construimos el json de forma recursiva
         StringBuilder sb = new StringBuilder();

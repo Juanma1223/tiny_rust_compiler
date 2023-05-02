@@ -1,5 +1,5 @@
-/*ERROR: No puede haber herencia circular*/
-class Prueba : Prueba2{
+/*CORRECTO*/
+class Prueba {
 	I32: a;
 	pub Str: b;
 	Array I32: c;
@@ -8,24 +8,14 @@ class Prueba : Prueba2{
 	create(){
 		a = 42;
 	}
-	fn get_a(I32 : a, Char : d) -> I32 {
+	fn get_a() -> I32 {
 		return a;
 	}
 	static fn imprimo_algo() -> void {
+		
 		(IO.out_string("hola mundo"));
 	}
 }
-
-class Prueba2 : Prueba3 {
-
-}
-
-class Prueba3 : Prueba {
-
-}
-
 fn main () {
-	I32 : z;
-	z = new I32[2];
 	c = new I32[1+2];
 }

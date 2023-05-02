@@ -11,11 +11,17 @@ public class Clase {
     private String heredaDe;
     private HashMap<String, Atributo> atributos = new HashMap<String, Atributo>();
     private HashMap<String, Metodo> metodos = new HashMap<String, Metodo>();
-    private Constructor constructor;
+    private Constructor constructor = new Constructor();
+    private int fila, columna;
 
     public Clase(String nombre) {
         this.nombre = nombre;
-        this.constructor = new Constructor();
+    }
+
+    public Clase(String nombre, int fila, int columna) {
+        this.nombre = nombre;
+        this.fila = fila;
+        this.columna = columna;
     }
 
     public String toJson() {
@@ -87,6 +93,9 @@ public class Clase {
     }
 
     public void insertarAtributo(Atributo atributo) {
+        // Guardamos el orden de declaracion de los atributos mediante su posicion
+        int posicion = this.atributos.size();
+        atributo.establecerPosicion(posicion);
         this.atributos.put(atributo.obtenerNombre(), atributo);
     }
 
@@ -98,6 +107,14 @@ public class Clase {
         } else {
             return true;
         }
+    }
+
+    public int obtenerFila(){
+        return this.fila;
+    }
+
+    public int obtenerColumna(){
+        return this.columna;
     }
 
 }

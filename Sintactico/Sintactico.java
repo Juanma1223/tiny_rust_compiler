@@ -95,7 +95,7 @@ public class Sintactico {
         aux.matcheoId("id_clase");
         Clase checkeoClase = tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema());
         if (checkeoClase == null) {
-            Clase nuevaClase = new Clase(tokenActual.obtenerLexema());
+            Clase nuevaClase = new Clase(tokenActual.obtenerLexema(), tokenActual.obtenerFila(), tokenActual.obtenerColumna());
             tablaDeSimbolos.establecerClaseActual(nuevaClase);
             restoClase();
             tablaDeSimbolos.insertarClase(nuevaClase);
@@ -181,7 +181,7 @@ public class Sintactico {
         Atributo checkeoAtributo = tablaDeSimbolos.obtenerClaseActual()
                 .obtenerAtributoPorNombre(tokenActual.obtenerLexema());
         if (checkeoAtributo == null) {
-            Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(), tAtr, visibilidad);
+            Atributo nuevoAtributo = new Atributo(tokenActual.obtenerLexema(), tAtr, tokenActual.obtenerFila(), tokenActual.obtenerColumna(), visibilidad);
             tablaDeSimbolos.obtenerClaseActual().insertarAtributo(nuevoAtributo);
             listaDeclAtributosP(visibilidad, tAtr);
         } else {
@@ -288,20 +288,12 @@ public class Sintactico {
     private void listaDeclVariables(Tipo tVar) {
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        Variable nuevaVariable = new Variable(tokenActual.obtenerLexema(), tVar);
+        Variable nuevaVariable = new Variable(tokenActual.obtenerLexema(), tVar, tokenActual.obtenerFila(), tokenActual.obtenerColumna());
         // Checkear que no se esta redefiniendo la variable en el metodo
         if (tablaDeSimbolos.obtenerMetodoActual().variableYaDeclarada(tokenActual.obtenerLexema())) {
             new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable " +
-                    tokenActual.obtenerLexema() + " en la posicion " + tokenActual.obtenerFila() + ":"
-                    + tokenActual.obtenerColumna() +
-                    " ya esta definida");
-        }
-        // Checkear que no se esta redefiniendo una variable de clase
-        if (tablaDeSimbolos.obtenerClaseActual().atributoYaDeclarado(tokenActual.obtenerLexema())) {
-            new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable " +
-                    tokenActual.obtenerLexema() + " en la posicion " + tokenActual.obtenerFila() + ":"
-                    + tokenActual.obtenerColumna() +
-                    " ya esta definida");
+                    tokenActual.obtenerLexema() + " ya fue declarada." +
+                    " No puede haber dos variables con el mismo nombre dentro de una función");
         }
         tablaDeSimbolos.obtenerMetodoActual().insertarVariable(nuevaVariable);
         listaDeclVariablesP(tVar);
@@ -337,12 +329,11 @@ public class Sintactico {
 
     private void listaArgumentosFormales() {
         Parametro nuevoParametro = argumentoFormal();
-        // Checkear que no se esta redefiniendo una variable de clase
+        // Checkear que no se esta redefiniendo el parámetro en el método
         if (tablaDeSimbolos.obtenerMetodoActual().parametroYaDeclarado(nuevoParametro.obtenerNombre())) {
-            new ErrorSemantico(aux.tokenActual.obtenerFila(), aux.tokenActual.obtenerColumna(), "El parametro " +
-                    aux.tokenActual.obtenerLexema() + " en la posicion " + aux.tokenActual.obtenerFila() + ":"
-                    + aux.tokenActual.obtenerColumna() +
-                    " ya se esta utilizando en este metodo!");
+            new ErrorSemantico(nuevoParametro.obtenerFila(), nuevoParametro.obtenerColumna(), "El parámetro " +
+                    nuevoParametro.obtenerNombre() + " ya fue declarado. " +
+                    "No puede haber dos parámetros con el mismo nombre dentro de una función");
         }
         tablaDeSimbolos.obtenerMetodoActual().insertarParametro(nuevoParametro);
         listaArgumentosFormales2();
@@ -366,7 +357,7 @@ public class Sintactico {
         aux.matcheo(":");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_objeto");
-        Parametro p = new Parametro(tokenActual.obtenerLexema(), tPar);
+        Parametro p = new Parametro(tokenActual.obtenerLexema(), tPar, tokenActual.obtenerFila(), tokenActual.obtenerColumna());
         return p;
     }
 
