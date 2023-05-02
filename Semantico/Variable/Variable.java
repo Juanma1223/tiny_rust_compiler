@@ -26,7 +26,7 @@ public class Variable {
         sb.append("{").append(System.lineSeparator());
         sb.append("\"nombre\":").append("\"" + nombre + "\",").append(System.lineSeparator());
         sb.append("\"tipo\":").append("\"" + tipo.obtenerTipo() + "\",").append(System.lineSeparator());
-        sb.append("\"posicion\":").append("\"" + tipo.obtenerTipo() + "\"").append(System.lineSeparator());
+        sb.append("\"posicion\":").append("\"" + posicion + "\"").append(System.lineSeparator());
         sb.append("}").append(System.lineSeparator());
         return sb.toString();
     }
