@@ -114,9 +114,6 @@ public class TablaDeSimbolos {
     }
 
     public void insertarClasesPrimitivas() {
-        Clase cObject = new Clase("Object");
-        this.clases.put(null, cObject);
-
         Clase cChar = new Clase("Char");
         cChar.establecerHerencia("Object");
         this.clases.put("Char", cChar);
