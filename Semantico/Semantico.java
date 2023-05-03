@@ -18,7 +18,7 @@ public class Semantico {
         tablaDeSimbolos = sintacticoTS.tablaDeSimbolos;
         // Consolidamos la tabla de simbolos con checkeos extra
         consolidarTS();
-        try (FileWriter escritor = new FileWriter(archivo+".json")) {
+        try (FileWriter escritor = new FileWriter(archivo + ".json")) {
             escritor.write(this.tablaDeSimbolos.toJson(archivo.getName()));
         } catch (IOException e) {
             System.out.println("Error al intentar escribir el json");
@@ -47,13 +47,22 @@ public class Semantico {
         HashMap<String, Clase> clasesRevisadas = new HashMap<String, Clase>();
         while (claseActual.obtenerNombre() != "Object") {
             if (clasesRevisadas.get(claseActual.obtenerHerencia()) != null) {
-                new ErrorSemantico(claseActual.obtenerFila(), claseActual.obtenerColumna(), "Herencia circular encontrada para la clase " + claseActual.obtenerNombre() +
-                        " que hereda de " + claseActual.obtenerHerencia());
-            }else{
+                new ErrorSemantico(claseActual.obtenerFila(), claseActual.obtenerColumna(),
+                        "Herencia circular encontrada para la clase " + claseActual.obtenerNombre() +
+                                " que hereda de " + claseActual.obtenerHerencia());
+            } else {
                 // Insertamos la clase como ya revisada
                 clasesRevisadas.put(clase.obtenerNombre(), claseActual);
                 // Revisamos la siguiente clase
+                String claseAnterior = claseActual.obtenerNombre();
                 claseActual = tablaDeSimbolos.obtenerClasePorNombre(claseActual.obtenerHerencia());
+                // Si la clase actual es null significa que la clase anterior hereda de otra clase inexistente
+                if (claseActual == null) {
+                    claseActual = tablaDeSimbolos.obtenerClasePorNombre(claseAnterior);
+                    new ErrorSemantico(claseActual.obtenerFila(), claseActual.obtenerColumna(),
+                            "La clase " + claseActual.obtenerNombre() +
+                                    " hereda de una clase no declarada: " + claseActual.obtenerHerencia());
+                }
             }
         }
     }

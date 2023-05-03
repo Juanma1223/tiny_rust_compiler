@@ -23,6 +23,7 @@ public class Atributo extends Variable {
         sb.append("\"nombre\":").append("\"" + super.obtenerNombre() + "\",").append(System.lineSeparator());
         sb.append("\"tipo\":").append("\"" + super.obtenerTipo().obtenerTipo() + "\",").append(System.lineSeparator());
         sb.append("\"posicion\":").append("\"" + super.obtenerPosicion() + "\"").append(System.lineSeparator());
+        sb.append("\"public\":").append("\"" + this.obtenerVisibilidad() + "\"").append(System.lineSeparator());
         sb.append("}").append(System.lineSeparator());
         return sb.toString();
     }

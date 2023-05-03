@@ -61,8 +61,24 @@ public class Clase {
         return this.nombre;
     }
 
-    public void establecerHerencia(String heredaDe) {
-        this.heredaDe = heredaDe;
+    public void establecerHerencia(Clase superClase) {
+        this.heredaDe = superClase.obtenerNombre();
+        // Agregamos metodos y atributos de la superclase a la subclase
+        for (HashMap.Entry<String, Atributo> atributo : superClase.atributos.entrySet()) {
+            // Si el atributo ya se encuentra definido en la subclase, lanzamos un error
+            // ya que no se pueden redefinir atributos
+            if (this.atributos.get(atributo.getValue().obtenerNombre()) != null) {
+                new ErrorSemantico(0, 0,
+                        "El atributo " + atributo.getValue().obtenerNombre() + " en la clase " + this.obtenerNombre()
+                                + " ya esta definido en la superclase");
+            } else {
+                this.atributos.put(atributo.getValue().obtenerNombre(), atributo.getValue());
+            }
+        }
+        for (HashMap.Entry<String, Metodo> metodo : superClase.metodos.entrySet()) {
+            // El metodo si se puede redefinir, por lo que solo lo ingresamos
+            this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
+        }
     }
 
     public String obtenerHerencia() {
@@ -109,11 +125,11 @@ public class Clase {
         }
     }
 
-    public int obtenerFila(){
+    public int obtenerFila() {
         return this.fila;
     }
 
-    public int obtenerColumna(){
+    public int obtenerColumna() {
         return this.columna;
     }
 

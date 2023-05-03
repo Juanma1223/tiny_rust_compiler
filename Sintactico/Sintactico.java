@@ -82,7 +82,7 @@ public class Sintactico {
 
     private void metodoMain() {
         Clase nuevaClase = new Clase("Fantasma");
-        nuevaClase.establecerHerencia("Object");
+        nuevaClase.establecerHerencia(tablaDeSimbolos.obtenerClasePorNombre("Object"));
         tablaDeSimbolos.establecerClaseActual(nuevaClase);
         aux.matcheo("fn");
         aux.matcheo("main");
@@ -119,12 +119,12 @@ public class Sintactico {
             aux.matcheo(":");
             Token tokenActual = aux.tokenActual;
             aux.matcheoId("id_clase");
-            tablaDeSimbolos.obtenerClaseActual().establecerHerencia(tokenActual.obtenerLexema());
+            tablaDeSimbolos.obtenerClaseActual().establecerHerencia(tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema()));
             aux.matcheo("{");
             miembroP();
             aux.matcheo("}");
         } else if (aux.verifico("{")) {
-            tablaDeSimbolos.obtenerClaseActual().establecerHerencia("Object");
+            tablaDeSimbolos.obtenerClaseActual().establecerHerencia(tablaDeSimbolos.obtenerClasePorNombre("Object"));
             aux.matcheo("{");
             miembroP();
             aux.matcheo("}");
