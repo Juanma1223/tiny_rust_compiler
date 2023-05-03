@@ -30,7 +30,18 @@ public class Semantico {
     }
 
     private void consolidarTS() {
+        establecerClases();
         herenciaCircular();
+    }
+
+    // Este metodo lee el nombre de las clases que heredan de otra e
+    // inserta los atributos y metodos de la superclase en la subclase
+    private void establecerClases(){
+        for (HashMap.Entry<String, Clase> clase : tablaDeSimbolos.obtenerClases().entrySet()) {
+            Clase superclase = tablaDeSimbolos.obtenerClasePorNombre(clase.getValue().obtenerHerencia());
+            clase.getValue().heredarAtributosMetodos(superclase);
+            herenciaCircularClase(clase.getValue());
+        }
     }
 
     // Para cada clase de la tabla de simbolos verificar que no tenga herencia

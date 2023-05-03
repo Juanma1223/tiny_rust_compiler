@@ -61,7 +61,12 @@ public class Clase {
         return this.nombre;
     }
 
-    public void establecerHerencia(Clase superClase) {
+    public void establecerHerencia(String heredaDe){
+        this.heredaDe = heredaDe;
+    }
+
+    // Esta clase debe heredar los atributos y metodos de la superclase
+    public void heredarAtributosMetodos(Clase superClase) {
         if (superClase != null) {
             this.heredaDe = superClase.obtenerNombre();
             // Agregamos metodos y atributos de la superclase a la subclase
