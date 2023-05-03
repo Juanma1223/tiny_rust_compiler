@@ -62,22 +62,28 @@ public class Clase {
     }
 
     public void establecerHerencia(Clase superClase) {
-        this.heredaDe = superClase.obtenerNombre();
-        // Agregamos metodos y atributos de la superclase a la subclase
-        for (HashMap.Entry<String, Atributo> atributo : superClase.atributos.entrySet()) {
-            // Si el atributo ya se encuentra definido en la subclase, lanzamos un error
-            // ya que no se pueden redefinir atributos
-            if (this.atributos.get(atributo.getValue().obtenerNombre()) != null) {
-                new ErrorSemantico(0, 0,
-                        "El atributo " + atributo.getValue().obtenerNombre() + " en la clase " + this.obtenerNombre()
-                                + " ya esta definido en la superclase");
-            } else {
-                this.atributos.put(atributo.getValue().obtenerNombre(), atributo.getValue());
+        if (superClase != null) {
+            this.heredaDe = superClase.obtenerNombre();
+            // Agregamos metodos y atributos de la superclase a la subclase
+            for (HashMap.Entry<String, Atributo> atributo : superClase.atributos.entrySet()) {
+                // Si el atributo ya se encuentra definido en la subclase, lanzamos un error
+                // ya que no se pueden redefinir atributos
+                if (this.atributos.get(atributo.getValue().obtenerNombre()) != null) {
+                    new ErrorSemantico(0, 0,
+                            "El atributo " + atributo.getValue().obtenerNombre() + " en la clase "
+                                    + this.obtenerNombre()
+                                    + " ya esta definido en la superclase");
+                } else {
+                    this.atributos.put(atributo.getValue().obtenerNombre(), atributo.getValue());
+                }
             }
-        }
-        for (HashMap.Entry<String, Metodo> metodo : superClase.metodos.entrySet()) {
-            // El metodo si se puede redefinir, por lo que solo lo ingresamos
-            this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
+            for (HashMap.Entry<String, Metodo> metodo : superClase.metodos.entrySet()) {
+                // El metodo si se puede redefinir, por lo que solo lo ingresamos
+                this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
+            }
+        } else {
+            // Utilizado para el caso Object
+            this.heredaDe = "null";
         }
     }
 
