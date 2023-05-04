@@ -1,5 +1,5 @@
-/*ERROR: LINEA 4 | COLUMNA 11 | El atributo a no se puede redefinir en la clase Prueba2
-ya que ya se encuentra definido en esta superclase.*/
+/*ERROR: LINEA 15 | COLUMNA 11 | El atributo a no se puede redefinir en la clase Prueba2
+ya que ya se encuentra definido en su superclase.*/
 class Prueba {
 	pub I32: a;
 	Str: b;
@@ -12,7 +12,7 @@ class Prueba {
 }
 
 class Prueba2 : Prueba {
-    pub I32: a;
+	pub I32: a;
 }
 
 fn main () {

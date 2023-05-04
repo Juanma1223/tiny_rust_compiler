@@ -81,10 +81,11 @@ public class Clase {
                 // Si el atributo ya se encuentra definido en la subclase, lanzamos un error
                 // ya que no se pueden redefinir atributos
                 if (this.atributos.get(atributo.getValue().obtenerNombre()) != null) {
-                    new ErrorSemantico(atributo.getValue().obtenerFila(), atributo.getValue().obtenerColumna(),
-                            "El atributo " + atributo.getValue().obtenerNombre() + " no se puede redefinir en la clase "
+                    Atributo atr = this.atributos.get(atributo.getValue().obtenerNombre());
+                    new ErrorSemantico(atr.obtenerFila(), atr.obtenerColumna(),
+                            "El atributo " + atr.obtenerNombre() + " no se puede redefinir en la clase "
                                     + this.obtenerNombre()
-                                    + " ya que ya se encuentra definido en esta superclase");
+                                    + " ya que ya se encuentra definido en su superclase.");
                 } else {
                     this.atributos.put(atributo.getValue().obtenerNombre(), atributo.getValue());
                 }
