@@ -1,4 +1,4 @@
-/*CORRECTO*/
+/*ERROR: LINEA 29 | COLUMNA 5 |  No se puede cambiar el tipo de retorno de un método heredado*/
 class Prueba {
 	I32: a;
 	Str: b;
@@ -12,7 +12,7 @@ class Prueba {
 	fn get_a() -> I32 {
 		return a;
 	}
-    fn get_b() -> Str {
+	fn get_b() -> Str {
 		return b;
 	}
 	static fn imprimo_algo() -> void {
@@ -21,10 +21,13 @@ class Prueba {
 }
 class Prueba2 : Prueba{
 	Bool: f;
-    create(Bool: f){
+	create(Bool: f){
 	}
-    fn get_f() -> Bool {
+	fn get_f() -> Bool {
 		return f;
+	}
+	fn get_b() -> I32 {
+		return b;
 	}
 }
 fn main () {

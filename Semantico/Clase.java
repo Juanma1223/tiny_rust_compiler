@@ -13,6 +13,7 @@ public class Clase {
     private HashMap<String, Metodo> metodos = new HashMap<String, Metodo>();
     private Constructor constructor = new Constructor();
     private int fila, columna;
+    private Boolean tieneConstructor = false;
 
     public Clase(String nombre) {
         this.nombre = nombre;
@@ -96,6 +97,15 @@ public class Clase {
                 if(this.metodos.get(metodo.getValue().obtenerNombre()) == null){
                     this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
                 }
+                else {
+                    Metodo m1 = this.metodos.get(metodo.getValue().obtenerNombre());
+                    if (!(m1.obtenerTipoRetorno().obtenerTipo().equals(metodo.getValue().obtenerTipoRetorno().obtenerTipo()))){
+                        new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar el tipo de retorno de un método heredado");
+                    }
+                    if (m1.obtenerParametros().size() != metodo.getValue().obtenerParametros().size()){
+                        new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar la cantidad de parámetros de un método heredado");
+                    }
+                }
             }
             // Actualizamos la posicion de los metodos de la subclase en funcion de los de la superclase
             for (HashMap.Entry<String, Metodo> metodo : this.metodos.entrySet()) {
@@ -120,8 +130,13 @@ public class Clase {
         return this.constructor;
     }
 
+    public Boolean tieneConstructor(){
+        return tieneConstructor;
+    }
+
     public void establecerConstructor(Constructor constructor) {
         this.constructor = constructor;
+        tieneConstructor = true;
     }
 
     public Atributo obtenerAtributoPorNombre(String nombre) {

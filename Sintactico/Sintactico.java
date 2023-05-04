@@ -213,12 +213,17 @@ public class Sintactico {
     }
 
     private void constructor() {
-        aux.matcheo("create");
-        Constructor nuevoConstructor = new Constructor();
-        tablaDeSimbolos.establecerMetodoActual(nuevoConstructor);
-        argumentosFormales();
-        tablaDeSimbolos.obtenerClaseActual().establecerConstructor(nuevoConstructor);
-        bloqueMetodo();
+        Token tokenActual = aux.tokenActual;
+        if (tablaDeSimbolos.obtenerClaseActual().tieneConstructor() == false){
+            aux.matcheo("create");
+            Constructor nuevoConstructor = new Constructor();
+            tablaDeSimbolos.establecerMetodoActual(nuevoConstructor);
+            argumentosFormales();
+            tablaDeSimbolos.obtenerClaseActual().establecerConstructor(nuevoConstructor);
+            bloqueMetodo();
+        } else {
+            new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),"Ya hay un constructor declarado para esta clase");
+        }
     }
 
     private void metodo() {
@@ -232,7 +237,7 @@ public class Sintactico {
         aux.matcheoId("id_objeto");
         Metodo checkeMetodo = tablaDeSimbolos.obtenerClaseActual().obtenerMetodoPorNombre(tokenActual.obtenerLexema());
         if (checkeMetodo == null) {
-            Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(), formaMetodo);
+            Metodo nuevoMetodo = new Metodo(tokenActual.obtenerLexema(), formaMetodo, tokenActual.obtenerFila(), tokenActual.obtenerColumna());
             tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
             argumentosFormales();
             aux.matcheo("->");

@@ -1,4 +1,5 @@
-/*CORRECTO*/
+/*ERROR: LINEA 27 | COLUMNA 2 | Ya hay un constructor declarado para esta clase
+No puede haber más de un constructor por clase*/
 class Prueba {
 	I32: a;
 	Str: b;
@@ -12,7 +13,7 @@ class Prueba {
 	fn get_a() -> I32 {
 		return a;
 	}
-	fn get_b(Int:a,Int:x) -> Str {
+	fn get_b() -> Str {
 		return b;
 	}
 	static fn imprimo_algo() -> void {
@@ -23,11 +24,10 @@ class Prueba2 : Prueba{
 	Bool: f;
 	create(Bool: f){
 	}
+	create(Bool: g){
+	}
 	fn get_f() -> Bool {
 		return f;
-	}
-	fn get_b(Int:a,Int:y) -> Str {
-		return b;
 	}
 }
 fn main () {

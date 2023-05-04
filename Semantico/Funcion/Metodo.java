@@ -10,6 +10,7 @@ public class Metodo extends Funcion {
     private boolean esEstatico;
     private Tipo tipoRetorno;
     private int posicion;
+    private int fila, columna;
 
     public Metodo(String nombre, boolean esEstatico) {
         this.nombre = nombre;
@@ -20,6 +21,13 @@ public class Metodo extends Funcion {
         this.nombre = nombre;
         this.esEstatico = esEstatico;
         this.tipoRetorno = tipoRetorno;
+    }
+
+    public Metodo(String nombre, boolean esEstatico, int fila, int columna) {
+        this.nombre = nombre;
+        this.esEstatico = esEstatico;
+        this.fila = fila;
+        this.columna = columna;
     }
 
     public String toJson() {
@@ -69,4 +77,11 @@ public class Metodo extends Funcion {
         this.posicion = posicion;
     }
 
+    public int obtenerFila(){
+        return this.fila;
+    }
+
+    public int obtenerColumna(){
+        return this.columna;
+    }
 }
