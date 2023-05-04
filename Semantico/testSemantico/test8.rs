@@ -1,4 +1,5 @@
-/*ERROR: No se puede redefinir un atributo*/
+/*ERROR: LINEA 4 | COLUMNA 11 | El atributo a no se puede redefinir en la clase Prueba2
+ya que ya se encuentra definido en esta superclase.*/
 class Prueba {
 	pub I32: a;
 	Str: b;

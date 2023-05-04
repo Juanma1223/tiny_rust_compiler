@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import Semantico.Tipo.Tipo;
 import Semantico.Variable.Parametro;
-import Semantico.Variable.Variable;
 
 public class Metodo extends Funcion {
     private String nombre;

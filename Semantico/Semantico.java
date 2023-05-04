@@ -72,7 +72,7 @@ public class Semantico {
                     claseActual = tablaDeSimbolos.obtenerClasePorNombre(claseAnterior);
                     new ErrorSemantico(claseActual.obtenerFila(), claseActual.obtenerColumna(),
                             "La clase " + claseActual.obtenerNombre() +
-                                    " hereda de una clase no declarada: " + claseActual.obtenerHerencia());
+                                    " hereda de una clase no declarada.");
                 }
             }
         }

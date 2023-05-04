@@ -26,7 +26,7 @@ class Prueba2 : Prueba{
 	fn get_f() -> Bool {
 		return f;
 	}
-	fn get_b(Str:b) -> Str {
+	fn get_b(Int:a,Int:y) -> Str {
 		return b;
 	}
 }
