@@ -69,6 +69,13 @@ public class Clase {
     public void heredarAtributosMetodos(Clase superClase) {
         if (superClase != null) {
             this.heredaDe = superClase.obtenerNombre();
+            // Actualizamos la posicion de los atributos para corresponderlas con las de la superclase
+            int offset = superClase.atributos.size();
+            for (HashMap.Entry<String, Atributo> atributo : this.atributos.entrySet()) {
+                Atributo atributoActual = atributo.getValue();
+                atributoActual.establecerPosicion(atributoActual.obtenerPosicion()+offset);
+                this.atributos.put(atributoActual.obtenerNombre(), atributoActual);
+            }
             // Agregamos metodos y atributos de la superclase a la subclase
             for (HashMap.Entry<String, Atributo> atributo : superClase.atributos.entrySet()) {
                 // Si el atributo ya se encuentra definido en la subclase, lanzamos un error
@@ -82,9 +89,21 @@ public class Clase {
                     this.atributos.put(atributo.getValue().obtenerNombre(), atributo.getValue());
                 }
             }
+            offset = superClase.metodos.size();
             for (HashMap.Entry<String, Metodo> metodo : superClase.metodos.entrySet()) {
-                // El metodo si se puede redefinir, por lo que solo lo ingresamos
-                this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
+                // Si el metodo se esta redefiniendo, no debe insertarse
+                if(this.metodos.get(metodo.getValue().obtenerNombre()) == null){
+                    this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
+                }
+            }
+            // Actualizamos la posicion de los metodos de la subclase en funcion de los de la superclase
+            for (HashMap.Entry<String, Metodo> metodo : this.metodos.entrySet()) {
+                // No actualizamos la posicion en aquellos metodos que vienen desde la superclase
+                if(superClase.metodos.get(metodo.getValue().obtenerNombre()) == null){
+                    Metodo metodoActual = metodo.getValue();
+                    metodoActual.establecerPosicion(metodoActual.obtenerPosicion()+offset);
+                    this.metodos.put(metodoActual.obtenerNombre(), metodoActual);
+                }
             }
         } else {
             // Utilizado para el caso Object

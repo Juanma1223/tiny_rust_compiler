@@ -12,7 +12,7 @@ class Prueba {
 	fn get_a() -> I32 {
 		return a;
 	}
-	fn get_b() -> Str {
+	fn get_b(Int:a,Int:x) -> Str {
 		return b;
 	}
 	static fn imprimo_algo() -> void {
