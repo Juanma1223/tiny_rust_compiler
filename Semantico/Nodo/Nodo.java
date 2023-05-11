@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Nodo {
 
     private Nodo padre;
-    private ArrayList<NodoClase> clases;
+    private ArrayList<NodoClase> clases = new ArrayList<>();
 
     public void establecerPadre(Nodo padre){
         this.padre = padre;
