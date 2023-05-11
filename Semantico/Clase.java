@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import Semantico.Variable.Atributo;
 import Semantico.Funcion.Metodo;
+import Semantico.Tipo.TipoReferencia;
 import Semantico.Funcion.Constructor;
 
 public class Clase {
@@ -150,8 +151,16 @@ public class Clase {
         return this.atributos.get(nombre);
     }
 
+    public HashMap<String, Atributo> obtenerAtributos() {
+        return this.atributos;
+    }
+
     public Metodo obtenerMetodoPorNombre(String nombre) {
         return this.metodos.get(nombre);
+    }
+
+    public HashMap<String, Metodo> obtenerMetodos() {
+        return this.metodos;
     }
 
     public void insertarMetodo(Metodo metodo) {

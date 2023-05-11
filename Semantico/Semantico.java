@@ -5,7 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import Semantico.Funcion.Constructor;
+import Semantico.Funcion.Metodo;
 import Semantico.Nodo.Nodo;
+import Semantico.Variable.Atributo;
+import Semantico.Variable.Parametro;
+import Semantico.Variable.Variable;
 import Sintactico.Sintactico;
 
 public class Semantico {
@@ -33,8 +38,78 @@ public class Semantico {
     }
 
     private void consolidarTS() {
+        chequeoTipos();
         establecerClases();
         herenciaCircular();
+    }
+
+    //Este método chequea que los tipos de los atributos, parámetros y variables declaradas existan
+    private void chequeoTipos(){
+        for (HashMap.Entry<String, Clase> clase : tablaDeSimbolos.obtenerClases().entrySet()) {
+            HashMap<String, Atributo> atributos = clase.getValue().obtenerAtributos();
+            for (HashMap.Entry<String, Atributo> atributo : atributos.entrySet()) {
+                Atributo atributoActual = atributo.getValue();
+                if (atributoActual.obtenerTipo().equals("TipoReferencia")){
+                    if (tablaDeSimbolos.obtenerClasePorNombre(atributoActual.obtenerTipo().obtenerTipo()) == null){
+                        new ErrorSemantico(atributoActual.obtenerFila(),atributoActual.obtenerColumna(),"El tipo del atributo " +
+                        atributoActual.obtenerNombre() + " no está declarado.");
+                    }
+                }
+            }
+            if(clase.getValue().tieneConstructor()){
+                Constructor constructor = clase.getValue().obtenerConstructor();
+                HashMap<String, Parametro> parametros = constructor.obtenerParametros();
+                for (HashMap.Entry<String, Parametro> parametro : parametros.entrySet()) {
+                    Parametro parametroActual = parametro.getValue();
+                    if (parametroActual.obtenerTipo().equals("TipoReferencia")){
+                        if (tablaDeSimbolos.obtenerClasePorNombre(parametroActual.obtenerTipo().obtenerTipo()) == null){
+                            new ErrorSemantico(parametroActual.obtenerFila(),parametroActual.obtenerColumna(),"El tipo del parámetro " +
+                            parametroActual.obtenerNombre() + " no está declarado.");
+                        }
+                    }
+                }
+                HashMap<String, Variable> variables = constructor.obtenerVariables();
+                for (HashMap.Entry<String, Variable> variable : variables.entrySet()) {
+                    Variable variableActual = variable.getValue();
+                    if (variableActual.obtenerTipo().equals("TipoReferencia")){
+                        if (tablaDeSimbolos.obtenerClasePorNombre(variableActual.obtenerTipo().obtenerTipo()) == null){
+                            new ErrorSemantico(variableActual.obtenerFila(),variableActual.obtenerColumna(),"El tipo de la variable " +
+                            variableActual.obtenerNombre() + " no está declarado.");
+                        }
+                    }
+                }
+            }
+            HashMap<String, Metodo> metodos = clase.getValue().obtenerMetodos();
+            for (HashMap.Entry<String, Metodo> metodo : metodos.entrySet()) {
+                Metodo metodoActual = metodo.getValue();
+                if (metodoActual.obtenerTipoRetorno().equals("TipoReferencia")){
+                    if (tablaDeSimbolos.obtenerClasePorNombre(metodoActual.obtenerTipoRetorno().obtenerTipo()) == null){
+                        new ErrorSemantico(metodoActual.obtenerFila(),metodoActual.obtenerColumna(),"El tipo de retorno del método " +
+                        metodoActual.obtenerNombre() + " no está declarado.");
+                    }
+                }
+                HashMap<String, Parametro> parametros = metodoActual.obtenerParametros();
+                for (HashMap.Entry<String, Parametro> parametro : parametros.entrySet()) {
+                    Parametro parametroActual = parametro.getValue();
+                    if (parametroActual.obtenerTipo().equals("TipoReferencia")){
+                        if (tablaDeSimbolos.obtenerClasePorNombre(parametroActual.obtenerTipo().obtenerTipo()) == null){
+                            new ErrorSemantico(parametroActual.obtenerFila(),parametroActual.obtenerColumna(),"El tipo del parámetro " +
+                            parametroActual.obtenerNombre() + " no está declarado.");
+                        }
+                    }
+                }
+                HashMap<String, Variable> variables = metodoActual.obtenerVariables();
+                for (HashMap.Entry<String, Variable> variable : variables.entrySet()) {
+                    Variable variableActual = variable.getValue();
+                    if (variableActual.obtenerTipo().equals("TipoReferencia")){
+                        if (tablaDeSimbolos.obtenerClasePorNombre(variableActual.obtenerTipo().obtenerTipo()) == null){
+                            new ErrorSemantico(variableActual.obtenerFila(),variableActual.obtenerColumna(),"El tipo de la variable " +
+                            variableActual.obtenerNombre() + " no está declarado.");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Este metodo lee el nombre de las clases que heredan de otra e
