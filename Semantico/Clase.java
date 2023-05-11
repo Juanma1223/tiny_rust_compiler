@@ -105,6 +105,13 @@ public class Clase {
                     if (m1.obtenerParametros().size() != metodo.getValue().obtenerParametros().size()){
                         new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar la cantidad de parámetros de un método heredado");
                     }
+                    if (metodo.getValue().obtenerEsEstatico() == true){
+                        new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede redefinir un método de clase");
+                    } else {
+                        if (m1.obtenerEsEstatico() != false){
+                            new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar la forma de un método heredado");
+                        }
+                    }
                 }
             }
             // Actualizamos la posicion de los metodos de la subclase en funcion de los de la superclase
