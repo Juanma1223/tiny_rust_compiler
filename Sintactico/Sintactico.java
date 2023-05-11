@@ -13,6 +13,10 @@ import Semantico.Variable.Parametro;
 import Semantico.Variable.Variable;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
+import Semantico.Nodo.Nodo;
+import Semantico.Nodo.NodoBloque;
+import Semantico.Nodo.NodoClase;
+import Semantico.Nodo.NodoMetodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
@@ -31,14 +35,16 @@ public class Sintactico {
     AuxiliarSintactico aux;
 
     public TablaDeSimbolos tablaDeSimbolos;
+    public Nodo AST;
 
     // Este constructor recibe como argumento la ruta en el sistema operativo
     // donde se encuentra el archivo con el codigo fuente
-    public Sintactico(File archivo, TablaDeSimbolos tablaDeSimbolos) {
+    public Sintactico(File archivo, TablaDeSimbolos tablaDeSimbolos, Nodo AST) {
         try {
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);
             this.tablaDeSimbolos = tablaDeSimbolos;
+            this.AST = AST;
 
             // Iniciamos el analisis sintactico
             this.start();
@@ -69,7 +75,9 @@ public class Sintactico {
 
     private void claseP() {
         if (aux.verifico("class")) {
-            clase();
+            // Creamos un nuevo arbol de clase
+            NodoClase ASTClase = AST.agregarHijo();
+            clase(ASTClase);
             claseP();
         } else {
             Token tokenActual = aux.tokenActual;
@@ -91,12 +99,15 @@ public class Sintactico {
         Metodo nuevoMetodo = new Metodo("main",false);
         nuevoMetodo.establecerTipoRetorno(new TipoVoid("void"));
         tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
-        bloqueMetodo();
+        NodoClase ASTClase = AST.agregarHijo();
+        NodoMetodo ASTMetodo = ASTClase.agregarMetodo();
+        bloqueMetodo(ASTMetodo);
         tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         tablaDeSimbolos.insertarClase(nuevaClase);
     }
 
-    private void clase() {
+    // Recibe el arbol de la clase para ampliarlo con su contenido
+    private void clase(NodoClase ASTClase) {
         aux.matcheo("class");
         Token tokenActual = aux.tokenActual;
         aux.matcheoId("id_clase");
@@ -104,7 +115,7 @@ public class Sintactico {
         if (checkeoClase == null) {
             Clase nuevaClase = new Clase(tokenActual.obtenerLexema(), tokenActual.obtenerFila(), tokenActual.obtenerColumna());
             tablaDeSimbolos.establecerClaseActual(nuevaClase);
-            restoClase();
+            restoClase(ASTClase);
             tablaDeSimbolos.insertarClase(nuevaClase);
         } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -114,19 +125,19 @@ public class Sintactico {
 
     }
 
-    private void restoClase() {
+    private void restoClase(NodoClase ASTClase) {
         if (aux.verifico(":")) {
             aux.matcheo(":");
             Token tokenActual = aux.tokenActual;
             aux.matcheoId("id_clase");
             tablaDeSimbolos.obtenerClaseActual().establecerHerencia(tokenActual.obtenerLexema());
             aux.matcheo("{");
-            miembroP();
+            miembroP(ASTClase);
             aux.matcheo("}");
         } else if (aux.verifico("{")) {
             tablaDeSimbolos.obtenerClaseActual().establecerHerencia("Object");
             aux.matcheo("{");
-            miembroP();
+            miembroP(ASTClase);
             aux.matcheo("}");
         } else {
             Token tokenActual = aux.tokenActual;
@@ -135,11 +146,11 @@ public class Sintactico {
         }
     }
 
-    private void miembroP() {
+    private void miembroP(NodoClase ASTClase) {
         String[] ter = { "pub", "Bool", "I32", "Str", "Char", "id_clase", "Array", "create", "static", "fn" };
         if (aux.verifico(ter)) {
-            miembro();
-            miembroP();
+            miembro(ASTClase);
+            miembroP(ASTClase);
         } else {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals("}")) {
@@ -149,17 +160,20 @@ public class Sintactico {
         }
     }
 
-    private void miembro() {
+    private void miembro(NodoClase ASTClase) {
         String[] ter = { "pub", "Bool", "I32", "Str", "Char", "id_clase", "Array" };
         String[] ter1 = { "static", "fn" };
         if (aux.verifico(ter)) {
             atributo();
         } else {
             if (aux.verifico("create")) {
-                constructor();
+                NodoMetodo ASTMetodo = ASTClase.agregarMetodo();
+                constructor(ASTMetodo);
             } else {
                 if (aux.verifico(ter1)) {
-                    metodo();
+                    // Insertamos el metodo en el AST de la clase y continuamos el AST por el metodo
+                    NodoMetodo ASTMetodo = ASTClase.agregarMetodo();
+                    metodo(ASTMetodo);
                 } else {
                     Token tokenActual = aux.tokenActual;
                     ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -212,7 +226,7 @@ public class Sintactico {
         }
     }
 
-    private void constructor() {
+    private void constructor(NodoMetodo ASTMetodo) {
         Token tokenActual = aux.tokenActual;
         if (tablaDeSimbolos.obtenerClaseActual().tieneConstructor() == false){
             aux.matcheo("create");
@@ -220,13 +234,13 @@ public class Sintactico {
             tablaDeSimbolos.establecerMetodoActual(nuevoConstructor);
             argumentosFormales();
             tablaDeSimbolos.obtenerClaseActual().establecerConstructor(nuevoConstructor);
-            bloqueMetodo();
+            bloqueMetodo(ASTMetodo);
         } else {
             new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),"Ya hay un constructor declarado para esta clase");
         }
     }
 
-    private void metodo() {
+    private void metodo(NodoMetodo ASTMetodo) {
         boolean formaMetodo = false;
         if (aux.verifico("static")) {
             aux.matcheo("static");
@@ -244,7 +258,7 @@ public class Sintactico {
             Tipo t = tipoMetodo();
             nuevoMetodo.establecerTipoRetorno(t);
             tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
-            bloqueMetodo();
+            bloqueMetodo(ASTMetodo);
         } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "El método " + tokenActual.obtenerLexema()
@@ -252,10 +266,10 @@ public class Sintactico {
         }
     }
 
-    private void bloqueMetodo() {
+    private void bloqueMetodo(NodoMetodo ASTMetodo) {
         aux.matcheo("{");
         declVarLocalesP();
-        sentenciaP();
+        sentenciaP(ASTMetodo);
         aux.matcheo("}");
     }
 
@@ -276,11 +290,11 @@ public class Sintactico {
 
     }
 
-    private void sentenciaP() {
+    private void sentenciaP(NodoBloque ASTMetodo) {
         String[] ter = { ";", "id_objeto", "self", "(", "if", "while", "{", "return" };
         if (aux.verifico(ter)) {
-            sentencia();
-            sentenciaP();
+            sentencia(ASTMetodo);
+            sentenciaP(ASTMetodo);
         } else {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals("}")) {
@@ -426,7 +440,7 @@ public class Sintactico {
         return new TipoArreglo(tArray.obtenerTipo());
     }
 
-    private void sentencia() {
+    private void sentencia(NodoBloque ASTBloque) {
 
         if (aux.verifico(";")) {
             aux.matcheo(";");
@@ -440,16 +454,16 @@ public class Sintactico {
             aux.matcheo("(");
             expresion();
             aux.matcheo(")");
-            sentencia();
-            sentencia2();
+            sentencia(ASTBloque);
+            sentencia2(ASTBloque);
         } else if (aux.verifico("while")) {
             aux.matcheo("while");
             aux.matcheo("(");
             expresion();
             aux.matcheo(")");
-            sentencia();
+            sentencia(ASTBloque);
         } else if (aux.verifico("{")) {
-            bloque();
+            bloque(ASTBloque);
         } else if (aux.verifico("return")) {
             aux.matcheo("return");
             expresionP();
@@ -460,10 +474,10 @@ public class Sintactico {
         }
     }
 
-    private void sentencia2() {
+    private void sentencia2(NodoBloque ASTbloque) {
         if (aux.verifico("else")) {
             aux.matcheo("else");
-            sentencia();
+            sentencia(ASTbloque);
         }
     }
 
@@ -485,9 +499,9 @@ public class Sintactico {
         }
     }
 
-    private void bloque() {
+    private void bloque(NodoBloque ASTBloque) {
         aux.matcheo("{");
-        sentenciaP();
+        sentenciaP(ASTBloque);
         aux.matcheo("}");
     }
 

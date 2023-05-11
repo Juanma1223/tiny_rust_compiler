@@ -5,16 +5,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import Semantico.Nodo.Nodo;
 import Sintactico.Sintactico;
 
 public class Semantico {
     private TablaDeSimbolos tablaDeSimbolos;
+    private Nodo AST;
 
     public Semantico(File archivo) {
         this.tablaDeSimbolos = new TablaDeSimbolos();
+        this.AST = new Nodo();
         // Corroboramos la validez sintactica del codigo y rellenamos la tabla de
         // simbolos
-        Sintactico sintacticoTS = new Sintactico(archivo, this.tablaDeSimbolos);
+        Sintactico sintacticoTS = new Sintactico(archivo, this.tablaDeSimbolos, this.AST);
         tablaDeSimbolos = sintacticoTS.tablaDeSimbolos;
         // Consolidamos la tabla de simbolos con checkeos extra
         consolidarTS();
