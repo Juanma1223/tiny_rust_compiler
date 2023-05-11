@@ -1,13 +1,9 @@
-/*ERROR: LINEA 4 | COLUMNA 8 | El tipo de retorno del método m1 no está declarado*/
+/*ERROR: LINEA 39 | COLUMNA 6 | El tipo del atributo c no está declarado*/
 class A {
 
-    fn m1()->C
+    fn m1()->void
 
-    {
-
-        return nil;
-
-    }
+    {}
 
     
 
@@ -40,9 +36,7 @@ class A {
 
 
 class B{
-
-    
-
+	C : c;
 }
 
 
