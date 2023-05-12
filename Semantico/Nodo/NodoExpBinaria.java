@@ -7,6 +7,12 @@ public class NodoExpBinaria extends NodoExpresion {
     private Nodo ladoDer;
     private Token operador;
 
+    public NodoExpBinaria(Nodo ladoIzq, Nodo ladoDer, Token operador){
+        this.ladoIzq = ladoIzq;
+        this.ladoDer = ladoDer;
+        this.operador = operador;
+    }
+
     public void establecerLadoIzq(Nodo ladoIzq){
         this.ladoIzq = ladoIzq;
     }
