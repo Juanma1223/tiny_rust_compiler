@@ -1,6 +1,6 @@
 package Semantico.Nodo;
 
-public class NodoAsignacion {
+public class NodoAsignacion extends NodoExpresion{
     private Nodo ladoIzq;
     private Nodo ladoDer;
 
@@ -8,7 +8,11 @@ public class NodoAsignacion {
         this.ladoIzq = ladoIzq;
     }
 
-    public void establecerLadoDer(Nodo ladoDer){
-        this.ladoDer = ladoDer;
+    public NodoExpresion establecerLadoDer(){
+        NodoExpresion hijo = new NodoExpresion();
+        hijo.establecerPadre(this);
+        this.ladoDer = hijo;
+        return hijo;
     }
+
 }

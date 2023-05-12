@@ -14,9 +14,16 @@ import Semantico.Variable.Variable;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
 import Semantico.Nodo.Nodo;
+import Semantico.Nodo.NodoAsignacion;
 import Semantico.Nodo.NodoBloque;
 import Semantico.Nodo.NodoClase;
+import Semantico.Nodo.NodoExpresion;
+import Semantico.Nodo.NodoIf;
 import Semantico.Nodo.NodoMetodo;
+import Semantico.Nodo.NodoReturn;
+import Semantico.Nodo.NodoSentencia;
+import Semantico.Nodo.NodoVariable;
+import Semantico.Nodo.NodoWhile;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
@@ -445,28 +452,36 @@ public class Sintactico {
         if (aux.verifico(";")) {
             aux.matcheo(";");
         } else if (aux.verifico("id_objeto") || aux.verifico("self")) {
-            asignacion();
+            NodoAsignacion ASTAsignacion = ASTBloque.agregarAsignacion();
+            asignacion(ASTAsignacion);
             aux.matcheo(";");
         } else if (aux.verifico("(")) {
-            sentenciaSimple();
+            NodoSentencia ASTSentencia = ASTBloque.agregarSentencia();
+            sentenciaSimple(ASTSentencia);
         } else if (aux.verifico("if")) {
             aux.matcheo("if");
             aux.matcheo("(");
-            expresion();
+            NodoIf ASTIf = ASTBloque.agregarIf();
+            NodoExpresion ASTExpresion = ASTIf.agregarExpresion();
+            expresion(ASTExpresion);
             aux.matcheo(")");
             sentencia(ASTBloque);
             sentencia2(ASTBloque);
         } else if (aux.verifico("while")) {
+            NodoWhile ASTWhile = ASTBloque.agregarWhile();
             aux.matcheo("while");
             aux.matcheo("(");
-            expresion();
+            NodoExpresion ASTExpresion = ASTWhile.agregarExpresion();
+            expresion(ASTExpresion);
             aux.matcheo(")");
             sentencia(ASTBloque);
         } else if (aux.verifico("{")) {
             bloque(ASTBloque);
         } else if (aux.verifico("return")) {
             aux.matcheo("return");
-            expresionP();
+            NodoReturn ASTReturn = ASTBloque.agregarReturn();
+            NodoExpresion ASTExpresion = ASTReturn.agregarExpresion();
+            expresionP(ASTExpresion);
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -481,7 +496,7 @@ public class Sintactico {
         }
     }
 
-    private void expresionP() {
+    private void expresionP(NodoExpresion ASTExpresion) {
         String[] ter = { "+", "-", "!", "nil", "true", "false", "lit_ent", "lit_cad", "lit_car", "(", "self",
                 "id_objeto",
                 "id_clase", "new" };
@@ -505,26 +520,20 @@ public class Sintactico {
         aux.matcheo("}");
     }
 
-    private void asignacion() {
+    private void asignacion(NodoAsignacion ASTAsignacion) {
         if (aux.verifico("id_objeto")) {
-            // Verificamos que la variable este previamente definida antes de la asignacion
-            // Verificamos si esta definida a nivel de metodo
-            // if(!tablaDeSimbolos.obtenerMetodoActual().variableYaDeclarada(aux.tokenActual.obtenerLexema())){
-            // Token tokenActual = aux.tokenActual;
-            // ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(),
-            // tokenActual.obtenerColumna(),
-            // "La variable \""+tokenActual.obtenerLexema() + "\" en " +
-            // tokenActual.obtenerFila()+", "+tokenActual.obtenerColumna() +
-            // " no esta declarada!");
-            // };
-            asignacionVarSimple();
+            NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
+            ASTAsignacion.establecerLadoIzq(ladoIzq);
+            NodoExpresion ladoDer = ASTAsignacion.establecerLadoDer();
+            asignacionVarSimple(ASTAsignacion);
             aux.matcheo("=");
-            expresion();
+            expresion(ladoDer);
         } else if (aux.verifico("self")) {
-
             asignacionSelfSimple();
             aux.matcheo("=");
-            expresion();
+            NodoExpresion ladoDer = ASTAsignacion.establecerLadoDer();
+            asignacionVarSimple(ASTAsignacion);
+            expresion(ladoDer);
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -532,17 +541,17 @@ public class Sintactico {
         }
     }
 
-    private void asignacionVarSimple() {
+    private void asignacionVarSimple(NodoExpresion ASTExpresion) {
         aux.matcheoId("id_objeto");
-        asignacionVarSimpleP();
+        asignacionVarSimpleP(ASTExpresion);
     }
 
-    private void asignacionVarSimpleP() {
+    private void asignacionVarSimpleP(NodoExpresion ASTExpresion) {
         if (aux.verifico(".")) {
             encadenadoSimpleP();
         } else if (aux.verifico("[")) {
             aux.matcheo("[");
-            expresion();
+            expresion(ASTExpresion);
             aux.matcheo("]");
         } else {
             Token tokenActual = aux.tokenActual;
@@ -566,13 +575,13 @@ public class Sintactico {
         encadenadoSimpleP();
     }
 
-    private void sentenciaSimple() {
+    private void sentenciaSimple(NodoSentencia ASTExpresion) {
         aux.matcheo("(");
-        expresion();
+        expresion(ASTExpresion);
         aux.matcheo(")");
     }
 
-    private void expresion() {
+    private void expresion(NodoSentencia ASTExpresion) {
         expOr();
     }
 
