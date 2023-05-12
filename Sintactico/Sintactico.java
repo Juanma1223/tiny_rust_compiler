@@ -241,7 +241,8 @@ public class Sintactico {
             tablaDeSimbolos.establecerMetodoActual(nuevoConstructor);
             argumentosFormales();
             tablaDeSimbolos.obtenerClaseActual().establecerConstructor(nuevoConstructor);
-            bloqueMetodo(ASTMetodo);
+            NodoBloque ASTBloque = ASTMetodo.agregarBloque();
+            bloqueMetodo(ASTBloque);
         } else {
             new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),"Ya hay un constructor declarado para esta clase");
         }
@@ -265,7 +266,8 @@ public class Sintactico {
             Tipo t = tipoMetodo();
             nuevoMetodo.establecerTipoRetorno(t);
             tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
-            bloqueMetodo(ASTMetodo);
+            NodoBloque ASTBloque = ASTMetodo.agregarBloque();
+            bloqueMetodo(ASTBloque);
         } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "El método " + tokenActual.obtenerLexema()
@@ -273,10 +275,10 @@ public class Sintactico {
         }
     }
 
-    private void bloqueMetodo(NodoMetodo ASTMetodo) {
+    private void bloqueMetodo(NodoBloque ASTBloque) {
         aux.matcheo("{");
         declVarLocalesP();
-        sentenciaP(ASTMetodo);
+        sentenciaP(ASTBloque);
         aux.matcheo("}");
     }
 
@@ -297,11 +299,11 @@ public class Sintactico {
 
     }
 
-    private void sentenciaP(NodoBloque ASTMetodo) {
+    private void sentenciaP(NodoBloque ASTBloque) {
         String[] ter = { ";", "id_objeto", "self", "(", "if", "while", "{", "return" };
         if (aux.verifico(ter)) {
-            sentencia(ASTMetodo);
-            sentenciaP(ASTMetodo);
+            sentencia(ASTBloque);
+            sentenciaP(ASTBloque);
         } else {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals("}")) {
@@ -456,32 +458,36 @@ public class Sintactico {
             asignacion(ASTAsignacion);
             aux.matcheo(";");
         } else if (aux.verifico("(")) {
-            NodoSentencia ASTSentencia = ASTBloque.agregarSentencia();
-            sentenciaSimple(ASTSentencia);
+            NodoExpresion ASTExpresion = ASTBloque.agregarExpresion();
+            sentenciaSimple(ASTExpresion);
         } else if (aux.verifico("if")) {
             aux.matcheo("if");
             aux.matcheo("(");
             NodoIf ASTIf = ASTBloque.agregarIf();
-            NodoExpresion ASTExpresion = ASTIf.agregarExpresion();
-            expresion(ASTExpresion);
+            NodoExpresion ASTCondicion = ASTIf.agregarCondicion();
+            expresion(ASTCondicion);
             aux.matcheo(")");
-            sentencia(ASTBloque);
-            sentencia2(ASTBloque);
+            NodoSentencia ASTSentenciaThen = ASTIf.agregarSentenciaThen();
+            sentencia(ASTSentenciaThen);
+            NodoSentencia ASTSentenciaElse = ASTIf.agregarSentenciaElse();
+            sentencia2(ASTSentenciaElse);
         } else if (aux.verifico("while")) {
             NodoWhile ASTWhile = ASTBloque.agregarWhile();
             aux.matcheo("while");
             aux.matcheo("(");
-            NodoExpresion ASTExpresion = ASTWhile.agregarExpresion();
-            expresion(ASTExpresion);
+            NodoExpresion ASTCondicionW = ASTWhile.agregarCondicion();
+            expresion(ASTCondicionW);
             aux.matcheo(")");
-            sentencia(ASTBloque);
+            NodoSentencia ASTSentenciaW = ASTWhile.agregarSentencia();
+            sentencia(ASTSentenciaW);
         } else if (aux.verifico("{")) {
-            bloque(ASTBloque);
+            NodoSentencia ASTSentencia = ASTBloque.agregarSentencia();
+            bloque(ASTSentencia);
         } else if (aux.verifico("return")) {
             aux.matcheo("return");
             NodoReturn ASTReturn = ASTBloque.agregarReturn();
-            NodoExpresion ASTExpresion = ASTReturn.agregarExpresion();
-            expresionP(ASTExpresion);
+            NodoExpresion ASTRetorno = ASTReturn.agregarExpresion();
+            expresionP(ASTRetorno);
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -489,10 +495,10 @@ public class Sintactico {
         }
     }
 
-    private void sentencia2(NodoBloque ASTbloque) {
+    private void sentencia2(NodoSentencia ASTsentencia) {
         if (aux.verifico("else")) {
             aux.matcheo("else");
-            sentencia(ASTbloque);
+            sentencia(ASTsentencia);
         }
     }
 
@@ -504,7 +510,7 @@ public class Sintactico {
             aux.matcheo(";");
         } else {
             if (aux.verifico(ter)) {
-                expresion();
+                expresion(ASTExpresion);
                 aux.matcheo(";");
             } else {
                 Token tokenActual = aux.tokenActual;
@@ -575,13 +581,13 @@ public class Sintactico {
         encadenadoSimpleP();
     }
 
-    private void sentenciaSimple(NodoSentencia ASTExpresion) {
+    private void sentenciaSimple(NodoExpresion ASTExpresion) {
         aux.matcheo("(");
         expresion(ASTExpresion);
         aux.matcheo(")");
     }
 
-    private void expresion(NodoSentencia ASTExpresion) {
+    private void expresion(NodoExpresion ASTExpresion) {
         expOr();
     }
 

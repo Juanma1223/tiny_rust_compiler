@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import Semantico.Variable.Atributo;
 import Semantico.Funcion.Metodo;
-import Semantico.Tipo.TipoReferencia;
 import Semantico.Funcion.Constructor;
 
 public class Clase {

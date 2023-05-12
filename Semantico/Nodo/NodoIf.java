@@ -1,15 +1,28 @@
 package Semantico.Nodo;
 
-import java.util.ArrayList;
-
 public class NodoIf extends NodoSentencia {
     private NodoExpresion condicion;
-    private ArrayList<NodoSentencia> sentencias;
+    private NodoSentencia sentenciaThen;
+    private NodoSentencia sentenciaElse;
 
-    public NodoExpresion agregarExpresion(){
+    public NodoExpresion agregarCondicion(){
         NodoExpresion hijo = new NodoExpresion();
         hijo.establecerPadre(this);
-        this.sentencias.add(hijo);
+        this.condicion = hijo;
+        return hijo;
+    }
+
+    public NodoSentencia agregarSentenciaThen(){
+        NodoSentencia hijo = new NodoSentencia();
+        hijo.establecerPadre(this);
+        this.sentenciaThen = hijo;
+        return hijo;
+    }
+
+    public NodoSentencia agregarSentenciaElse(){
+        NodoSentencia hijo = new NodoSentencia();
+        hijo.establecerPadre(this);
+        this.sentenciaElse = hijo;
         return hijo;
     }
 }
