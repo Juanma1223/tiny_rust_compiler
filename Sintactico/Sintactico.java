@@ -17,8 +17,6 @@ import Semantico.Nodo.Nodo;
 import Semantico.Nodo.NodoAsignacion;
 import Semantico.Nodo.NodoBloque;
 import Semantico.Nodo.NodoClase;
-import Semantico.Nodo.NodoExpBinaria;
-import Semantico.Nodo.NodoExpUnaria;
 import Semantico.Nodo.NodoExpresion;
 import Semantico.Nodo.NodoIf;
 import Semantico.Nodo.NodoMetodo;
@@ -590,139 +588,101 @@ public class Sintactico {
     }
 
     private void expresion(NodoExpresion ASTExpresion) {
-        ASTExpresion = expOr();
+        expOr();
     }
 
-    private NodoExpresion expOr() {
-        NodoExpresion expI = expAnd();
-        NodoExpresion expD = expOrP(expI);
-
-        return expD;
+    private void expOr() {
+        expAnd();
+        expOrP();
     }
 
     // LAMBDA
-    private NodoExpresion expOrP(NodoExpresion expR) {
+    private void expOrP() {
         if (aux.verifico("||")) {
-            Token tokenActual = aux.tokenActual;
             aux.matcheo("||");
-            NodoExpresion expI = expAnd();
-            NodoExpresion expD = expOrP(expI);
-            return new NodoExpBinaria(expR,expD,tokenActual);
-        } else {
-            return expR;
+            expAnd();
+            expOrP();
         }
     }
 
-    private NodoExpresion expAnd() {
-        NodoExpresion expI = expIgual();
-        NodoExpresion expD = expAndP(expI);
-
-        return expD;
+    private void expAnd() {
+        expIgual();
+        expAndP();
     }
 
     // LAMBDA
-    private NodoExpresion expAndP(NodoExpresion expR) {
+    private void expAndP() {
         if (aux.verifico("&&")) {
-            Token tokenActual = aux.tokenActual;
             aux.matcheo("&&");
-            NodoExpresion expI = expIgual();
-            NodoExpresion expD = expAndP(expI);
-            return new NodoExpBinaria(expR,expD,tokenActual);
-        } else {
-            return expR;
+            expIgual();
+            expAndP();
         }
     }
 
-    private NodoExpresion expIgual() {
-        NodoExpresion expI = expCompuesta();
-        NodoExpresion expD = expIgualP(expI);
-
-        return expD;
+    private void expIgual() {
+        expCompuesta();
+        expIgualP();
     }
 
     // LAMBDA
-    private NodoExpresion expIgualP(NodoExpresion expR) {
+    private void expIgualP() {
         String[] terOpIgual = { "==", "!=" };
         if (aux.verifico(terOpIgual)) {
-            Token tokenActual = aux.tokenActual;
             opIgual();
-            NodoExpresion expI = expCompuesta();
-            NodoExpresion expD = expIgualP(expI);
-            return new NodoExpBinaria(expR,expD,tokenActual);
-        } else {
-            return expR;
+            expCompuesta();
+            expIgualP();
         }
     }
 
-    private NodoExpresion expCompuesta() {
-        NodoExpresion expI = expAdd();
-        NodoExpresion expD = expCompuestaP(expI);
-
-        return expD;
+    private void expCompuesta() {
+        expAdd();
+        expCompuestaP();
     }
 
     // LAMBDA
-    private NodoExpresion expCompuestaP(NodoExpresion expR) {
+    private void expCompuestaP() {
         String[] terOpCompuesto = { "<", ">", "<=", ">=" };
         if (aux.verifico(terOpCompuesto)) {
-            Token tokenActual = aux.tokenActual;
             opCompuesto();
-            NodoExpresion expD = expAdd();
-            return new NodoExpBinaria(expR,expD,tokenActual);
-        } else {
-            return expR;
+            expAdd();
         }
     }
 
-    private NodoExpresion expAdd() {
-        NodoExpresion expI = expMul();
-        NodoExpresion expD = expAddP(expI);
-
-        return expD;
+    private void expAdd() {
+        expMul();
+        expAddP();
     }
 
     // LAMBDA
-    private NodoExpresion expAddP(NodoExpresion expR) {
+    private void expAddP() {
         String[] terOpAdd = { "+", "-" };
         if (aux.verifico(terOpAdd)) {
-            Token tokenActual = aux.tokenActual;
             opAdd();
-            NodoExpresion expI = expMul();
-            NodoExpresion expD = expAddP(expI);
-            return new NodoExpBinaria(expR,expD,tokenActual);
-        } else {
-            return expR;
+            expMul();
+            expAddP();
         }
     }
 
-    private NodoExpresion expMul() {
-        NodoExpresion expI = expUn();
-        NodoExpresion expD = expMulP(expI);
-
-        return expD;
+    private void expMul() {
+        expUn();
+        expMulP();
     }
 
     // LAMBDA
-    private NodoExpresion expMulP(NodoExpresion expR) {
+    private void expMulP() {
         String[] terOpMul = { "*", "/", "%" };
         if (aux.verifico(terOpMul)) {
-            Token tokenActual = aux.tokenActual;
             opMul();
-            NodoExpresion expI = expUn();
-            NodoExpresion expD = expMulP(expI);
-            return new NodoExpBinaria(expR,expD,tokenActual);
-        } else {
-            return expR;
+            expUn();
+            expMulP();
         }
     }
 
-    private NodoExpresion expUn() {
+    private void expUn() {
         String[] ter = { "+", "-", "!" };
         if (aux.verifico(ter)) {
-            Token tokenActual = aux.tokenActual;
             opUnario();
-            NodoExpresion expD = expUn();
-            return new NodoExpUnaria(expD, tokenActual);
+            expUn();
         } else {
             operando();
         }
