@@ -2,8 +2,8 @@ package Semantico.Nodo;
 
 public class NodoIf extends NodoSentencia {
     private NodoExpresion condicion;
-    private NodoSentencia sentenciaThen;
-    private NodoSentencia sentenciaElse;
+    private NodoBloque sentenciaThen;
+    private NodoBloque sentenciaElse;
 
     public NodoExpresion agregarCondicion(){
         NodoExpresion hijo = new NodoExpresion();
@@ -12,15 +12,15 @@ public class NodoIf extends NodoSentencia {
         return hijo;
     }
 
-    public NodoSentencia agregarSentenciaThen(){
-        NodoSentencia hijo = new NodoSentencia();
+    public NodoBloque agregarSentenciaThen(){
+        NodoBloque hijo = new NodoBloque();
         hijo.establecerPadre(this);
         this.sentenciaThen = hijo;
         return hijo;
     }
 
-    public NodoSentencia agregarSentenciaElse(){
-        NodoSentencia hijo = new NodoSentencia();
+    public NodoBloque agregarSentenciaElse(){
+        NodoBloque hijo = new NodoBloque();
         hijo.establecerPadre(this);
         this.sentenciaElse = hijo;
         return hijo;

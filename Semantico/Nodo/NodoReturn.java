@@ -9,4 +9,9 @@ public class NodoReturn extends NodoSentencia {
         this.retorno = hijo;
         return hijo;
     }
+
+    public void agregarExpresion(NodoExpresion retorno){
+        this.retorno = retorno;
+        retorno.establecerPadre(this);
+    }
 }

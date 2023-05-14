@@ -1,6 +1,6 @@
 package Semantico.Nodo;
 
-public class NodoMetodo extends Nodo {
+public class NodoMetodo extends NodoBloque {
     private NodoBloque bloque;
 
     public NodoBloque agregarBloque(){

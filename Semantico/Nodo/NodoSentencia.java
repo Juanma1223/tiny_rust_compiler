@@ -1,5 +1,5 @@
 package Semantico.Nodo;
 
-public class NodoSentencia extends NodoBloque {
+public class NodoSentencia extends Nodo {
     
 }

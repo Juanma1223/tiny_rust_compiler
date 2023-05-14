@@ -2,7 +2,7 @@ package Semantico.Nodo;
 
 public class NodoWhile extends NodoSentencia {
     private NodoExpresion condicion;
-    private NodoSentencia sentencia;
+    private NodoBloque bloqueW;
 
     public NodoExpresion agregarCondicion(){
         NodoExpresion hijo = new NodoExpresion();
@@ -10,11 +10,16 @@ public class NodoWhile extends NodoSentencia {
         this.condicion = hijo;
         return hijo;
     }
+
+    public void agregarCondicion(NodoExpresion condicion){
+        this.condicion = condicion;
+        condicion.establecerPadre(this);
+    }
     
-    public NodoSentencia agregarSentencia(){
-        NodoSentencia hijo = new NodoSentencia();
+    public NodoBloque agregarBloqueW(){
+        NodoBloque hijo = new NodoBloque();
         hijo.establecerPadre(this);
-        this.sentencia = hijo;
+        this.bloqueW = hijo;
         return hijo;
     }
 }

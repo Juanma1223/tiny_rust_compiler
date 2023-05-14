@@ -48,4 +48,10 @@ public class NodoBloque extends Nodo {
         this.sentencias.add(hijo);
         return hijo;
     }
+
+    // Sobrecarga para poder insertar expresiones de cualquier tipo
+    public void agregarExpresion(NodoExpresion hijo){
+        hijo.establecerPadre(this);
+        this.sentencias.add(hijo);
+    }
 }
