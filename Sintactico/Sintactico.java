@@ -645,7 +645,7 @@ public class Sintactico {
         String[] terOpIgual = { "==", "!=" };
         if (aux.verifico(terOpIgual)) {
             Token tokenActual = aux.tokenActual;
-            aux.matcheo(tokenActual.obtenerLexema());
+            opIgual();
             NodoExpresion expI = expCompuesta();
             NodoExpresion expD = expIgualP(expI);
             return new NodoExpBinaria(expR,expD,tokenActual);
@@ -666,7 +666,7 @@ public class Sintactico {
         String[] terOpCompuesto = { "<", ">", "<=", ">=" };
         if (aux.verifico(terOpCompuesto)) {
             Token tokenActual = aux.tokenActual;
-            aux.matcheo(tokenActual.obtenerLexema());
+            opCompuesto();
             NodoExpresion expD = expAdd();
             return new NodoExpBinaria(expR,expD,tokenActual);
         } else {
@@ -686,7 +686,7 @@ public class Sintactico {
         String[] terOpAdd = { "+", "-" };
         if (aux.verifico(terOpAdd)) {
             Token tokenActual = aux.tokenActual;
-            aux.matcheo(tokenActual.obtenerLexema());
+            opAdd();
             NodoExpresion expI = expMul();
             NodoExpresion expD = expAddP(expI);
             return new NodoExpBinaria(expR,expD,tokenActual);
@@ -707,7 +707,7 @@ public class Sintactico {
         String[] terOpMul = { "*", "/", "%" };
         if (aux.verifico(terOpMul)) {
             Token tokenActual = aux.tokenActual;
-            aux.matcheo(tokenActual.obtenerLexema());
+            opMul();
             NodoExpresion expI = expUn();
             NodoExpresion expD = expMulP(expI);
             return new NodoExpBinaria(expR,expD,tokenActual);
@@ -720,11 +720,66 @@ public class Sintactico {
         String[] ter = { "+", "-", "!" };
         if (aux.verifico(ter)) {
             Token tokenActual = aux.tokenActual;
-            aux.matcheo(tokenActual.obtenerLexema());
+            opUnario();
             NodoExpresion expD = expUn();
             return new NodoExpUnaria(expD, tokenActual);
         } else {
             operando();
+        }
+    }
+
+    private void opIgual() {
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "==", "!=" };
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"==\" o \"!=\", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void opCompuesto() {
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "<", ">", "<=", ">=" };
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"<\", \">\", \"<=\", o \">=\", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void opAdd() {
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "+", "-" };
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"+\" o \"-\", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void opUnario() {
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "+", "-", "!" };
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"+\", \"-\" o \"!\", se encontró: " + tokenActual.obtenerLexema());
+        }
+    }
+
+    private void opMul() {
+        Token tokenActual = aux.tokenActual;
+        String[] ter = { "*", "/", "%" };
+        if (aux.verifico(ter)) {
+            aux.matcheo(tokenActual.obtenerLexema());
+        } else {
+            ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
+                    "Se esperaba \"*\", \"/\" o \"%\", se encontró: " + tokenActual.obtenerLexema());
         }
     }
 
