@@ -42,6 +42,12 @@ public class NodoBloque extends Nodo {
         return hijo;
     }
 
+    public void agregarReturn(NodoReturn hijo){
+        this.sentencias.add(hijo);
+        hijo.establecerPadre(this);
+    }
+
+
     public NodoExpresion agregarExpresion(){
         NodoExpresion hijo = new NodoExpresion();
         hijo.establecerPadre(this);

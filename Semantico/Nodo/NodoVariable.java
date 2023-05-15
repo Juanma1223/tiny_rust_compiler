@@ -2,7 +2,7 @@ package Semantico.Nodo;
 
 import Lexico.Token;
 
-public class NodoVariable extends Nodo{
+public class NodoVariable extends NodoExpresion{
 
     Token token;
 

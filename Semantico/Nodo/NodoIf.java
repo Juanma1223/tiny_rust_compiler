@@ -12,6 +12,11 @@ public class NodoIf extends NodoSentencia {
         return hijo;
     }
 
+    public void agregarCondicion(NodoExpresion hijo){
+        this.condicion = hijo;
+        hijo.establecerPadre(this);
+    }
+
     public NodoBloque agregarSentenciaThen(){
         NodoBloque hijo = new NodoBloque();
         hijo.establecerPadre(this);

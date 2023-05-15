@@ -6,7 +6,8 @@ class Prueba {
 	Char: d;
 	Bool: e;
 	create(){
-		a = 42;
+		a = 2*1+1;
+		a = 2%3;
 	}
 	fn get_a() -> I32 {
 		return a;

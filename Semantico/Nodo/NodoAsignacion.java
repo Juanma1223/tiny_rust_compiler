@@ -8,16 +8,10 @@ public class NodoAsignacion extends NodoExpresion{
         this.ladoIzq = ladoIzq;
     }
 
-    public NodoExpresion establecerLadoDer(){
-        NodoExpresion hijo = new NodoExpresion();
-        hijo.establecerPadre(this);
-        this.ladoDer = hijo;
-        return hijo;
-    }
 
     public void establecerLadoDer(NodoExpresion ladoDer){
-        this.ladoDer = ladoDer;
         ladoDer.establecerPadre(this);
+        this.ladoDer = ladoDer;
     }
 
 }

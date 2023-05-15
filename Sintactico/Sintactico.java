@@ -17,6 +17,7 @@ import Semantico.Nodo.Nodo;
 import Semantico.Nodo.NodoAsignacion;
 import Semantico.Nodo.NodoBloque;
 import Semantico.Nodo.NodoClase;
+import Semantico.Nodo.NodoExpBinaria;
 import Semantico.Nodo.NodoExpresion;
 import Semantico.Nodo.NodoIf;
 import Semantico.Nodo.NodoLiteral;
@@ -457,7 +458,6 @@ public class Sintactico {
     }
 
     private void sentencia(NodoBloque ASTBloque) {
-
         if (aux.verifico(";")) {
             aux.matcheo(";");
         } else if (aux.verifico("id_objeto") || aux.verifico("self")) {
@@ -466,13 +466,12 @@ public class Sintactico {
             aux.matcheo(";");
         } else if (aux.verifico("(")) {
             NodoExpresion expresion = sentenciaSimple();
-            NodoExpresion ASTExpresion = ASTBloque.agregarExpresion();
+            ASTBloque.agregarExpresion(expresion);
         } else if (aux.verifico("if")) {
             aux.matcheo("if");
             aux.matcheo("(");
             NodoIf ASTIf = ASTBloque.agregarIf();
-            NodoExpresion ASTCondicion = ASTIf.agregarCondicion();
-            expresion();
+            ASTIf.agregarCondicion(expresion());
             aux.matcheo(")");
             NodoBloque ASTSentenciaThen = ASTIf.agregarSentenciaThen();
             sentencia(ASTSentenciaThen);
@@ -517,8 +516,9 @@ public class Sintactico {
             return new NodoExpresion();
         } else {
             if (aux.verifico(ter)) {
+                NodoExpresion retorno = expresion();
                 aux.matcheo(";");
-                return expresion();
+                return retorno;
             } else {
                 Token tokenActual = aux.tokenActual;
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -606,9 +606,9 @@ public class Sintactico {
     private NodoExpresion expOr() {
         NodoExpresion and = expAnd();
         if (and != null) {
-            return expOrP();
-        } else {
             return and;
+        } else {
+            return expOrP();
         }
     }
 
@@ -617,9 +617,9 @@ public class Sintactico {
         if (aux.verifico("||")) {
             aux.matcheo("||");
             NodoExpresion expAnd = expAnd();
-            if(expAnd != null){
+            if (expAnd != null) {
                 return expAnd;
-            }else{
+            } else {
                 return expOrP();
             }
         }
@@ -693,11 +693,18 @@ public class Sintactico {
     }
 
     private NodoExpresion expAdd() {
-        NodoExpresion mul = expMul();
-        if (mul != null) {
-            return mul;
+        NodoExpresion expMul = expMul();
+        // Checkeamos si es una expresion binaria o solamente un literal
+        NodoExpresion expAddP = expAddP();
+        if (expAddP == null) {
+            return expMul;
         } else {
-            return expAddP();
+            NodoExpBinaria expBinaria = new NodoExpBinaria();
+            expBinaria.establecerLadoIzq(expMul);
+            expBinaria.establecerLadoDer(expAddP);
+            // Hacemos uso de la variable auxiliar de los nodos
+            expBinaria.establecerOp(expAddP.aux);
+            return expBinaria;
         }
     }
 
@@ -705,12 +712,15 @@ public class Sintactico {
     private NodoExpresion expAddP() {
         String[] terOpAdd = { "+", "-" };
         if (aux.verifico(terOpAdd)) {
-            opAdd();
+            Token operador = opAdd();
             NodoExpresion expMul = expMul();
             if (expMul != null) {
+                expMul.aux = operador;
                 return expMul;
             } else {
-                return expAddP();
+                NodoExpresion expAddP = expAddP();
+                expAddP.aux = operador;
+                return expAddP;
             }
         }
         return null;
@@ -718,10 +728,15 @@ public class Sintactico {
 
     private NodoExpresion expMul() {
         NodoExpresion un = expUn();
-        if (un != null) {
+        NodoExpresion expMulP = expMulP();
+        if (expMulP == null) {
             return un;
         } else {
-            return expMulP();
+            NodoExpBinaria expBinaria = new NodoExpBinaria();
+            expBinaria.establecerOp(expMulP.aux);
+            expBinaria.establecerLadoIzq(un);
+            expBinaria.establecerLadoDer(expMulP);
+            return expBinaria;
         }
     }
 
@@ -729,12 +744,15 @@ public class Sintactico {
     private NodoExpresion expMulP() {
         String[] terOpMul = { "*", "/", "%" };
         if (aux.verifico(terOpMul)) {
-            opMul();
+            Token operador = opMul();
             NodoExpresion expUn = expUn();
             if (expUn != null) {
+                expUn.aux = operador;
                 return expUn;
             } else {
-                return expMulP();
+                NodoExpresion expMulP = expMulP();
+                expMulP.aux = operador;
+                return expMulP;
             }
         }
         return null;
@@ -772,14 +790,16 @@ public class Sintactico {
         }
     }
 
-    private void opAdd() {
+    private Token opAdd() {
         Token tokenActual = aux.tokenActual;
         String[] ter = { "+", "-" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
+            return tokenActual;
         } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba \"+\" o \"-\", se encontró: " + tokenActual.obtenerLexema());
+            return tokenActual;
         }
     }
 
@@ -794,14 +814,16 @@ public class Sintactico {
         }
     }
 
-    private void opMul() {
+    private Token opMul() {
         Token tokenActual = aux.tokenActual;
         String[] ter = { "*", "/", "%" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
+            return tokenActual;
         } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba \"*\", \"/\" o \"%\", se encontró: " + tokenActual.obtenerLexema());
+            return tokenActual;
         }
     }
 
@@ -809,11 +831,13 @@ public class Sintactico {
         String[] terLiteral = { "nil", "true", "false", "lit_ent", "lit_cad", "lit_car" };
         String[] terPrimario = { "(", "self", "id_objeto", "id_clase", "new" };
         if (aux.verifico(terLiteral)) {
-            NodoExpresion expresion = new NodoExpresion();
             return literal();
         } else if (aux.verifico(terPrimario)) {
-            primario();
+            NodoExpresion primario = primario();
             encadenadoP();
+            if (primario instanceof NodoVariable) {
+                return primario;
+            }
             // Aca todavia no se que hacer xd
             return new NodoExpresion();
         } else {
@@ -825,46 +849,64 @@ public class Sintactico {
     }
 
     // LAMBDA
-    private void encadenadoP() {
+    private NodoExpresion encadenadoP() {
         if (aux.verifico(".")) {
             aux.matcheo(".");
             aux.matcheoId("id_objeto");
             encadenado2();
+            // TO DO
+            return new NodoExpresion();
+        } else {
+            if (aux.tokenActual.obtenerToken() == "id_objeto") {
+                return new NodoVariable(null, aux.tokenActual);
+            }
         }
-
+        return null;
     }
 
     private NodoLiteral literal() {
         Token tokenActual = aux.tokenActual;
         aux.matcheo(tokenActual.obtenerLexema());
-        return new NodoLiteral();
+        return new NodoLiteral(tokenActual);
     }
 
-    private void primario() {
+    private NodoExpresion primario() {
         if (aux.verifico("(")) {
+            // TO DO
             expresionParentizada();
+            return new NodoExpresion();
         } else if (aux.verifico("self")) {
+            // TO DO
             accesoSelf();
+            return new NodoExpresion();
         } else if (aux.verifico("id_objeto")) {
+            Token tokenActual = aux.tokenActual;
+            NodoExpresion primarioP = primarioP();
             aux.matcheoId("id_objeto");
-            primarioP();
+            return primarioP;
         } else if (aux.verifico("id_clase")) {
+            // TO DO
             llamadaMetodoEstatico();
+            return new NodoExpresion();
         } else if (aux.verifico("new")) {
-            llamadaConstructor();
+            // TO DO
+            return llamadaConstructor();
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba \"(\",\"self\",\"new\",\"id_clase\",\"id_objeto\" se encontró: "
                             + tokenActual.obtenerLexema());
+            return null;
         }
     }
 
-    private void primarioP() {
+    private NodoExpresion primarioP() {
         if (aux.verifico("(")) {
+            // TO DO
             llamadaMetodoP();
+            return new NodoExpresion();
         } else {
-            accesoVarP();
+            return accesoVarP();
         }
     }
 
@@ -880,13 +922,14 @@ public class Sintactico {
         encadenadoP();
     }
 
-    private void accesoVarP() {
+    private NodoExpresion accesoVarP() {
         if (aux.verifico("[")) {
             aux.matcheo("[");
-            expresion();
+            NodoExpresion expresion = expresion();
             aux.matcheo("]");
+            return expresion;
         } else {
-            encadenadoP();
+            return encadenadoP();
         }
     }
 
@@ -908,21 +951,24 @@ public class Sintactico {
         encadenadoP();
     }
 
-    private void llamadaConstructor() {
+    private NodoExpresion llamadaConstructor() {
         aux.matcheo("new");
-        llamadaConstructorP();
+        return llamadaConstructorP();
     }
 
-    private void llamadaConstructorP() {
+    private NodoExpresion llamadaConstructorP() {
         if (aux.verifico("id_clase")) {
             aux.matcheoId("id_clase");
             argumentosActuales();
             encadenadoP();
+            // TO DO
+            return new NodoExpresion();
         } else {
             tipoPrimitivo();
             aux.matcheo("[");
-            expresion();
+            NodoExpresion expresion = expresion();
             aux.matcheo("]");
+            return expresion;
         }
     }
 

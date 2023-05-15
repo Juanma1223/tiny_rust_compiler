@@ -6,6 +6,7 @@ class Prueba {
 	pub Char: d;
 	pub Bool: e;
 	create(I32: a, Str: b){
+		c = 2*1;
 		a = 1;
         b = "pepe";
 	}
@@ -31,5 +32,5 @@ class Prueba2 : Prueba{
 	}
 }
 fn main () {
-	c = new I32[1+2];
+	c = new I32[1];
 }
