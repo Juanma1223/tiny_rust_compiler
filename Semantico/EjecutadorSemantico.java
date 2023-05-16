@@ -13,7 +13,7 @@ public class EjecutadorSemantico {
         // }
 
         // Abrimos el archivo y almacenamos su informacion
-        File archivo = new File("/home/juanma/Facultad/tiny_rust_compiler/Semantico/testSemantico/test_c3.rs");
+        File archivo = new File("/mnt/hdd/Facultad/Facultad/4to_año/Compiladores/Compilador/tiny_rust_compiler/Semantico/testSemantico/test_c1.rs");
         new Semantico(archivo);
         System.out.println("CORRECTO: SEMANTICO - DECLARACIONES");
     }

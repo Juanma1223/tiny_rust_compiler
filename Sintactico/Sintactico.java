@@ -605,23 +605,35 @@ public class Sintactico {
 
     private NodoExpresion expOr() {
         NodoExpresion and = expAnd();
-        if (and != null) {
-            return and;
+        NodoExpresion expOrP = expOrP();
+        if (expOrP != null) {
+            NodoExpBinaria newExpOr = new NodoExpBinaria();
+            newExpOr.establecerLadoIzq(and);
+            newExpOr.establecerLadoDer(expOrP);
+            // El operador es enviado haciendo uso de el auxiliar
+            newExpOr.establecerOp(expOrP.aux);
+            return newExpOr;
         } else {
-            return expOrP();
+            return and;
         }
     }
 
     // LAMBDA
     private NodoExpresion expOrP() {
         if (aux.verifico("||")) {
+            Token tokenActual = aux.tokenActual;
             aux.matcheo("||");
             NodoExpresion expAnd = expAnd();
-            NodoExpresion expOrP = expOr();
-            if (expAnd != null) {
-                return expAnd;
+            NodoExpresion expOrP = expOrP();
+            if (expOrP != null) {
+                NodoExpBinaria newExpOr = new NodoExpBinaria();
+                newExpOr.establecerLadoIzq(expAnd);
+                newExpOr.establecerLadoDer(expOrP);
+                newExpOr.aux = tokenActual;
+                return newExpOr;
             } else {
-                return expOrP;
+                expAnd.aux = tokenActual;
+                return expAnd;
             }
         }
         return null;
@@ -630,22 +642,29 @@ public class Sintactico {
     private NodoExpresion expAnd() {
         NodoExpresion igual = expIgual();
         NodoExpresion expAndP = expAndP();
-        if (igual != null) {
-            return igual;
+        if (expAndP != null) {
+            NodoExpBinaria newExpAnd = new NodoExpBinaria();
+            newExpAnd.establecerLadoIzq(igual);
+            newExpAnd.establecerLadoDer(expAndP);
+            newExpAnd.establecerOp(expAndP.aux);
+            return newExpAnd;
         } else {
-            return expAndP;
+            return igual;
         }
     }
 
     // LAMBDA
     private NodoExpresion expAndP() {
         if (aux.verifico("&&")) {
+            Token tokenActual = aux.tokenActual;
             aux.matcheo("&&");
             NodoExpresion expIgual = expIgual();
             NodoExpresion expAndP = expAndP();
             if (expIgual != null) {
+                expIgual.aux = tokenActual;
                 return expIgual;
             } else {
+                expAndP.aux = tokenActual;
                 return expAndP;
             }
         }
@@ -655,10 +674,14 @@ public class Sintactico {
     private NodoExpresion expIgual() {
         NodoExpresion compuesta = expCompuesta();
         NodoExpresion expIgualP = expIgualP();
-        if (compuesta != null) {
-            return compuesta;
+        if (expIgualP != null) {
+            NodoExpBinaria newExpIgual = new NodoExpBinaria();
+            newExpIgual.establecerLadoIzq(compuesta);
+            newExpIgual.establecerLadoDer(expIgualP);
+            newExpIgual.establecerOp(expIgualP.aux);
+            return newExpIgual;
         } else {
-            return expIgualP;
+            return compuesta;
         }
     }
 
@@ -666,12 +689,18 @@ public class Sintactico {
     private NodoExpresion expIgualP() {
         String[] terOpIgual = { "==", "!=" };
         if (aux.verifico(terOpIgual)) {
-            opIgual();
+            Token operador = opIgual();
             NodoExpresion expCompuesta = expCompuesta();
-            if (expCompuesta != null) {
-                return expCompuesta;
+            NodoExpresion expIgualP = expIgualP();
+            if (expIgualP != null) {
+                NodoExpBinaria newExpCompuesta = new NodoExpBinaria();
+                newExpCompuesta.establecerLadoIzq(expCompuesta);
+                newExpCompuesta.establecerLadoDer(expIgualP);
+                newExpCompuesta.establecerOp(operador);
+                return newExpCompuesta;
             } else {
-                return expIgualP();
+                expCompuesta.aux = operador;
+                return expCompuesta;
             }
         }
         return null;
@@ -719,11 +748,11 @@ public class Sintactico {
         if (aux.verifico(terOpAdd)) {
             Token operador = opAdd();
             NodoExpresion expMul = expMul();
+            NodoExpresion expAddP = expAddP();
             if (expMul != null) {
                 expMul.aux = operador;
                 return expMul;
             } else {
-                NodoExpresion expAddP = expAddP();
                 expAddP.aux = operador;
                 return expAddP;
             }
@@ -751,11 +780,11 @@ public class Sintactico {
         if (aux.verifico(terOpMul)) {
             Token operador = opMul();
             NodoExpresion expUn = expUn();
+            NodoExpresion expMulP = expMulP();
             if (expUn != null) {
                 expUn.aux = operador;
                 return expUn;
             } else {
-                NodoExpresion expMulP = expMulP();
                 expMulP.aux = operador;
                 return expMulP;
             }
@@ -773,14 +802,16 @@ public class Sintactico {
         }
     }
 
-    private void opIgual() {
+    private Token opIgual() {
         Token tokenActual = aux.tokenActual;
         String[] ter = { "==", "!=" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
+            return tokenActual;
         } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba \"==\" o \"!=\", se encontró: " + tokenActual.obtenerLexema());
+            return tokenActual;
         }
     }
 

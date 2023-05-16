@@ -8,6 +8,17 @@ class Prueba {
 	create(){
 		a = 2*1+1;
 		a = 2%3;
+		if(a == 2){
+			a = 5;
+			d = 'e';
+		}else{
+			a = 7;
+			d = 'f';
+		}
+		while(a != 2 || d == '3'){
+			a = 3;
+			d = 'b';
+		}
 	}
 	fn get_a() -> I32 {
 		return a;
