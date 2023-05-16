@@ -7,6 +7,7 @@ public class NodoExpUnaria extends NodoExpresion {
     private Token operador;
 
     public void establecerLadoDer(NodoExpresion ladoDer){
+        ladoDer.establecerPadre(this);
         this.ladoDer = ladoDer;
     }
 

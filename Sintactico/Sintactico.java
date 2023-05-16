@@ -540,11 +540,13 @@ public class Sintactico {
             NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionVarSimple();
+            ASTAsignacion.establecerOp(aux.tokenActual);
             aux.matcheo("=");
             NodoExpresion ladoDer = expresion();
             ASTAsignacion.establecerLadoDer(ladoDer);
         } else if (aux.verifico("self")) {
             asignacionSelfSimple();
+            ASTAsignacion.establecerOp(aux.tokenActual);
             aux.matcheo("=");
             asignacionVarSimple();
             NodoExpresion ladoDer = expresion();
