@@ -617,10 +617,11 @@ public class Sintactico {
         if (aux.verifico("||")) {
             aux.matcheo("||");
             NodoExpresion expAnd = expAnd();
+            NodoExpresion expOrP = expOr();
             if (expAnd != null) {
                 return expAnd;
             } else {
-                return expOrP();
+                return expOrP;
             }
         }
         return null;
@@ -628,10 +629,11 @@ public class Sintactico {
 
     private NodoExpresion expAnd() {
         NodoExpresion igual = expIgual();
+        NodoExpresion expAndP = expAndP();
         if (igual != null) {
             return igual;
         } else {
-            return expAndP();
+            return expAndP;
         }
     }
 
@@ -640,10 +642,11 @@ public class Sintactico {
         if (aux.verifico("&&")) {
             aux.matcheo("&&");
             NodoExpresion expIgual = expIgual();
+            NodoExpresion expAndP = expAndP();
             if (expIgual != null) {
                 return expIgual;
             } else {
-                return expAndP();
+                return expAndP;
             }
         }
         return null;
@@ -651,10 +654,11 @@ public class Sintactico {
 
     private NodoExpresion expIgual() {
         NodoExpresion compuesta = expCompuesta();
+        NodoExpresion expIgualP = expIgualP();
         if (compuesta != null) {
             return compuesta;
         } else {
-            return expIgualP();
+            return expIgualP;
         }
     }
 
@@ -675,10 +679,11 @@ public class Sintactico {
 
     private NodoExpresion expCompuesta() {
         NodoExpresion add = expAdd();
+        NodoExpresion expCompuestaP = expCompuestaP();
         if (add != null) {
             return add;
         } else {
-            return expCompuestaP();
+            return expCompuestaP;
         }
     }
 

@@ -1,12 +1,12 @@
 /*CORRECTO*/
 class Prueba {
 	I32: a;
-	Str: b;
+	A: b;
 	pub Array I32: c;
 	pub Char: d;
 	pub Bool: e;
 	create(I32: a, Str: b){
-		c = 2*1;
+		c = 2*1+1;
 		a = 1;
         b = "pepe";
 	}
@@ -32,5 +32,5 @@ class Prueba2 : Prueba{
 	}
 }
 fn main () {
-	c = new I32[1];
+	c = new I32[1+2];
 }
