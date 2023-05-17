@@ -6,6 +6,7 @@ class Prueba {
 	Char: d;
 	Bool: e;
 	create(){
+		a.b.c = 1;
 		(a || b || c);
 		(d && e && f);
 		(expOr || expAnd && expIgual == expAd < expAd);

@@ -539,16 +539,17 @@ public class Sintactico {
         if (aux.verifico("id_objeto")) {
             NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
-            asignacionVarSimple();
+            asignacionVarSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
             aux.matcheo("=");
             NodoExpresion ladoDer = expresion();
             ASTAsignacion.establecerLadoDer(ladoDer);
         } else if (aux.verifico("self")) {
-            asignacionSelfSimple();
+            NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
+            ASTAsignacion.establecerLadoIzq(ladoIzq);
+            asignacionSelfSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
             aux.matcheo("=");
-            asignacionVarSimple();
             NodoExpresion ladoDer = expresion();
             ASTAsignacion.establecerLadoDer(ladoDer);
         } else {
@@ -558,41 +559,40 @@ public class Sintactico {
         }
     }
 
-    private NodoExpresion asignacionVarSimple() {
+    private void asignacionVarSimple(NodoExpresion var) {
         aux.matcheoId("id_objeto");
-        return asignacionVarSimpleP();
+        asignacionVarSimpleP(var);
     }
 
-    private NodoExpresion asignacionVarSimpleP() {
+    private void asignacionVarSimpleP(NodoExpresion var) {
         if (aux.verifico(".")) {
-            return encadenadoSimpleP();
+            encadenadoSimpleP(var);
         } else if (aux.verifico("[")) {
             aux.matcheo("[");
+            // AGREGAR LA EXPRESION COMO OPCIONAL EN LA VARIABLE?
             NodoExpresion retorno = expresion();
             aux.matcheo("]");
-            return retorno;
         } else {
             Token tokenActual = aux.tokenActual;
             if (!tokenActual.obtenerLexema().equals("=")) {
                 ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                         "Se esperaba: =, se encontró: " + tokenActual.obtenerLexema());
             }
-            return null;
         }
     }
 
-    private NodoExpresion encadenadoSimpleP() {
+    private void encadenadoSimpleP(NodoExpresion var) {
         if (aux.verifico(".")) {
             aux.matcheo(".");
+            NodoVariable varEnc = new NodoVariable(var, aux.tokenActual);
             aux.matcheoId("id_objeto");
-            return encadenadoSimpleP();
+            encadenadoSimpleP(varEnc);
         }
-        return null;
     }
 
-    private void asignacionSelfSimple() {
+    private void asignacionSelfSimple(NodoExpresion var) {
         aux.matcheo("self");
-        encadenadoSimpleP();
+        encadenadoSimpleP(var);
     }
 
     private NodoExpresion sentenciaSimple() {
