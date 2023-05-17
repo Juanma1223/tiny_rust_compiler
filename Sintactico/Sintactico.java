@@ -909,19 +909,14 @@ public class Sintactico {
     }
 
     // LAMBDA
-    private NodoExpresion encadenadoP() {
+    private void encadenadoP(NodoExpresion exp) {
         if (aux.verifico(".")) {
             aux.matcheo(".");
+            NodoVariable newVar = new NodoVariable(exp, aux.tokenActual);
             aux.matcheoId("id_objeto");
-            encadenado2();
-            // TO DO
-            return new NodoExpresion();
-        } else {
-            if (aux.tokenActual.obtenerToken() == "id_objeto") {
-                return new NodoVariable(null, aux.tokenActual);
-            }
+            //Agregar encadenado2
+            encadenado2(newVar);
         }
-        return null;
     }
 
     private NodoLiteral literal() {
@@ -932,25 +927,30 @@ public class Sintactico {
 
     private NodoExpresion primario() {
         if (aux.verifico("(")) {
-            // TO DO
-            expresionParentizada();
-            return new NodoExpresion();
+
+            return expresionParentizada();
+            
         } else if (aux.verifico("self")) {
-            // TO DO
-            accesoSelf();
-            return new NodoExpresion();
+            
+            return accesoSelf();
+
         } else if (aux.verifico("id_objeto")) {
-            Token tokenActual = aux.tokenActual;
-            NodoExpresion primarioP = primarioP();
+
+            NodoVariable newVar = new NodoVariable(aux.tokenActual);
             aux.matcheoId("id_objeto");
-            return primarioP;
+            primarioP(newVar);
+            return newVar;
+
         } else if (aux.verifico("id_clase")) {
-            // TO DO
-            llamadaMetodoEstatico();
-            return new NodoExpresion();
+            
+            NodoVariable newVarC = new NodoVariable(aux.tokenActual);
+            llamadaMetodoEstatico(newVarC);
+            return newVarC;
+
         } else if (aux.verifico("new")) {
-            // TO DO
+
             return llamadaConstructor();
+
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -960,55 +960,58 @@ public class Sintactico {
         }
     }
 
-    private NodoExpresion primarioP() {
+    private void primarioP(NodoExpresion var) {
         if (aux.verifico("(")) {
             // TO DO
-            llamadaMetodoP();
-            return new NodoExpresion();
+            llamadaMetodoP(var);
         } else {
-            return accesoVarP();
+            // TO DO
+            accesoVarP(var);
         }
     }
 
-    private void expresionParentizada() {
+    private NodoExpresion expresionParentizada() {
         aux.matcheo("(");
-        expresion();
+        NodoExpresion newExp = expresion();
         aux.matcheo(")");
-        encadenadoP();
+        encadenadoP(newExp);
+        return newExp;
     }
 
-    private void accesoSelf() {
+    private NodoExpresion accesoSelf() {
+        NodoVariable newVar = new NodoVariable(aux.tokenActual);
         aux.matcheo("self");
-        encadenadoP();
+        encadenadoP(newVar);
+        return newVar;
     }
 
-    private NodoExpresion accesoVarP() {
+    private void accesoVarP(NodoExpresion var) {
         if (aux.verifico("[")) {
             aux.matcheo("[");
+            // Agregar expresion
             NodoExpresion expresion = expresion();
             aux.matcheo("]");
-            return expresion;
         } else {
-            return encadenadoP();
+            encadenadoP(var);
         }
     }
 
-    private void llamadaMetodoP() {
+    private void llamadaMetodoP(NodoExpresion var) {
         argumentosActuales();
-        encadenadoP();
+        encadenadoP(var);
     }
 
-    private void llamadaMetodo() {
+    private void llamadaMetodo(NodoExpresion var) {
         aux.matcheoId("id_objeto");
         argumentosActuales();
-        encadenadoP();
+        encadenadoP(var);
     }
 
-    private void llamadaMetodoEstatico() {
+    private void llamadaMetodoEstatico(NodoExpresion var) {
         aux.matcheoId("id_clase");
         aux.matcheo(".");
-        llamadaMetodo();
-        encadenadoP();
+        llamadaMetodo(var);
+        encadenadoP(var);
     }
 
     private NodoExpresion llamadaConstructor() {
@@ -1018,11 +1021,12 @@ public class Sintactico {
 
     private NodoExpresion llamadaConstructorP() {
         if (aux.verifico("id_clase")) {
+            NodoVariable newVarC = new NodoVariable(aux.tokenActual);
             aux.matcheoId("id_clase");
             argumentosActuales();
-            encadenadoP();
+            encadenadoP(newVarC);
             // TO DO
-            return new NodoExpresion();
+            return newVarC;
         } else {
             tipoPrimitivo();
             aux.matcheo("[");
@@ -1058,16 +1062,16 @@ public class Sintactico {
         }
     }
 
-    private void encadenado2() {
+    private void encadenado2(NodoExpresion var) {
         if (aux.verifico("[")) {
             aux.matcheo("[");
             expresion();
             aux.matcheo("]");
         } else if (aux.verifico("(")) {
             argumentosActuales();
-            encadenadoP();
+            encadenadoP(var);
         } else {
-            encadenadoP();
+            encadenadoP(var);
         }
     }
 }

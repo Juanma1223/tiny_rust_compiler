@@ -10,4 +10,9 @@ public class NodoVariable extends NodoExpresion{
         this.token = token;
         super.establecerPadre(padre);
     }
+
+    public NodoVariable(Token token){
+        this.token = token;
+    }
+
 }
