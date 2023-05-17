@@ -1,16 +1,13 @@
 package Semantico.Nodo;
 
-import java.util.ArrayList;
-
 import Lexico.Token;
 
-// Esta clase es la raiz de nuestra estructura de arbol
-// Es quien mantiene los subarboles de cada clase
+// Esta clase es la clase padre de todos los nodos
 public class Nodo {
 
+    // Esta variable guarda la información del padre de un nodo
     private Nodo padre;
-    private ArrayList<NodoClase> clases = new ArrayList<>();
-    // Esta variable la utilizamos para comunicar informacion hacia arriba en los nodos
+    // Esta variable la utilizamos para comunicar información hacia arriba en los nodos
     public Token aux;
 
     public void establecerPadre(Nodo padre){
@@ -19,14 +16,6 @@ public class Nodo {
 
     public Nodo obtenerPadre(){
         return this.padre;
-    }
-
-    // Esta clase crea un hijo y lo retorna
-    public NodoClase agregarHijo(){
-        NodoClase hijo = new NodoClase();
-        hijo.establecerPadre(this);
-        this.clases.add(hijo);
-        return hijo;
     }
 
 }

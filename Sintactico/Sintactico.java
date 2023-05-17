@@ -13,7 +13,7 @@ import Semantico.Variable.Parametro;
 import Semantico.Variable.Variable;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
-import Semantico.Nodo.Nodo;
+import Semantico.Nodo.NodoAST;
 import Semantico.Nodo.NodoAsignacion;
 import Semantico.Nodo.NodoBloque;
 import Semantico.Nodo.NodoClase;
@@ -24,7 +24,6 @@ import Semantico.Nodo.NodoIf;
 import Semantico.Nodo.NodoLiteral;
 import Semantico.Nodo.NodoMetodo;
 import Semantico.Nodo.NodoReturn;
-import Semantico.Nodo.NodoSentencia;
 import Semantico.Nodo.NodoVariable;
 import Semantico.Nodo.NodoWhile;
 import Semantico.Tipo.Tipo;
@@ -45,11 +44,11 @@ public class Sintactico {
     AuxiliarSintactico aux;
 
     public TablaDeSimbolos tablaDeSimbolos;
-    public Nodo AST;
+    public NodoAST AST;
 
     // Este constructor recibe como argumento la ruta en el sistema operativo
     // donde se encuentra el archivo con el codigo fuente
-    public Sintactico(File archivo, TablaDeSimbolos tablaDeSimbolos, Nodo AST) {
+    public Sintactico(File archivo, TablaDeSimbolos tablaDeSimbolos, NodoAST AST) {
         try {
             this.analizadorLexico = new Lexico(archivo);
             this.aux = new AuxiliarSintactico(this.analizadorLexico);

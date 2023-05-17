@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
-import Semantico.Nodo.Nodo;
+import Semantico.Nodo.NodoAST;
 import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Atributo;
 import Semantico.Variable.Parametro;
@@ -16,11 +16,11 @@ import Sintactico.Sintactico;
 
 public class Semantico {
     private TablaDeSimbolos tablaDeSimbolos;
-    private Nodo AST;
+    private NodoAST AST;
 
     public Semantico(File archivo) {
         this.tablaDeSimbolos = new TablaDeSimbolos();
-        this.AST = new Nodo();
+        this.AST = new NodoAST();
         // Corroboramos la validez sintactica del codigo y rellenamos la tabla de
         // simbolos
         Sintactico sintacticoTS = new Sintactico(archivo, this.tablaDeSimbolos, this.AST);

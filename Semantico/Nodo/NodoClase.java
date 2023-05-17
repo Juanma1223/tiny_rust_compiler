@@ -2,7 +2,10 @@ package Semantico.Nodo;
 
 import java.util.ArrayList;
 
+// Esta clase mantiene los subarboles de cada método
+// dentro de un Nodo Clase
 public class NodoClase extends Nodo {
+    
     private ArrayList<NodoMetodo> metodos = new ArrayList<>();
 
     public NodoMetodo agregarMetodo(){
