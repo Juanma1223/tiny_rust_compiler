@@ -894,12 +894,8 @@ public class Sintactico {
             return literal();
         } else if (aux.verifico(terPrimario)) {
             NodoExpresion primario = primario();
-            encadenadoP();
-            if (primario instanceof NodoVariable) {
-                return primario;
-            }
-            // Aca todavia no se que hacer xd
-            return new NodoExpresion();
+            encadenadoP(primario);
+            return primario;
         } else {
             Token tokenActual = aux.tokenActual;
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
