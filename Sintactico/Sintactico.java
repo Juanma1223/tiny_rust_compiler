@@ -468,9 +468,10 @@ public class Sintactico {
             NodoExpresion expresion = sentenciaSimple();
             ASTBloque.agregarExpresion(expresion);
         } else if (aux.verifico("if")) {
+            NodoIf ASTIf = ASTBloque.agregarIf();
+            ASTIf.aux = aux.tokenActual;
             aux.matcheo("if");
             aux.matcheo("(");
-            NodoIf ASTIf = ASTBloque.agregarIf();
             ASTIf.agregarCondicion(expresion());
             aux.matcheo(")");
             NodoBloque ASTSentenciaThen = ASTIf.agregarSentenciaThen();
@@ -479,6 +480,7 @@ public class Sintactico {
             sentencia2(ASTSentenciaElse);
         } else if (aux.verifico("while")) {
             NodoWhile ASTWhile = ASTBloque.agregarWhile();
+            ASTWhile.aux = aux.tokenActual;
             aux.matcheo("while");
             aux.matcheo("(");
             NodoExpresion condicion = expresion();

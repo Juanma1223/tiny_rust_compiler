@@ -1,4 +1,4 @@
-/*CORRECTO*/
+/*TEST PARA PROBAR COSAS*/
 class Prueba {
 	I32: a;
 	pub I32: b;
@@ -6,11 +6,16 @@ class Prueba {
 	Char: d;
 	Bool: e,f;
 	create(){
-		(+-+-+-a);
-		(!+3);
+		//(+-+-+-a);
+		//(!+3);
 		//a.b.c = 1;
-		(a+b);
-		(e&&f || a<b);
+		d = a+b;
+		if(a<5){
+		}
+		while(1) {
+
+		}
+		//(e&&f || a<b);
 		//(expOr || expAnd && expIgual == expAd < expAd);
 	}
 }

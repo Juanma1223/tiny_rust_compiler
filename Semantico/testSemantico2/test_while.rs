@@ -1,12 +1,11 @@
-/*ERROR: Condición no booleana en while.*/
+/*ERROR: LINEA 4 | COLUMNA 3 | El tipo de la condicion while no es booleano!*/
 class Prueba {
+	fn m1 () -> void {
+		while ('a'){
 
+		}
+	}
 }
 fn main () {
-	I32 : i,a;
-	i = 0;
-	a = 5;
-	while (i < 10 || a*3){
-		(IO.out_i32(i));
-	}
+
 }
