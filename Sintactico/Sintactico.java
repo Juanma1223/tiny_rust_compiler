@@ -108,9 +108,12 @@ public class Sintactico {
         Metodo nuevoMetodo = new Metodo("main", false);
         nuevoMetodo.establecerTipoRetorno(new TipoVoid("void"));
         tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
-        NodoClase ASTClase = AST.agregarHijo();
-        NodoMetodo ASTMetodo = ASTClase.agregarMetodo();
-        bloqueMetodo(ASTMetodo);
+        // Creamos el árbol de la clase Fantasma que contiene a main
+        NodoClase ASTClaseM = AST.agregarHijo();
+        ASTClaseM.establecerNombre("Fantasma");
+        NodoMetodo ASTMetodoM = ASTClaseM.agregarMetodo();
+        ASTMetodoM.establecerNombre("main");
+        bloqueMetodo(ASTMetodoM);
         tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         tablaDeSimbolos.insertarClase(nuevaClase);
     }

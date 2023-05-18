@@ -6,6 +6,7 @@ class Prueba {
 	Char: d;
 	Bool: e,f;
 	create(){
+		a = 5/;
 		//(+-+-+-a);
 		//(!+3);
 		//a.b.c = 1;
@@ -30,5 +31,11 @@ class A {
 
 }
 fn main () {
+	I32: b;
+	Str: a;
+	if(a<5){
+		(a + b);
+	}
+	b = 3/5+9-8*4;
 	//c = new I32[1+2];
 }
