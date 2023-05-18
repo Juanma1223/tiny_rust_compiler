@@ -29,10 +29,17 @@ public class Semantico {
         consolidarTS();
         // Realizamos el checkeo de tipos sobre el AST
         this.AST.checkeoTipos();
-        try (FileWriter escritor = new FileWriter(archivo + ".json")) {
-            escritor.write(this.tablaDeSimbolos.toJson(archivo.getName()));
+        // Creamos el json de la Tabla de Simbolos
+        try (FileWriter escritorTDS = new FileWriter(archivo + ".ts.json")) {
+            escritorTDS.write(this.tablaDeSimbolos.toJson(archivo.getName()));
         } catch (IOException e) {
-            System.out.println("Error al intentar escribir el json");
+            System.out.println("Error al intentar escribir el json de la TDS");
+        }
+        // Creamos el json del AST
+        try (FileWriter escritorAST = new FileWriter(archivo + ".ast.json")) {
+            escritorAST.write(this.AST.toJson(archivo.getName()));
+        } catch (IOException e) {
+            System.out.println("Error al intentar escribir el json del AST");
         }
     }
 

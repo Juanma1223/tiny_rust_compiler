@@ -65,4 +65,17 @@ public class NodoBloque extends Nodo {
         // Cada subclase de sentencia debe implementar su propio checkeo de tipos
         sentencias.forEach((sentencia) -> sentencia.checkeoTipos());
     }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Sentencias\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        for (int i = 0; i < sentencias.size(); i++) {
+            sb.append(sentencias.get(i).toJson() + ",").append(System.lineSeparator());
+        }
+        sb.append("}").append(System.lineSeparator());
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

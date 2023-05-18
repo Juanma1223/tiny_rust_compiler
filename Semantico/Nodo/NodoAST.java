@@ -21,4 +21,18 @@ public class NodoAST extends Nodo {
     public void checkeoTipos(){
         clases.forEach((clase) -> clase.checkeoTipos());
     }
+
+    public String toJson(String nombreArchivo) {
+        StringBuilder sb = new StringBuilder();
+        // Construimos el json de forma recursiva
+        sb.append("{").append(System.lineSeparator());
+        sb.append("\"nombre\":").append("\""+nombreArchivo+"\",").append(System.lineSeparator());
+        sb.append("\"clases\":[").append(System.lineSeparator());
+        for (int i = 0; i < clases.size(); i++) {
+            sb.append(clases.get(i).toJson() + ",").append(System.lineSeparator());
+        }
+        sb.append("]").append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

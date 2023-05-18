@@ -22,9 +22,12 @@ class Prueba {
 	fn m1 () -> void {
 		I32: p;
 		{
-			p = "hola";
+			p = 1;
 		}
 	}
+}
+class A {
+
 }
 fn main () {
 	//c = new I32[1+2];

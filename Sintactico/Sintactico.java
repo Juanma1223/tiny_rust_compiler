@@ -119,6 +119,7 @@ public class Sintactico {
     private void clase(NodoClase ASTClase) {
         aux.matcheo("class");
         Token tokenActual = aux.tokenActual;
+        ASTClase.establecerNombre(tokenActual.obtenerLexema());
         aux.matcheoId("id_clase");
         Clase checkeoClase = tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema());
         if (checkeoClase == null) {
@@ -239,6 +240,7 @@ public class Sintactico {
 
     private void constructor(NodoMetodo ASTMetodo) {
         Token tokenActual = aux.tokenActual;
+        ASTMetodo.establecerNombre("constructor");
         if (tablaDeSimbolos.obtenerClaseActual().tieneConstructor() == false) {
             aux.matcheo("create");
             Constructor nuevoConstructor = new Constructor();
@@ -261,6 +263,7 @@ public class Sintactico {
         }
         aux.matcheo("fn");
         Token tokenActual = aux.tokenActual;
+        ASTMetodo.establecerNombre(tokenActual.obtenerLexema());
         aux.matcheoId("id_objeto");
         Metodo checkeMetodo = tablaDeSimbolos.obtenerClaseActual().obtenerMetodoPorNombre(tokenActual.obtenerLexema());
         if (checkeMetodo == null) {
