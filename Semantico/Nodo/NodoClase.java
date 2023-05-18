@@ -14,4 +14,9 @@ public class NodoClase extends Nodo {
         hijo.establecerPadre(this);
         return hijo;
     }
+
+    @Override
+    public void checkeoTipos(){
+        metodos.forEach((metodo) -> metodo.checkeoTipos());
+    }
 }

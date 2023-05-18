@@ -9,4 +9,12 @@ public class NodoMetodo extends NodoBloque {
         this.bloque = hijo;
         return hijo;
     }
+
+    @Override
+    public void checkeoTipos(){
+        // El bloque puede llegar a ser null
+        if(this.bloque != null){
+            this.bloque.checkeoTipos();
+        }
+    }
 }

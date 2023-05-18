@@ -1,6 +1,8 @@
 package Semantico.Nodo;
 
 import Lexico.Token;
+import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoPrimitivo;
 
 public class NodoLiteral extends NodoExpresion{
 
@@ -10,4 +12,22 @@ public class NodoLiteral extends NodoExpresion{
         this.token = token;
     }
     
+    @Override
+    public Tipo obtenerTipo(){
+        switch(this.token.obtenerToken()){
+            case "lit_ent":
+            return new TipoPrimitivo("I32");
+            case "lit_car":
+            return new TipoPrimitivo("Char");
+            case "lit_cad":
+            return new TipoPrimitivo("Str");
+            case "p_true":
+            return new TipoPrimitivo("Bool");
+            case "p_false":
+            return new TipoPrimitivo("Bool");
+            default:
+            return new Tipo("");
+        }
+    }
+
 }

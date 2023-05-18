@@ -10,4 +10,5 @@ public class Tipo {
     public String obtenerTipo(){
         return this.tipo;
     }
+
 }

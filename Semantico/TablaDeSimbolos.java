@@ -2,6 +2,7 @@ package Semantico;
 
 import java.util.HashMap;
 
+import Lexico.Token;
 import Semantico.Funcion.Funcion;
 import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
@@ -9,6 +10,7 @@ import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoVoid;
 import Semantico.Variable.Parametro;
+import Semantico.Variable.Variable;
 
 public class TablaDeSimbolos {
     private Clase claseActual;
@@ -140,5 +142,18 @@ public class TablaDeSimbolos {
         cArray.establecerHerencia("Object");
         cArray.insertarMetodo(new Metodo("length", true, tI32));
         this.clases.put("Array", cArray);
+    }
+
+    // Este metodo obtiene una variable en el scope actual, si no la encuentra devuelve error
+    public Variable obtenerVarEnAlcanceActual(Token tokenActual){
+        Variable infoVariable = this.metodoActual.obtenerVariablePorNombre(tokenActual.obtenerLexema());
+        // Si no encontramos la variable en el metodo que recorre el sintactico actualmente, la buscamos en la clase
+        if(infoVariable == null){
+            infoVariable = this.claseActual.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+            if(infoVariable == null){
+                new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable "+tokenActual.obtenerLexema()+" no esta declarada!");
+            }
+        }
+        return infoVariable;
     }
 }

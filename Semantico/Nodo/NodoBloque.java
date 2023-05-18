@@ -7,48 +7,47 @@ public class NodoBloque extends Nodo {
 
     // Las sentencias son un tipo polimorfico que admite if, while, asignacion, etc
 
-    public NodoSentencia agregarSentencia(){
+    public NodoSentencia agregarSentencia() {
         NodoSentencia hijo = new NodoSentencia();
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
-    public NodoAsignacion agregarAsignacion(){
+    public NodoAsignacion agregarAsignacion() {
         NodoAsignacion hijo = new NodoAsignacion();
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
-    public NodoWhile agregarWhile(){
+    public NodoWhile agregarWhile() {
         NodoWhile hijo = new NodoWhile();
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
-    public NodoIf agregarIf(){
+    public NodoIf agregarIf() {
         NodoIf hijo = new NodoIf();
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
-    public NodoReturn agregarReturn(){
+    public NodoReturn agregarReturn() {
         NodoReturn hijo = new NodoReturn();
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
-    public void agregarReturn(NodoReturn hijo){
+    public void agregarReturn(NodoReturn hijo) {
         this.sentencias.add(hijo);
         hijo.establecerPadre(this);
     }
 
-
-    public NodoExpresion agregarExpresion(){
+    public NodoExpresion agregarExpresion() {
         NodoExpresion hijo = new NodoExpresion();
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
@@ -56,8 +55,14 @@ public class NodoBloque extends Nodo {
     }
 
     // Sobrecarga para poder insertar expresiones de cualquier tipo
-    public void agregarExpresion(NodoExpresion hijo){
+    public void agregarExpresion(NodoExpresion hijo) {
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
+    }
+
+    @Override
+    public void checkeoTipos() {
+        // Cada subclase de sentencia debe implementar su propio checkeo de tipos
+        sentencias.forEach((sentencia) -> sentencia.checkeoTipos());
     }
 }

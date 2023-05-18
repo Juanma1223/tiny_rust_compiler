@@ -123,6 +123,13 @@
 "public":"false",
 "posicion":"4"
 }
+,
+{
+"nombre":"f",
+"tipo":"Bool",
+"public":"false",
+"posicion":"5"
+}
 
 ],
 "constructor":{

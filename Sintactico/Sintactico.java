@@ -536,7 +536,12 @@ public class Sintactico {
 
     private void asignacion(NodoAsignacion ASTAsignacion) {
         if (aux.verifico("id_objeto")) {
+            // Obtenemos informacion de la variable que estamos asignando
+            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
+            // Si la variable no se encuentra en el scope 
             NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
+            // Establecememos el tipo de la variable que estamos asignando
+            ladoIzq.establecerTipo(infoVariable.obtenerTipo());
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionVarSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -612,7 +617,7 @@ public class Sintactico {
             NodoExpBinaria newExpOr = new NodoExpBinaria();
             newExpOr.establecerLadoIzq(and);
             newExpOr.establecerLadoDer(expOrP);
-            // El operador es enviado haciendo uso de el auxiliar
+            // El operador es enviado haciendo uso del auxiliar
             newExpOr.establecerOp(expOrP.aux);
             return newExpOr;
         } else {
@@ -909,7 +914,7 @@ public class Sintactico {
             aux.matcheo(".");
             NodoVariable newVar = new NodoVariable(exp, aux.tokenActual);
             aux.matcheoId("id_objeto");
-            //Agregar encadenado2
+            // Agregar encadenado2
             encadenado2(newVar);
         }
     }
@@ -924,21 +929,22 @@ public class Sintactico {
         if (aux.verifico("(")) {
 
             return expresionParentizada();
-            
+
         } else if (aux.verifico("self")) {
-            
+
             return accesoSelf();
 
         } else if (aux.verifico("id_objeto")) {
-
+            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
             NodoVariable newVar = new NodoVariable(aux.tokenActual);
+            newVar.establecerTipo(infoVariable.obtenerTipo());
             aux.matcheoId("id_objeto");
             primarioP(newVar);
             return newVar;
-
         } else if (aux.verifico("id_clase")) {
-            
+            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
             NodoVariable newVarC = new NodoVariable(aux.tokenActual);
+            newVarC.establecerTipo(infoVariable.obtenerTipo());
             llamadaMetodoEstatico(newVarC);
             return newVarC;
 
@@ -1016,7 +1022,10 @@ public class Sintactico {
 
     private NodoExpresion llamadaConstructorP() {
         if (aux.verifico("id_clase")) {
+            // Obtenemos la informacion de la variable para obtener su tipo
+            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
             NodoVariable newVarC = new NodoVariable(aux.tokenActual);
+            newVarC.establecerTipo(infoVariable.obtenerTipo());
             aux.matcheoId("id_clase");
             argumentosActuales();
             encadenadoP(newVarC);

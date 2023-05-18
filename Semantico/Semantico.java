@@ -27,6 +27,8 @@ public class Semantico {
         tablaDeSimbolos = sintacticoTS.tablaDeSimbolos;
         // Consolidamos la tabla de simbolos con checkeos extra
         consolidarTS();
+        // Realizamos el checkeo de tipos sobre el AST
+        this.AST.checkeoTipos();
         try (FileWriter escritor = new FileWriter(archivo + ".json")) {
             escritor.write(this.tablaDeSimbolos.toJson(archivo.getName()));
         } catch (IOException e) {
