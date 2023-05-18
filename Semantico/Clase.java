@@ -1,8 +1,10 @@
 package Semantico;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import Semantico.Variable.Atributo;
+import Semantico.Variable.Parametro;
 import Semantico.Funcion.Metodo;
 import Semantico.Funcion.Constructor;
 

@@ -9,14 +9,21 @@ class Prueba {
 		//(+-+-+-a);
 		//(!+3);
 		//a.b.c = 1;
-		d = a+b;
+		//d = a+b;
 		if(a<5){
+			(a + 3);
 		}
-		while(1) {
-
+		while(true) {
+			(a + 3);
 		}
 		//(e&&f || a<b);
 		//(expOr || expAnd && expIgual == expAd < expAd);
+	}
+	fn m1 () -> void {
+		I32: p;
+		{
+			p = "hola";
+		}
 	}
 }
 fn main () {

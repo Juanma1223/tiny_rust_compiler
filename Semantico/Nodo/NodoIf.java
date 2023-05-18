@@ -41,5 +41,7 @@ public class NodoIf extends NodoSentencia {
             new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(), "El tipo de la condicion if no es booleano!", true);
         }
         this.establecerTipo(tipo);
+        sentenciaThen.checkeoTipos();
+        sentenciaElse.checkeoTipos();
     }
 }

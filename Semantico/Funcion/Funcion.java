@@ -1,20 +1,21 @@
 package Semantico.Funcion;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import Semantico.Variable.Parametro;
 import Semantico.Variable.Variable;
 
 public class Funcion {
 
-    private HashMap<String, Parametro> parametros = new HashMap<String, Parametro>();
+    private LinkedHashMap<String, Parametro> parametros = new LinkedHashMap<String, Parametro>();
     private HashMap<String, Variable> variables = new HashMap<String, Variable>();
 
     public Parametro obtenerParametroPorNombre(String nombre) {
         return this.parametros.get(nombre);
     }
 
-    public HashMap<String, Parametro> obtenerParametros(){
+    public LinkedHashMap<String, Parametro> obtenerParametros(){
         return this.parametros;
     }
 

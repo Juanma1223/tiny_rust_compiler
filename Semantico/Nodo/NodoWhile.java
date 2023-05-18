@@ -33,5 +33,6 @@ public class NodoWhile extends NodoSentencia {
             new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(), "El tipo de la condicion while no es booleano!", true);
         }
         this.establecerTipo(tipo);
+        bloqueW.checkeoTipos();
     }
 }
