@@ -98,7 +98,7 @@
 ,
 {
 "nombre":"b",
-"tipo":"Str",
+"tipo":"I32",
 "public":"true",
 "posicion":"1"
 }
@@ -122,6 +122,13 @@
 "tipo":"Bool",
 "public":"false",
 "posicion":"4"
+}
+,
+{
+"nombre":"f",
+"tipo":"Bool",
+"public":"false",
+"posicion":"5"
 }
 
 ],

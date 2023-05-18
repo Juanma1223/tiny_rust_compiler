@@ -3,6 +3,7 @@ package Semantico.Nodo;
 import Lexico.Token;
 import Semantico.ErrorSemantico;
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoPrimitivo;
 
 public class NodoExpBinaria extends NodoExpresion {
     private Nodo ladoIzq;
@@ -38,36 +39,45 @@ public class NodoExpBinaria extends NodoExpresion {
         Tipo tipoIzq = ladoIzq.obtenerTipo();
         Tipo tipoDer = ladoDer.obtenerTipo();
         if (!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())) {
-            new ErrorSemantico(0, 0,
-                    "Los tipos de la expresion binaria no coinciden! (falta agregar filas y columnas)");
+            new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                    "Los tipos de la expresion binaria no coinciden!",true);
         }
-        this.checkeoOperadorValido(tipoIzq.obtenerTipo(), operador);
-        this.establecerTipo(tipoDer);
+        Tipo tExp = this.checkeoOperadorValido(tipoIzq, operador);
+        this.establecerTipo(tExp);
     }
 
     // Esta funcion revisa si la operacion que estamos ejecutando es compatible con
     // el tipo de dato con el que se esta trabajando
-    public void checkeoOperadorValido(String tipo, Token operador) {
+    public Tipo checkeoOperadorValido(Tipo tipoIzq, Token operador) {
+        String tipo = tipoIzq.obtenerTipo();
         String op = operador.obtenerLexema();
-        if (tipo.equals("I32")) {
-            if (op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/")) {
+        if (op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/") || op.equals("%")) {
+            if (tipo.equals("I32")) {
                 // Operador y tipo correctos
-                return;
+                return new TipoPrimitivo("I32");
             }
         } else {
-            if (op.equals("+") && (tipo.equals("Char") || tipo.equals("Str"))) {
-                // Operador y tipo correctos
-                return;
-            } else {
-                if (tipo == "Bool") {
-                    if (op.equals("&&") || op.equals("||")) {
-                        return;
-                    } else {
-                        new ErrorSemantico(0, 0,
-                                "No se puede aplicar la operacion " + op + " en el tipo de dato " + tipo);
+            if (op.equals("<") || op.equals("<=") || op.equals(">") || op.equals(">=")) {
+                if (tipo.equals("I32")) {
+                    // Operador y tipo correctos
+                    return new TipoPrimitivo("Bool");
+                }
+            }
+            else {
+                if (op.equals("&&") || op.equals("||")) {
+                    if (tipo.equals("Bool")) {
+                        // Operador y tipo correctos
+                        return new TipoPrimitivo("Bool");
                     }
+                }
+                else {
+                    return tipoIzq;
                 }
             }
         }
+        new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                "No se puede aplicar la operacion " + op + " en el tipo de dato " + tipo, true);
+        return null;
     }
+
 }

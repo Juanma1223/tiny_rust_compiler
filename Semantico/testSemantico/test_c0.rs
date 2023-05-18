@@ -1,17 +1,19 @@
 /*CORRECTO*/
 class Prueba {
 	I32: a;
-	pub Str: b;
+	pub I32: b;
 	Array I32: c;
 	Char: d;
-	Bool: e;
+	Bool: e,f;
 	create(){
-		a.b.c = 1;
-		(a || b || c);
-		(d && e && f);
-		(expOr || expAnd && expIgual == expAd < expAd);
+		(+-+-+-a);
+		(!+3);
+		//a.b.c = 1;
+		(a+b);
+		(e&&f || a<b);
+		//(expOr || expAnd && expIgual == expAd < expAd);
 	}
 }
 fn main () {
-	c = new I32[1+2];
+	//c = new I32[1+2];
 }
