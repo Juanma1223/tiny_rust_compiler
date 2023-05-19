@@ -985,7 +985,8 @@ public class Sintactico {
             llamadaMetodoP(llamadaM);
             return llamadaM;
         } else {
-            NodoVariable var = new NodoVariable(token);
+            NodoVariable var = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),token);
             accesoVarP(var);
             return var;
         }
@@ -1089,7 +1090,8 @@ public class Sintactico {
 
     private void encadenado2(NodoExpresion exp, Token token) {
         if (aux.verifico("[")) {
-            NodoVariable varA = new NodoVariable(token);
+            NodoVariable varA = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),token);
             aux.matcheo("[");
             NodoExpresion accesoArray = expresion();
             varA.establecerEncadenado(accesoArray);
