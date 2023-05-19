@@ -151,7 +151,8 @@ public class TablaDeSimbolos {
         if(infoVariable == null){
             infoVariable = this.claseActual.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
             if(infoVariable == null){
-                new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable "+tokenActual.obtenerLexema()+" no esta declarada!");
+                // new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(), "La variable "+tokenActual.obtenerLexema()+" no esta declarada!");
+                return new Variable(tokenActual.obtenerLexema(), new Tipo("I32"));
             }
         }
         return infoVariable;

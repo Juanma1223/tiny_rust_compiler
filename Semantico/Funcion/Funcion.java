@@ -1,25 +1,29 @@
 package Semantico.Funcion;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import Semantico.Variable.Parametro;
 import Semantico.Variable.Variable;
 
 public class Funcion {
 
-    private LinkedHashMap<String, Parametro> parametros = new LinkedHashMap<String, Parametro>();
+    private HashMap<String, Parametro> parametros = new LinkedHashMap<String, Parametro>();
     private HashMap<String, Variable> variables = new HashMap<String, Variable>();
 
     public Parametro obtenerParametroPorNombre(String nombre) {
         return this.parametros.get(nombre);
     }
 
-    public LinkedHashMap<String, Parametro> obtenerParametros(){
+    public HashMap<String, Parametro> obtenerParametros() {
         return this.parametros;
     }
 
-    public HashMap<String, Variable> obtenerVariables(){
+    public HashMap<String, Variable> obtenerVariables() {
         return this.variables;
     }
 
@@ -65,6 +69,26 @@ public class Funcion {
         } else {
             return true;
         }
+    }
+
+    // Retorna los parametros en el orden de insercion
+    public ArrayList<Parametro> obtenerParamsOrdenados(){
+        ArrayList<Parametro> ordenados = new ArrayList<Parametro>();
+        ArrayList<Integer> aux = new ArrayList<Integer>();
+        // Insertamos las posiciones en un arreglo auxiliar para luego ordenarlas
+        for(HashMap.Entry<String,Parametro> parametro : this.parametros.entrySet()){
+            aux.add(parametro.getValue().obtenerPosicion());
+        }
+        Collections.sort(aux);
+        // Insertamos los parametros ordenados por posicion en un LinkedHashMap
+        for (int num : aux){
+            for (HashMap.Entry<String, Parametro> parametro : this.parametros.entrySet()){
+                if(parametro.getValue().obtenerPosicion() == num){
+                    ordenados.add(parametro.getValue());
+                }
+            }
+        }
+        return ordenados;
     }
 
 }

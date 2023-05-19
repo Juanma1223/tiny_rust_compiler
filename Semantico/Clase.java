@@ -1,5 +1,6 @@
 package Semantico;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -64,7 +65,7 @@ public class Clase {
         return this.nombre;
     }
 
-    public void establecerHerencia(String heredaDe){
+    public void establecerHerencia(String heredaDe) {
         this.heredaDe = heredaDe;
     }
 
@@ -72,11 +73,12 @@ public class Clase {
     public void heredarAtributosMetodos(Clase superClase) {
         if (superClase != null) {
             this.heredaDe = superClase.obtenerNombre();
-            // Actualizamos la posicion de los atributos para corresponderlas con las de la superclase
+            // Actualizamos la posicion de los atributos para corresponderlas con las de la
+            // superclase
             int offset = superClase.atributos.size();
             for (HashMap.Entry<String, Atributo> atributo : this.atributos.entrySet()) {
                 Atributo atributoActual = atributo.getValue();
-                atributoActual.establecerPosicion(atributoActual.obtenerPosicion()+offset);
+                atributoActual.establecerPosicion(atributoActual.obtenerPosicion() + offset);
                 this.atributos.put(atributoActual.obtenerNombre(), atributoActual);
             }
             // Agregamos metodos y atributos de la superclase a la subclase
@@ -96,32 +98,51 @@ public class Clase {
             offset = superClase.metodos.size();
             for (HashMap.Entry<String, Metodo> metodo : superClase.metodos.entrySet()) {
                 // Si el metodo se esta redefiniendo, no debe insertarse
-                if(this.metodos.get(metodo.getValue().obtenerNombre()) == null){
+                if (this.metodos.get(metodo.getValue().obtenerNombre()) == null) {
                     this.metodos.put(metodo.getValue().obtenerNombre(), metodo.getValue());
-                }
-                else {
+                } else {
                     Metodo m1 = this.metodos.get(metodo.getValue().obtenerNombre());
-                    if (!(m1.obtenerTipoRetorno().obtenerTipo().equals(metodo.getValue().obtenerTipoRetorno().obtenerTipo()))){
-                        new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar el tipo de retorno de un método heredado");
+                    if (!(m1.obtenerTipoRetorno().obtenerTipo()
+                            .equals(metodo.getValue().obtenerTipoRetorno().obtenerTipo()))) {
+                        new ErrorSemantico(m1.obtenerFila(), m1.obtenerColumna(),
+                                "No se puede cambiar el tipo de retorno de un método heredado");
                     }
-                    if (m1.obtenerParametros().size() != metodo.getValue().obtenerParametros().size()){
-                        new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar la cantidad de parámetros de un método heredado");
+                    if (m1.obtenerParametros().size() != metodo.getValue().obtenerParametros().size()) {
+                        new ErrorSemantico(m1.obtenerFila(), m1.obtenerColumna(),
+                                "No se puede cambiar la cantidad de parámetros de un método heredado");
                     }
-                    if (metodo.getValue().obtenerEsEstatico() == true){
-                        new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede redefinir un método de clase");
+                    if (metodo.getValue().obtenerEsEstatico() == true) {
+                        new ErrorSemantico(m1.obtenerFila(), m1.obtenerColumna(),
+                                "No se puede redefinir un método de clase");
                     } else {
-                        if (m1.obtenerEsEstatico() != false){
-                            new ErrorSemantico(m1.obtenerFila(),m1.obtenerColumna(),"No se puede cambiar la forma de un método heredado");
+                        if (m1.obtenerEsEstatico() != false) {
+                            new ErrorSemantico(m1.obtenerFila(), m1.obtenerColumna(),
+                                    "No se puede cambiar la forma de un método heredado");
+                        }
+                    }
+                    // Obtenemos los parametros ordenados de cada metodo para poder comparar los
+                    // tipos por posicion
+                    ArrayList<Parametro> paramOrdenados1 = metodo.getValue().obtenerParamsOrdenados();
+                    ArrayList<Parametro> paramOrdenados2 = m1.obtenerParamsOrdenados();
+                    // Recorremos los parametros checkeando que los tipos coincidan en cada posicion
+                    for (int i = 0; i < paramOrdenados1.size(); i++) {
+                        String tipoParam1 = paramOrdenados1.get(i).obtenerTipo().obtenerTipo();
+                        String tipoParam2 = paramOrdenados2.get(i).obtenerTipo().obtenerTipo();
+                        if (!tipoParam1.equals(tipoParam2)) {
+                            new ErrorSemantico(m1.obtenerFila(), m1.obtenerColumna(),
+                                    "No se puede cambiar el tipo de los parametros del método heredado");
                         }
                     }
                 }
             }
-            // Actualizamos la posicion de los metodos de la subclase en funcion de los de la superclase
+            // Actualizamos la posicion de los metodos de la subclase en funcion de los de
+            // la superclase
             for (HashMap.Entry<String, Metodo> metodo : this.metodos.entrySet()) {
-                // No actualizamos la posicion en aquellos metodos que vienen desde la superclase
-                if(superClase.metodos.get(metodo.getValue().obtenerNombre()) == null){
+                // No actualizamos la posicion en aquellos metodos que vienen desde la
+                // superclase
+                if (superClase.metodos.get(metodo.getValue().obtenerNombre()) == null) {
                     Metodo metodoActual = metodo.getValue();
-                    metodoActual.establecerPosicion(metodoActual.obtenerPosicion()+offset);
+                    metodoActual.establecerPosicion(metodoActual.obtenerPosicion() + offset);
                     this.metodos.put(metodoActual.obtenerNombre(), metodoActual);
                 }
             }
@@ -139,7 +160,7 @@ public class Clase {
         return this.constructor;
     }
 
-    public Boolean tieneConstructor(){
+    public Boolean tieneConstructor() {
         return tieneConstructor;
     }
 

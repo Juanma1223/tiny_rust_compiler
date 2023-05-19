@@ -1,41 +1,35 @@
-/*TEST PARA PROBAR COSAS*/
+/*CORRECTO*/
 class Prueba {
 	I32: a;
-	pub I32: b;
-	Array I32: c;
-	Char: d;
-	Bool: e,f;
-	create(){
-		a = 5/;
-		//(+-+-+-a);
-		//(!+3);
-		//a.b.c = 1;
-		//d = a+b;
-		if(a<5){
-			(a + 3);
-		}
-		while(true) {
-			(a + 3);
-		}
-		//(e&&f || a<b);
-		//(expOr || expAnd && expIgual == expAd < expAd);
+	Str: b;
+	pub Array I32: c;
+	pub Char: d;
+	pub Bool: e;
+	create(I32: a, Str: b){
+		a = 1;
+        b = "pepe";
 	}
-	fn m1 () -> void {
-		I32: p;
-		{
-			p = 1;
-		}
+	fn get_a() -> I32 {
+		return a;
+	}
+	fn get_b(I32:a,I32:x) -> I32 {
+		return a;
+	}
+	static fn imprimo_algo() -> void {
+		// (IO.out_string("hola mundo"));
 	}
 }
-class A {
-
+class Prueba2 : Prueba{
+	Bool: f;
+	create(Bool: f){
+	}
+	fn get_f() -> Bool {
+		return f;
+	}
+	fn get_b(I32:a,Str:y) -> I32 {
+		return a;
+	}
 }
 fn main () {
-	I32: b;
-	Str: a;
-	if(a<5){
-		(a + b);
-	}
-	b = 3/5+9-8*4;
-	//c = new I32[1+2];
+	c = new I32[1+2];
 }
