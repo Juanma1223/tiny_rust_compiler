@@ -1,13 +1,22 @@
 package Semantico.Nodo;
 
 import Lexico.Token;
+import Semantico.Clase;
 import Semantico.ErrorSemantico;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 public class NodoAsignacion extends NodoExpresion{
     private NodoExpresion ladoIzq;
     private NodoExpresion ladoDer;
     private Token operador;
+    
+    public NodoAsignacion(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
 
     public void establecerLadoIzq(NodoExpresion ladoIzq){
         ladoIzq.establecerPadre(this);

@@ -1,15 +1,25 @@
 package Semantico.Nodo;
 
 import Lexico.Token;
+import Semantico.Clase;
 import Semantico.ErrorSemantico;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 public class NodoExpUnaria extends NodoExpresion {
     private NodoExpresion ladoDer;
     private Token operador;
 
+    public NodoExpUnaria(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
+
     public void establecerLadoDer(NodoExpresion ladoDer){
         ladoDer.establecerPadre(this);
+        ladoDer.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.ladoDer = ladoDer;
     }
 

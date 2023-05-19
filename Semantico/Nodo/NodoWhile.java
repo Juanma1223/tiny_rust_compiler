@@ -1,15 +1,26 @@
 package Semantico.Nodo;
 
+import Semantico.Clase;
 import Semantico.ErrorSemantico;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 public class NodoWhile extends NodoSentencia {
     private NodoExpresion condicion;
     private NodoBloque bloqueW;
+    
+
+    public NodoWhile(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
 
     public NodoExpresion agregarCondicion(){
-        NodoExpresion hijo = new NodoExpresion();
+        NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.condicion = hijo;
         return hijo;
     }
@@ -20,8 +31,9 @@ public class NodoWhile extends NodoSentencia {
     }
     
     public NodoBloque agregarBloqueW(){
-        NodoBloque hijo = new NodoBloque();
+        NodoBloque hijo = new NodoBloque(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.bloqueW = hijo;
         return hijo;
     }

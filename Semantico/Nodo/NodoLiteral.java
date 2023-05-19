@@ -1,6 +1,9 @@
 package Semantico.Nodo;
 
 import Lexico.Token;
+import Semantico.Clase;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoPrimitivo;
 
@@ -8,8 +11,11 @@ public class NodoLiteral extends NodoExpresion{
 
     private Token token;
 
-    public NodoLiteral(Token token){
+    public NodoLiteral(Funcion metodoContenedor, Clase claseContenedora, Token token){
+        super(metodoContenedor,claseContenedora);
         this.token = token;
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
     }
     
     @Override

@@ -112,9 +112,9 @@ public class Sintactico {
         // Creamos el árbol de la clase Fantasma que contiene a main
         NodoClase ASTClaseM = AST.agregarHijo();
         ASTClaseM.establecerNombre("Fantasma");
-        NodoMetodo ASTMetodoM = ASTClaseM.agregarMetodo();
+        NodoMetodo ASTMetodoM = ASTClaseM.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),tablaDeSimbolos.obtenerClaseActual());
         ASTMetodoM.establecerNombre("main");
-        NodoBloque ASTBloqueM = ASTMetodoM.agregarBloque();
+        NodoBloque ASTBloqueM = ASTMetodoM.agregarBloque(tablaDeSimbolos.obtenerMetodoActual());
         bloqueMetodo(ASTBloqueM);
         tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         tablaDeSimbolos.insertarClase(nuevaClase);
@@ -183,12 +183,12 @@ public class Sintactico {
             atributo();
         } else {
             if (aux.verifico("create")) {
-                NodoMetodo ASTMetodo = ASTClase.agregarMetodo();
+                NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),tablaDeSimbolos.obtenerClaseActual());
                 constructor(ASTMetodo);
             } else {
                 if (aux.verifico(ter1)) {
                     // Insertamos el metodo en el AST de la clase y continuamos el AST por el metodo
-                    NodoMetodo ASTMetodo = ASTClase.agregarMetodo();
+                    NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),tablaDeSimbolos.obtenerClaseActual());
                     metodo(ASTMetodo);
                 } else {
                     Token tokenActual = aux.tokenActual;
@@ -252,7 +252,7 @@ public class Sintactico {
             tablaDeSimbolos.establecerMetodoActual(nuevoConstructor);
             argumentosFormales();
             tablaDeSimbolos.obtenerClaseActual().establecerConstructor(nuevoConstructor);
-            NodoBloque ASTBloque = ASTMetodo.agregarBloque();
+            NodoBloque ASTBloque = ASTMetodo.agregarBloque(tablaDeSimbolos.obtenerMetodoActual());
             bloqueMetodo(ASTBloque);
         } else {
             new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -280,7 +280,7 @@ public class Sintactico {
             Tipo t = tipoMetodo();
             nuevoMetodo.establecerTipoRetorno(t);
             tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
-            NodoBloque ASTBloque = ASTMetodo.agregarBloque();
+            NodoBloque ASTBloque = ASTMetodo.agregarBloque(tablaDeSimbolos.obtenerMetodoActual());
             bloqueMetodo(ASTBloque);
         } else {
             ErrorSemantico error = new ErrorSemantico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
@@ -523,7 +523,7 @@ public class Sintactico {
                 "id_clase", "new" };
         if (aux.verifico(";")) {
             aux.matcheo(";");
-            return new NodoExpresion();
+            return new NodoExpresion(tablaDeSimbolos.obtenerMetodoActual(), tablaDeSimbolos.obtenerClaseActual());
         } else {
             if (aux.verifico(ter)) {
                 NodoExpresion retorno = expresion();
@@ -546,7 +546,8 @@ public class Sintactico {
 
     private void asignacion(NodoAsignacion ASTAsignacion) {
         if (aux.verifico("id_objeto")) {
-            NodoVariable ladoIzq = new NodoVariable(aux.tokenActual);
+            NodoVariable ladoIzq = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionVarSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -554,7 +555,8 @@ public class Sintactico {
             NodoExpresion ladoDer = expresion();
             ASTAsignacion.establecerLadoDer(ladoDer);
         } else if (aux.verifico("self")) {
-            NodoVariable ladoIzq = new NodoVariable(aux.tokenActual);
+            NodoVariable ladoIzq = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionSelfSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -593,7 +595,8 @@ public class Sintactico {
     private void encadenadoSimpleP(NodoExpresion var) {
         if (aux.verifico(".")) {
             aux.matcheo(".");
-            NodoVariable varEnc = new NodoVariable(aux.tokenActual);
+            NodoVariable varEnc = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
             aux.matcheoId("id_objeto");
             var.establecerEncadenado(varEnc);
             encadenadoSimpleP(varEnc);
@@ -620,7 +623,8 @@ public class Sintactico {
         NodoExpresion and = expAnd();
         NodoExpresion expOrP = expOrP();
         if (expOrP != null) {
-            NodoExpBinaria newExpOr = new NodoExpBinaria();
+            NodoExpBinaria newExpOr = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             newExpOr.establecerLadoIzq(and);
             newExpOr.establecerLadoDer(expOrP);
             // El operador es enviado haciendo uso del auxiliar
@@ -639,7 +643,8 @@ public class Sintactico {
             NodoExpresion expAnd = expAnd();
             NodoExpresion expOrP = expOrP();
             if (expOrP != null) {
-                NodoExpBinaria newExpOr = new NodoExpBinaria();
+                NodoExpBinaria newExpOr = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                        tablaDeSimbolos.obtenerClaseActual());
                 newExpOr.establecerLadoIzq(expAnd);
                 newExpOr.establecerLadoDer(expOrP);
                 newExpOr.aux = tokenActual;
@@ -657,7 +662,8 @@ public class Sintactico {
         NodoExpresion igual = expIgual();
         NodoExpresion expAndP = expAndP();
         if (expAndP != null) {
-            NodoExpBinaria newExpAnd = new NodoExpBinaria();
+            NodoExpBinaria newExpAnd = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             newExpAnd.establecerLadoIzq(igual);
             newExpAnd.establecerLadoDer(expAndP);
             newExpAnd.establecerOp(expAndP.aux);
@@ -675,7 +681,8 @@ public class Sintactico {
             NodoExpresion expIgual = expIgual();
             NodoExpresion expAndP = expAndP();
             if (expAndP != null) {
-                NodoExpBinaria newExpAnd = new NodoExpBinaria();
+                NodoExpBinaria newExpAnd = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                        tablaDeSimbolos.obtenerClaseActual());
                 newExpAnd.establecerLadoIzq(expIgual);
                 newExpAnd.establecerLadoDer(expAndP);
                 newExpAnd.aux = tokenActual;
@@ -693,7 +700,8 @@ public class Sintactico {
         NodoExpresion compuesta = expCompuesta();
         NodoExpresion expIgualP = expIgualP();
         if (expIgualP != null) {
-            NodoExpBinaria newExpIgual = new NodoExpBinaria();
+            NodoExpBinaria newExpIgual = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             newExpIgual.establecerLadoIzq(compuesta);
             newExpIgual.establecerLadoDer(expIgualP);
             newExpIgual.establecerOp(expIgualP.aux);
@@ -711,7 +719,8 @@ public class Sintactico {
             NodoExpresion expCompuesta = expCompuesta();
             NodoExpresion expIgualP = expIgualP();
             if (expIgualP != null) {
-                NodoExpBinaria newExpCompuesta = new NodoExpBinaria();
+                NodoExpBinaria newExpCompuesta = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                        tablaDeSimbolos.obtenerClaseActual());
                 newExpCompuesta.establecerLadoIzq(expCompuesta);
                 newExpCompuesta.establecerLadoDer(expIgualP);
                 newExpCompuesta.establecerOp(operador);
@@ -729,7 +738,8 @@ public class Sintactico {
         Token op = aux.tokenActual;
         NodoExpresion expCompuestaP = expCompuestaP();
         if (expCompuestaP != null) {
-            NodoExpBinaria newExpComp = new NodoExpBinaria();
+            NodoExpBinaria newExpComp = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             newExpComp.establecerLadoIzq(add);
             newExpComp.establecerLadoDer(expCompuestaP);
             newExpComp.establecerOp(op);
@@ -756,7 +766,8 @@ public class Sintactico {
         if (expAddP == null) {
             return expMul;
         } else {
-            NodoExpBinaria expBinaria = new NodoExpBinaria();
+            NodoExpBinaria expBinaria = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             expBinaria.establecerLadoIzq(expMul);
             expBinaria.establecerLadoDer(expAddP);
             // Hacemos uso de la variable auxiliar de los nodos
@@ -773,7 +784,8 @@ public class Sintactico {
             NodoExpresion expMul = expMul();
             NodoExpresion expAddP = expAddP();
             if (expAddP != null) {
-                NodoExpBinaria newExpAdd = new NodoExpBinaria();
+                NodoExpBinaria newExpAdd = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                        tablaDeSimbolos.obtenerClaseActual());
                 newExpAdd.establecerLadoIzq(expMul);
                 newExpAdd.establecerLadoDer(expAddP);
                 newExpAdd.establecerOp(operador);
@@ -792,7 +804,8 @@ public class Sintactico {
         if (expMulP == null) {
             return un;
         } else {
-            NodoExpBinaria expBinaria = new NodoExpBinaria();
+            NodoExpBinaria expBinaria = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             expBinaria.establecerOp(expMulP.aux);
             expBinaria.establecerLadoIzq(un);
             expBinaria.establecerLadoDer(expMulP);
@@ -808,7 +821,8 @@ public class Sintactico {
             NodoExpresion expUn = expUn();
             NodoExpresion expMulP = expMulP();
             if (expMulP != null) {
-                NodoExpBinaria newExpMul = new NodoExpBinaria();
+                NodoExpBinaria newExpMul = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
+                        tablaDeSimbolos.obtenerClaseActual());
                 newExpMul.establecerLadoIzq(expUn);
                 newExpMul.establecerLadoDer(expMulP);
                 newExpMul.establecerOp(operador);
@@ -825,7 +839,8 @@ public class Sintactico {
         String[] ter = { "+", "-", "!" };
         if (aux.verifico(ter)) {
             Token operador = opUnario();
-            NodoExpUnaria newExpUn = new NodoExpUnaria();
+            NodoExpUnaria newExpUn = new NodoExpUnaria(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual());
             newExpUn.establecerLadoDer(expUn());
             newExpUn.establecerOp(operador);
             return newExpUn;
@@ -927,7 +942,8 @@ public class Sintactico {
     private NodoLiteral literal() {
         Token tokenActual = aux.tokenActual;
         aux.matcheo(tokenActual.obtenerLexema());
-        return new NodoLiteral(tokenActual);
+        return new NodoLiteral(tablaDeSimbolos.obtenerMetodoActual(), tablaDeSimbolos.obtenerClaseActual(),
+                tokenActual);
     }
 
     private NodoExpresion primario() {
@@ -984,7 +1000,8 @@ public class Sintactico {
     }
 
     private NodoExpresion accesoSelf() {
-        NodoVariable newVar = new NodoVariable(aux.tokenActual);
+        NodoVariable newVar = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+                tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
         aux.matcheo("self");
         encadenadoP(newVar);
         return newVar;
@@ -1084,7 +1101,8 @@ public class Sintactico {
             exp.establecerEncadenado(llamadaM);
             encadenadoP(llamadaM);
         } else {
-            NodoVariable var = new NodoVariable(token);
+            NodoVariable var = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),token);
             exp.establecerEncadenado(var);
             encadenadoP(var);
         }

@@ -1,6 +1,9 @@
 package Semantico.Nodo;
 
+import Semantico.Clase;
 import Semantico.ErrorSemantico;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 public class NodoIf extends NodoSentencia {
@@ -8,9 +11,16 @@ public class NodoIf extends NodoSentencia {
     private NodoBloque sentenciaThen;
     private NodoBloque sentenciaElse;
 
+    public NodoIf(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
+
     public NodoExpresion agregarCondicion(){
-        NodoExpresion hijo = new NodoExpresion();
+        NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.condicion = hijo;
         return hijo;
     }
@@ -21,15 +31,17 @@ public class NodoIf extends NodoSentencia {
     }
 
     public NodoBloque agregarSentenciaThen(){
-        NodoBloque hijo = new NodoBloque();
+        NodoBloque hijo = new NodoBloque(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentenciaThen = hijo;
         return hijo;
     }
 
     public NodoBloque agregarSentenciaElse(){
-        NodoBloque hijo = new NodoBloque();
+        NodoBloque hijo = new NodoBloque(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentenciaElse = hijo;
         return hijo;
     }
