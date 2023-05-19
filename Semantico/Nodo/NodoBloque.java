@@ -2,41 +2,52 @@ package Semantico.Nodo;
 
 import java.util.ArrayList;
 
+import Semantico.Clase;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
+
 public class NodoBloque extends Nodo {
     private ArrayList<NodoSentencia> sentencias = new ArrayList<>();;
 
     // Las sentencias son un tipo polimorfico que admite if, while, asignacion, etc
 
+
+    public NodoBloque(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
+
     public NodoSentencia agregarSentencia() {
-        NodoSentencia hijo = new NodoSentencia();
+        NodoSentencia hijo = new NodoSentencia(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
     public NodoAsignacion agregarAsignacion() {
-        NodoAsignacion hijo = new NodoAsignacion();
+        NodoAsignacion hijo = new NodoAsignacion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
     public NodoWhile agregarWhile() {
-        NodoWhile hijo = new NodoWhile();
+        NodoWhile hijo = new NodoWhile(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
     public NodoIf agregarIf() {
-        NodoIf hijo = new NodoIf();
+        NodoIf hijo = new NodoIf(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
     }
 
     public NodoReturn agregarReturn() {
-        NodoReturn hijo = new NodoReturn();
+        NodoReturn hijo = new NodoReturn(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;
@@ -48,7 +59,7 @@ public class NodoBloque extends Nodo {
     }
 
     public NodoExpresion agregarExpresion() {
-        NodoExpresion hijo = new NodoExpresion();
+        NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.sentencias.add(hijo);
         return hijo;

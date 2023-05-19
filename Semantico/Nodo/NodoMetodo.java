@@ -1,15 +1,25 @@
 package Semantico.Nodo;
 
+import Semantico.Clase;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
+
 public class NodoMetodo extends NodoBloque {
     private String nombre;
     private NodoBloque bloque;
+
+    public NodoMetodo(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.claseContenedora = claseContenedora;
+        this.metodoContenedor = metodoContenedor;
+    }
 
     public void establecerNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public NodoBloque agregarBloque(){
-        NodoBloque hijo = new NodoBloque();
+    public NodoBloque agregarBloque(Funcion metodoContenedor){
+        NodoBloque hijo = new NodoBloque(metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.bloque = hijo;
         return hijo;

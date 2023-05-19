@@ -1,7 +1,10 @@
 package Semantico.Nodo;
 
 import Lexico.Token;
+import Semantico.Clase;
 import Semantico.TablaDeSimbolos;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 // Esta clase es la clase padre de todos los nodos
@@ -13,6 +16,14 @@ public class Nodo {
     public Token aux;
     // Los nodos tienen un tipo que se utilizara en el checkeo de tipos
     protected Tipo tipo;
+
+    protected Funcion metodoContenedor;
+    protected Clase claseContenedora;
+
+    public Nodo(Funcion metodoContenedor, Clase claseContenedora){
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
 
     public void establecerPadre(Nodo padre){
         this.padre = padre;
@@ -35,6 +46,14 @@ public class Nodo {
 
     public void establecerTipo(Tipo tipo){
         this.tipo = tipo;
+    }
+
+    public void establecerMetodoContenedor(Metodo metodo){
+        this.metodoContenedor = metodo;
+    }
+
+    public void establecerClaseContenedora(Clase clase){
+        this.claseContenedora = clase;
     }
 
 }

@@ -1,10 +1,20 @@
 package Semantico.Nodo;
 
+import Semantico.Clase;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
+
 public class NodoReturn extends NodoSentencia {
     private NodoExpresion retorno;
 
+    public NodoReturn(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
+
     public NodoExpresion agregarExpresion(){
-        NodoExpresion hijo = new NodoExpresion();
+        NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.retorno = hijo;
         return hijo;

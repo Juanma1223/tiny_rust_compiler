@@ -1,7 +1,10 @@
 package Semantico.Nodo;
 
 import Lexico.Token;
+import Semantico.Clase;
 import Semantico.ErrorSemantico;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoPrimitivo;
 
@@ -9,6 +12,13 @@ public class NodoExpBinaria extends NodoExpresion {
     private NodoExpresion ladoIzq;
     private NodoExpresion ladoDer;
     private Token operador;
+
+    public NodoExpBinaria(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
+    
 
     public void establecerLadoIzq(NodoExpresion ladoIzq) {
         ladoIzq.establecerPadre(this);

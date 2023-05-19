@@ -2,16 +2,26 @@ package Semantico.Nodo;
 
 import java.util.ArrayList;
 
+import Semantico.Clase;
+import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
+
 // Esta clase es la raíz de nuestra estructura de árbol
 // Es quien mantiene los subarboles de cada clase
 public class NodoAST extends Nodo {
     
     private ArrayList<NodoClase> clases = new ArrayList<>();
 
+    public NodoAST(Funcion metodoContenedor, Clase claseContenedora){
+        super(metodoContenedor,claseContenedora);
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
+    }
+
 
     // Esta función crea un Nodo Clase hijo, lo agrega al árbol y lo retorna
     public NodoClase agregarHijo(){
-        NodoClase hijo = new NodoClase();
+        NodoClase hijo = new NodoClase(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
         this.clases.add(hijo);
         return hijo;
