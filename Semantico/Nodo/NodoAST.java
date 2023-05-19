@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import Semantico.Clase;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 
 // Esta clase es la raíz de nuestra estructura de árbol
 // Es quien mantiene los subarboles de cada clase

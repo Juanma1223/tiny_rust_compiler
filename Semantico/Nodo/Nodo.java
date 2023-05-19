@@ -4,7 +4,6 @@ import Lexico.Token;
 import Semantico.Clase;
 import Semantico.TablaDeSimbolos;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 // Esta clase es la clase padre de todos los nodos
@@ -42,7 +41,7 @@ public class Nodo {
 
     // Este metodo sera el encargado de revisar la resolucion de nombres una vez que se haya consolidado la tabla de simbolos
     public void resolucionNombres(){
-
+        // La implementacion es responsabilidad de cada uno de los nodos
     }
 
     

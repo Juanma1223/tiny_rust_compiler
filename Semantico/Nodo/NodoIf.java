@@ -3,7 +3,6 @@ package Semantico.Nodo;
 import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 public class NodoIf extends NodoSentencia {

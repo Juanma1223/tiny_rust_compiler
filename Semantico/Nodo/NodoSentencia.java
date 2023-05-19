@@ -2,7 +2,6 @@ package Semantico.Nodo;
 
 import Semantico.Clase;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 
 public class NodoSentencia extends Nodo {
     

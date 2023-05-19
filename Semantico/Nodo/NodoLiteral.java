@@ -3,7 +3,6 @@ package Semantico.Nodo;
 import Lexico.Token;
 import Semantico.Clase;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoPrimitivo;
 

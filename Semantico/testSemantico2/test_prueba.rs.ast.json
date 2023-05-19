@@ -9,32 +9,6 @@
 "Bloque":{
 "Sentencias":[
 {
-"Nodo":"NodoAsignacion",
-"operador":"=",
-"hijos":[
-{
-
-},
-{
-"Nodo":"NodoLiteral",
-"valor":"1"
-
-}
-]
-,
-"Nodo":"NodoAsignacion",
-"operador":"=",
-"hijos":[
-{
-
-},
-{
-"Nodo":"NodoLiteral",
-"valor":"pepe"
-
-}
-]
-
 }
 ]
 
@@ -49,14 +23,16 @@
 "Nodo":"NodoIf",
 "condicion":{
 "Nodo":"NodoExpBinaria",
-"operador":"==",
+"operador":"<=",
 "hijos":[
 {
+"Nodo":"NodoLiteral",
+"valor":"1"
 
 },
 {
 "Nodo":"NodoLiteral",
-"valor":"true"
+"valor":"2"
 
 }
 ]
@@ -78,6 +54,8 @@
 "operador":"+",
 "hijos":[
 {
+"Nodo":"NodoLiteral",
+"valor":"2"
 
 },
 {
@@ -127,6 +105,8 @@
 "Nodo":"NodoRetorno",
 "hijos":[
 {
+"Nodo":"NodoVariable",
+"valor":"a"
 
 }
 ]
@@ -145,6 +125,8 @@
 "Nodo":"NodoRetorno",
 "hijos":[
 {
+"Nodo":"NodoVariable",
+"valor":"a"
 
 }
 ]
@@ -191,6 +173,8 @@
 "Nodo":"NodoRetorno",
 "hijos":[
 {
+"Nodo":"NodoVariable",
+"valor":"f"
 
 }
 ]
@@ -209,6 +193,8 @@
 "Nodo":"NodoRetorno",
 "hijos":[
 {
+"Nodo":"NodoVariable",
+"valor":"a"
 
 }
 ]
@@ -230,31 +216,6 @@
 "Bloque":{
 "Sentencias":[
 {
-"Nodo":"NodoAsignacion",
-"operador":"=",
-"hijos":[
-{
-
-},
-{
-"Nodo":"NodoExpBinaria",
-"operador":"+",
-"hijos":[
-{
-"Nodo":"NodoLiteral",
-"valor":"1"
-
-},
-{
-"Nodo":"NodoLiteral",
-"valor":"2"
-
-}
-]
-
-}
-]
-
 }
 ]
 

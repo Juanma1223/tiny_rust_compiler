@@ -4,7 +4,6 @@ import Lexico.Token;
 import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 
 public class NodoAsignacion extends NodoExpresion{

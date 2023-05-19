@@ -981,7 +981,8 @@ public class Sintactico {
 
     private NodoExpresion primarioP(Token token) {
         if (aux.verifico("(")) {
-            NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(token);
+            NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),token);
             llamadaMetodoP(llamadaM);
             return llamadaM;
         } else {
@@ -1026,7 +1027,8 @@ public class Sintactico {
 
     private NodoLlamadaMetodo llamadaMetodo(Token token) {
         // Usar token para definir el tipo del método (clase a la que pertenece)
-        NodoLlamadaMetodo llamadaME = new NodoLlamadaMetodo(aux.tokenActual);
+        NodoLlamadaMetodo llamadaME = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+        tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
         aux.matcheoId("id_objeto");
         argumentosActuales(llamadaME);
         encadenadoP(llamadaME);
@@ -1047,7 +1049,8 @@ public class Sintactico {
 
     private NodoExpresion llamadaConstructorP() {
         if (aux.verifico("id_clase")) {
-            NodoLlamadaMetodo llamadaC = new NodoLlamadaMetodo(aux.tokenActual);
+            NodoLlamadaMetodo llamadaC = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
             aux.matcheoId("id_clase");
             argumentosActuales(llamadaC);
             encadenadoP(llamadaC);
@@ -1098,7 +1101,8 @@ public class Sintactico {
             aux.matcheo("]");
             exp.establecerEncadenado(varA);
         } else if (aux.verifico("(")) {
-            NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(token);
+            NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+            tablaDeSimbolos.obtenerClaseActual(),token);
             argumentosActuales(llamadaM);
             exp.establecerEncadenado(llamadaM);
             encadenadoP(llamadaM);

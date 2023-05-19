@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import Semantico.Clase;
 import Semantico.Funcion.Funcion;
-import Semantico.Funcion.Metodo;
 
 public class NodoBloque extends Nodo {
     private ArrayList<NodoSentencia> sentencias = new ArrayList<>();;

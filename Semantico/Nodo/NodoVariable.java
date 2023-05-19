@@ -17,4 +17,12 @@ public class NodoVariable extends NodoExpresion {
         this.claseContenedora = claseContenedora;
     }
 
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoVariable\",").append(System.lineSeparator());
+        sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\"").append(System.lineSeparator());
+        return sb.toString();
+    }
+
 }

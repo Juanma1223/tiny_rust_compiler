@@ -6,14 +6,14 @@ class Prueba {
 	pub Char: d;
 	pub Bool: e;
 	create(I32: a, Str: b){
-		a = 1;
-        b = "pepe";
+		//a = 1;
+        //b = "pepe";
 	}
 	fn get_a() -> I32 {
-		if(e==true) {
+		if(1<=2) {
 			;
 		} else {
-			(a+1);
+			(2+1);
 		}
 		while(false) {
 			(true || false);
@@ -39,5 +39,5 @@ class Prueba2 : Prueba{
 	}
 }
 fn main () {
-	c = new I32[1+2];
+	//c = new I32[1+2];
 }

@@ -2,7 +2,6 @@ package Semantico;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import Semantico.Variable.Atributo;
 import Semantico.Variable.Parametro;

@@ -3,6 +3,8 @@ package Semantico.Nodo;
 import java.util.ArrayList;
 
 import Lexico.Token;
+import Semantico.Clase;
+import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
 
 public class NodoLlamadaMetodo extends NodoExpresion {
@@ -11,13 +13,24 @@ public class NodoLlamadaMetodo extends NodoExpresion {
     Tipo tipo;
     ArrayList<NodoExpresion> argumentos = new ArrayList<>();
 
-    public NodoLlamadaMetodo(Token token){
+    public NodoLlamadaMetodo(Funcion metodoContenedor, Clase claseContenedora, Token token){
+        super(metodoContenedor, claseContenedora);
         this.token = token;
+        this.metodoContenedor = metodoContenedor;
+        this.claseContenedora = claseContenedora;
     }
 
     public void agregarArgumento(NodoExpresion exp){
         this.argumentos.add(exp);
         exp.establecerPadre(this);
+    }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoLlamadaMetodo\",").append(System.lineSeparator());
+        sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\"").append(System.lineSeparator());
+        return sb.toString();
     }
     
 }
