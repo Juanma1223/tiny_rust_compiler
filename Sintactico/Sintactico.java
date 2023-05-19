@@ -22,6 +22,7 @@ import Semantico.Nodo.NodoExpUnaria;
 import Semantico.Nodo.NodoExpresion;
 import Semantico.Nodo.NodoIf;
 import Semantico.Nodo.NodoLiteral;
+import Semantico.Nodo.NodoLlamadaMetodo;
 import Semantico.Nodo.NodoMetodo;
 import Semantico.Nodo.NodoReturn;
 import Semantico.Nodo.NodoVariable;
@@ -545,12 +546,7 @@ public class Sintactico {
 
     private void asignacion(NodoAsignacion ASTAsignacion) {
         if (aux.verifico("id_objeto")) {
-            // Obtenemos informacion de la variable que estamos asignando
-            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
-            // Si la variable no se encuentra en el scope 
-            NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
-            // Establecememos el tipo de la variable que estamos asignando
-            ladoIzq.establecerTipo(infoVariable.obtenerTipo());
+            NodoVariable ladoIzq = new NodoVariable(aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionVarSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -558,7 +554,7 @@ public class Sintactico {
             NodoExpresion ladoDer = expresion();
             ASTAsignacion.establecerLadoDer(ladoDer);
         } else if (aux.verifico("self")) {
-            NodoVariable ladoIzq = new NodoVariable(ASTAsignacion, aux.tokenActual);
+            NodoVariable ladoIzq = new NodoVariable(aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionSelfSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -582,8 +578,8 @@ public class Sintactico {
             encadenadoSimpleP(var);
         } else if (aux.verifico("[")) {
             aux.matcheo("[");
-            // AGREGAR LA EXPRESION COMO OPCIONAL EN LA VARIABLE?
-            NodoExpresion retorno = expresion();
+            NodoExpresion accesoArray = expresion();
+            var.establecerEncadenado(accesoArray);
             aux.matcheo("]");
         } else {
             Token tokenActual = aux.tokenActual;
@@ -597,8 +593,9 @@ public class Sintactico {
     private void encadenadoSimpleP(NodoExpresion var) {
         if (aux.verifico(".")) {
             aux.matcheo(".");
-            NodoVariable varEnc = new NodoVariable(var, aux.tokenActual);
+            NodoVariable varEnc = new NodoVariable(aux.tokenActual);
             aux.matcheoId("id_objeto");
+            var.establecerEncadenado(varEnc);
             encadenadoSimpleP(varEnc);
         }
     }
@@ -921,10 +918,9 @@ public class Sintactico {
     private void encadenadoP(NodoExpresion exp) {
         if (aux.verifico(".")) {
             aux.matcheo(".");
-            NodoVariable newVar = new NodoVariable(exp, aux.tokenActual);
+            Token tokenO = aux.tokenActual;
             aux.matcheoId("id_objeto");
-            // Agregar encadenado2
-            encadenado2(newVar);
+            encadenado2(exp,tokenO);
         }
     }
 
@@ -944,18 +940,15 @@ public class Sintactico {
             return accesoSelf();
 
         } else if (aux.verifico("id_objeto")) {
-            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
-            NodoVariable newVar = new NodoVariable(aux.tokenActual);
-            newVar.establecerTipo(infoVariable.obtenerTipo());
+
+            Token tokenO = aux.tokenActual;
             aux.matcheoId("id_objeto");
-            primarioP(newVar);
-            return newVar;
+            NodoExpresion primario = primarioP(tokenO);
+            return primario;
+
         } else if (aux.verifico("id_clase")) {
-            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
-            NodoVariable newVarC = new NodoVariable(aux.tokenActual);
-            newVarC.establecerTipo(infoVariable.obtenerTipo());
-            llamadaMetodoEstatico(newVarC);
-            return newVarC;
+            
+            return llamadaMetodoEstatico();
 
         } else if (aux.verifico("new")) {
 
@@ -970,13 +963,15 @@ public class Sintactico {
         }
     }
 
-    private void primarioP(NodoExpresion var) {
+    private NodoExpresion primarioP(Token token) {
         if (aux.verifico("(")) {
-            // TO DO
-            llamadaMetodoP(var);
+            NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(token);
+            llamadaMetodoP(llamadaM);
+            return llamadaM;
         } else {
-            // TO DO
+            NodoVariable var = new NodoVariable(token);
             accesoVarP(var);
+            return var;
         }
     }
 
@@ -998,30 +993,33 @@ public class Sintactico {
     private void accesoVarP(NodoExpresion var) {
         if (aux.verifico("[")) {
             aux.matcheo("[");
-            // Agregar expresion
-            NodoExpresion expresion = expresion();
+            NodoExpresion accesoArray = expresion();
             aux.matcheo("]");
+            var.establecerEncadenado(accesoArray);
         } else {
             encadenadoP(var);
         }
     }
 
-    private void llamadaMetodoP(NodoExpresion var) {
-        argumentosActuales();
-        encadenadoP(var);
+    private void llamadaMetodoP(NodoLlamadaMetodo varMetodo) {
+        argumentosActuales(varMetodo);
+        encadenadoP(varMetodo);
     }
 
-    private void llamadaMetodo(NodoExpresion var) {
+    private NodoLlamadaMetodo llamadaMetodo(Token token) {
+        // Usar token para definir el tipo del método (clase a la que pertenece)
+        NodoLlamadaMetodo llamadaME = new NodoLlamadaMetodo(aux.tokenActual);
         aux.matcheoId("id_objeto");
-        argumentosActuales();
-        encadenadoP(var);
+        argumentosActuales(llamadaME);
+        encadenadoP(llamadaME);
+        return llamadaME;
     }
 
-    private void llamadaMetodoEstatico(NodoExpresion var) {
+    private NodoLlamadaMetodo llamadaMetodoEstatico() {
+        Token token = aux.tokenActual;
         aux.matcheoId("id_clase");
         aux.matcheo(".");
-        llamadaMetodo(var);
-        encadenadoP(var);
+        return llamadaMetodo(token);
     }
 
     private NodoExpresion llamadaConstructor() {
@@ -1031,17 +1029,13 @@ public class Sintactico {
 
     private NodoExpresion llamadaConstructorP() {
         if (aux.verifico("id_clase")) {
-            // Obtenemos la informacion de la variable para obtener su tipo
-            Variable infoVariable = tablaDeSimbolos.obtenerVarEnAlcanceActual(aux.tokenActual);
-            NodoVariable newVarC = new NodoVariable(aux.tokenActual);
-            newVarC.establecerTipo(infoVariable.obtenerTipo());
+            NodoLlamadaMetodo llamadaC = new NodoLlamadaMetodo(aux.tokenActual);
             aux.matcheoId("id_clase");
-            argumentosActuales();
-            encadenadoP(newVarC);
-            // TO DO
-            return newVarC;
+            argumentosActuales(llamadaC);
+            encadenadoP(llamadaC);
+            return llamadaC;
         } else {
-            tipoPrimitivo();
+            Tipo tArray = tipoPrimitivo();
             aux.matcheo("[");
             NodoExpresion expresion = expresion();
             aux.matcheo("]");
@@ -1049,41 +1043,49 @@ public class Sintactico {
         }
     }
 
-    private void argumentosActuales() {
+    private void argumentosActuales(NodoLlamadaMetodo varMetodo) {
         aux.matcheo("(");
-        listaExpresionesP();
+        listaExpresionesP(varMetodo);
     }
 
-    private void listaExpresionesP() {
+    private void listaExpresionesP(NodoLlamadaMetodo varMetodo) {
         if (aux.verifico(")")) {
             aux.matcheo(")");
         } else {
-            listaExpresiones();
+            listaExpresiones(varMetodo);
             aux.matcheo(")");
         }
     }
 
-    private void listaExpresiones() {
-        expresion();
-        listaExpresiones2();
+    private void listaExpresiones(NodoLlamadaMetodo varMetodo) {
+        NodoExpresion expM = expresion();
+        varMetodo.agregarArgumento(expM);
+        listaExpresiones2(varMetodo);
     }
 
-    private void listaExpresiones2() {
+    private void listaExpresiones2(NodoLlamadaMetodo varMetodo) {
         if (aux.verifico(",")) {
             aux.matcheo(",");
-            listaExpresiones();
+            listaExpresiones(varMetodo);
         }
     }
 
-    private void encadenado2(NodoExpresion var) {
+    private void encadenado2(NodoExpresion exp, Token token) {
         if (aux.verifico("[")) {
+            NodoVariable varA = new NodoVariable(token);
             aux.matcheo("[");
-            expresion();
+            NodoExpresion accesoArray = expresion();
+            varA.establecerEncadenado(accesoArray);
             aux.matcheo("]");
+            exp.establecerEncadenado(varA);
         } else if (aux.verifico("(")) {
-            argumentosActuales();
-            encadenadoP(var);
+            NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(token);
+            argumentosActuales(llamadaM);
+            exp.establecerEncadenado(llamadaM);
+            encadenadoP(llamadaM);
         } else {
+            NodoVariable var = new NodoVariable(token);
+            exp.establecerEncadenado(var);
             encadenadoP(var);
         }
     }
