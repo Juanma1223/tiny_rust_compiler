@@ -44,4 +44,24 @@ public class NodoIf extends NodoSentencia {
         sentenciaThen.checkeoTipos();
         sentenciaElse.checkeoTipos();
     }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoIf\",").append(System.lineSeparator());
+        sb.append("\"hijos\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        if (sentenciaElse != null) {
+            sb.append(sentenciaThen.toJson()).append(System.lineSeparator());
+        }
+        sb.append("}").append(System.lineSeparator());
+        if (sentenciaElse != null) {
+            sb.append(",").append(System.lineSeparator());
+            sb.append("{").append(System.lineSeparator());
+            sb.append(sentenciaElse.toJson()).append(System.lineSeparator());
+            sb.append("}").append(System.lineSeparator());
+        }
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

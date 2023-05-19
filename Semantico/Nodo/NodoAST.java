@@ -28,8 +28,16 @@ public class NodoAST extends Nodo {
         sb.append("{").append(System.lineSeparator());
         sb.append("\"nombre\":").append("\""+nombreArchivo+"\",").append(System.lineSeparator());
         sb.append("\"clases\":[").append(System.lineSeparator());
-        for (int i = 0; i < clases.size(); i++) {
-            sb.append(clases.get(i).toJson() + ",").append(System.lineSeparator());
+        int s = clases.size()-1;
+        if (s>0) {
+            for (int i = 0; i < s; i++) {
+                sb.append(clases.get(i).toJson() + ",").append(System.lineSeparator());
+            }
+            sb.append(clases.get(s).toJson()).append(System.lineSeparator());
+        } else {
+            if (s==0) {
+                sb.append(clases.get(s).toJson()).append(System.lineSeparator());
+            }
         }
         sb.append("]").append(System.lineSeparator());
         sb.append("}").append(System.lineSeparator());

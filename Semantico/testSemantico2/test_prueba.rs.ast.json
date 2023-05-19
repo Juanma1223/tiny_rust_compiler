@@ -10,7 +10,7 @@
 "Sentencias":[
 {
 ,
-,
+
 }
 ]
 
@@ -22,7 +22,27 @@
 "Bloque":{
 "Sentencias":[
 {
+"Nodo":"NodoIf",
+"hijos":[
+{
+"Sentencias":[
+{
+}
+]
+
+}
 ,
+{
+"Sentencias":[
+{
+
+}
+]
+
+}
+]
+,
+
 }
 ]
 
@@ -34,7 +54,7 @@
 "Bloque":{
 "Sentencias":[
 {
-,
+
 }
 ]
 
@@ -51,8 +71,8 @@
 
 }
 }
-,
-],
+
+]
 }
 ,
 {
@@ -74,7 +94,7 @@
 "Bloque":{
 "Sentencias":[
 {
-,
+
 }
 ]
 
@@ -86,14 +106,14 @@
 "Bloque":{
 "Sentencias":[
 {
-,
+
 }
 ]
 
 }
 }
-,
-],
+
+]
 }
 ,
 {
@@ -102,11 +122,17 @@
 {
 "nombre":"main",
 "Bloque":{
+"Sentencias":[
+{
+
+}
+]
+
 }
 }
-,
-],
+
+]
 }
-,
+
 ]
 }

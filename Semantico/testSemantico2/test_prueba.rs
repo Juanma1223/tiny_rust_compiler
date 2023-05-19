@@ -10,6 +10,11 @@ class Prueba {
         b = "pepe";
 	}
 	fn get_a() -> I32 {
+		if(e==true) {
+			;
+		} else {
+			(a+1);
+		}
 		return a;
 	}
 	fn get_b(I32:a,I32:x) -> I32 {
@@ -26,7 +31,7 @@ class Prueba2 : Prueba{
 	fn get_f() -> Bool {
 		return f;
 	}
-	fn get_b(I32:a,Str:y) -> I32 {
+	fn get_b(I32:a,I32:x) -> I32 {
 		return a;
 	}
 }

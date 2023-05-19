@@ -71,8 +71,16 @@ public class NodoBloque extends Nodo {
         StringBuilder sb = new StringBuilder();
         sb.append("\"Sentencias\":[").append(System.lineSeparator());
         sb.append("{").append(System.lineSeparator());
-        for (int i = 0; i < sentencias.size(); i++) {
-            sb.append(sentencias.get(i).toJson() + ",").append(System.lineSeparator());
+        int s = sentencias.size()-1;
+        if (s>0) {
+            for (int i = 0; i < s; i++) {
+                sb.append(sentencias.get(i).toJson() + ",").append(System.lineSeparator());
+            }
+            sb.append(sentencias.get(s).toJson()).append(System.lineSeparator());
+        } else {
+            if (s==0) {
+                sb.append(sentencias.get(s).toJson()).append(System.lineSeparator());
+            }
         }
         sb.append("}").append(System.lineSeparator());
         sb.append("]").append(System.lineSeparator());

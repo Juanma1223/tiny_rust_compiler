@@ -113,7 +113,8 @@ public class Sintactico {
         ASTClaseM.establecerNombre("Fantasma");
         NodoMetodo ASTMetodoM = ASTClaseM.agregarMetodo();
         ASTMetodoM.establecerNombre("main");
-        bloqueMetodo(ASTMetodoM);
+        NodoBloque ASTBloqueM = ASTMetodoM.agregarBloque();
+        bloqueMetodo(ASTBloqueM);
         tablaDeSimbolos.obtenerClaseActual().insertarMetodo(nuevoMetodo);
         tablaDeSimbolos.insertarClase(nuevaClase);
     }
