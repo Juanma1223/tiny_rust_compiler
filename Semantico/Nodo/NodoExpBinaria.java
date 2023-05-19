@@ -6,16 +6,16 @@ import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoPrimitivo;
 
 public class NodoExpBinaria extends NodoExpresion {
-    private Nodo ladoIzq;
-    private Nodo ladoDer;
+    private NodoExpresion ladoIzq;
+    private NodoExpresion ladoDer;
     private Token operador;
 
-    public void establecerLadoIzq(Nodo ladoIzq) {
+    public void establecerLadoIzq(NodoExpresion ladoIzq) {
         ladoIzq.establecerPadre(this);
         this.ladoIzq = ladoIzq;
     }
 
-    public void establecerLadoDer(Nodo ladoDer) {
+    public void establecerLadoDer(NodoExpresion ladoDer) {
         ladoDer.establecerPadre(this);
         this.ladoDer = ladoDer;
     }
@@ -78,6 +78,22 @@ public class NodoExpBinaria extends NodoExpresion {
         new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
                 "No se puede aplicar la operacion " + op + " en el tipo de dato " + tipo, true);
         return null;
+    }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoExpBinaria\",").append(System.lineSeparator());
+        sb.append("\"operador\":").append("\""+operador.obtenerLexema()+"\",").append(System.lineSeparator());
+        sb.append("\"hijos\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        sb.append(ladoIzq.toJson()).append(System.lineSeparator());
+        sb.append("},").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        sb.append(ladoDer.toJson()).append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
     }
 
 }

@@ -35,4 +35,21 @@ public class NodoWhile extends NodoSentencia {
         this.establecerTipo(tipo);
         bloqueW.checkeoTipos();
     }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoWhile\",").append(System.lineSeparator());
+        sb.append("\"condicion\":{").append(System.lineSeparator());
+        sb.append(condicion.toJson()).append(System.lineSeparator());
+        sb.append("},").append(System.lineSeparator());
+        sb.append("\"hijos\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        if (bloqueW != null) {
+            sb.append(bloqueW.toJson()).append(System.lineSeparator());
+        }
+        sb.append("}").append(System.lineSeparator());
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

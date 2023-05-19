@@ -15,6 +15,9 @@ class Prueba {
 		} else {
 			(a+1);
 		}
+		while(false) {
+			(true || false);
+		}
 		return a;
 	}
 	fn get_b(I32:a,I32:x) -> I32 {

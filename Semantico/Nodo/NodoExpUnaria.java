@@ -55,4 +55,17 @@ public class NodoExpUnaria extends NodoExpresion {
         new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
                 "No se puede aplicar la operacion " + op + " en el tipo de dato " + tipo, true);
     }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoExpUnaria\",").append(System.lineSeparator());
+        sb.append("\"operador\":").append("\""+operador.obtenerLexema()+"\",").append(System.lineSeparator());
+        sb.append("\"hijos\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        sb.append(ladoDer.toJson()).append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

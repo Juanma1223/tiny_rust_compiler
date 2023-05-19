@@ -49,9 +49,12 @@ public class NodoIf extends NodoSentencia {
         // Construimos el json de forma recursiva
         StringBuilder sb = new StringBuilder();
         sb.append("\"Nodo\":").append("\"NodoIf\",").append(System.lineSeparator());
+        sb.append("\"condicion\":{").append(System.lineSeparator());
+        sb.append(condicion.toJson()).append(System.lineSeparator());
+        sb.append("},").append(System.lineSeparator());
         sb.append("\"hijos\":[").append(System.lineSeparator());
         sb.append("{").append(System.lineSeparator());
-        if (sentenciaElse != null) {
+        if (sentenciaThen != null) {
             sb.append(sentenciaThen.toJson()).append(System.lineSeparator());
         }
         sb.append("}").append(System.lineSeparator());

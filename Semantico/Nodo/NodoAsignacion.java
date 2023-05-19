@@ -5,11 +5,11 @@ import Semantico.ErrorSemantico;
 import Semantico.Tipo.Tipo;
 
 public class NodoAsignacion extends NodoExpresion{
-    private Nodo ladoIzq;
-    private Nodo ladoDer;
+    private NodoExpresion ladoIzq;
+    private NodoExpresion ladoDer;
     private Token operador;
 
-    public void establecerLadoIzq(Nodo ladoIzq){
+    public void establecerLadoIzq(NodoExpresion ladoIzq){
         ladoIzq.establecerPadre(this);
         this.ladoIzq = ladoIzq;
     }
@@ -32,6 +32,22 @@ public class NodoAsignacion extends NodoExpresion{
             new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(), "Los tipos de la asignacion no coinciden!",true);
         }
         this.establecerTipo(tipoDer);
+    }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoAsignacion\",").append(System.lineSeparator());
+        sb.append("\"operador\":").append("\""+operador.obtenerLexema()+"\",").append(System.lineSeparator());
+        sb.append("\"hijos\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        sb.append(ladoIzq.toJson()).append(System.lineSeparator());
+        sb.append("},").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        sb.append(ladoDer.toJson()).append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
     }
 
 }

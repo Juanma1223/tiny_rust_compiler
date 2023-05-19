@@ -14,4 +14,16 @@ public class NodoReturn extends NodoSentencia {
         this.retorno = retorno;
         retorno.establecerPadre(this);
     }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoRetorno\",").append(System.lineSeparator());
+        sb.append("\"hijos\":[").append(System.lineSeparator());
+        sb.append("{").append(System.lineSeparator());
+        sb.append(retorno.toJson()).append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        sb.append("]").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

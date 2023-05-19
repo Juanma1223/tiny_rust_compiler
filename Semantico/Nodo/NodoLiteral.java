@@ -30,4 +30,12 @@ public class NodoLiteral extends NodoExpresion{
         }
     }
 
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoLiteral\",").append(System.lineSeparator());
+        sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\"").append(System.lineSeparator());
+        return sb.toString();
+    }
+
 }
