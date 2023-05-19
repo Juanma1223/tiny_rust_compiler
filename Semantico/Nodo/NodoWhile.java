@@ -20,6 +20,7 @@ public class NodoWhile extends NodoSentencia {
     public NodoExpresion agregarCondicion(){
         NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.condicion = hijo;
         return hijo;
     }
@@ -32,6 +33,7 @@ public class NodoWhile extends NodoSentencia {
     public NodoBloque agregarBloqueW(){
         NodoBloque hijo = new NodoBloque(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.bloqueW = hijo;
         return hijo;
     }

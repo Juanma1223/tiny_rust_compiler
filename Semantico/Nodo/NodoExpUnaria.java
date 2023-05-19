@@ -19,6 +19,7 @@ public class NodoExpUnaria extends NodoExpresion {
 
     public void establecerLadoDer(NodoExpresion ladoDer){
         ladoDer.establecerPadre(this);
+        ladoDer.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.ladoDer = ladoDer;
     }
 

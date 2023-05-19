@@ -22,11 +22,13 @@ public class NodoExpBinaria extends NodoExpresion {
 
     public void establecerLadoIzq(NodoExpresion ladoIzq) {
         ladoIzq.establecerPadre(this);
+        ladoIzq.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.ladoIzq = ladoIzq;
     }
 
     public void establecerLadoDer(NodoExpresion ladoDer) {
         ladoDer.establecerPadre(this);
+        ladoDer.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.ladoDer = ladoDer;
     }
 

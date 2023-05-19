@@ -23,6 +23,7 @@ public class NodoAST extends Nodo {
     public NodoClase agregarHijo(){
         NodoClase hijo = new NodoClase(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.clases.add(hijo);
         return hijo;
     }

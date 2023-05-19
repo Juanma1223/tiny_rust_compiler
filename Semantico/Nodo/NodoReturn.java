@@ -16,6 +16,7 @@ public class NodoReturn extends NodoSentencia {
     public NodoExpresion agregarExpresion(){
         NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.retorno = hijo;
         return hijo;
     }

@@ -20,6 +20,7 @@ public class NodoIf extends NodoSentencia {
     public NodoExpresion agregarCondicion(){
         NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.condicion = hijo;
         return hijo;
     }
@@ -32,6 +33,7 @@ public class NodoIf extends NodoSentencia {
     public NodoBloque agregarSentenciaThen(){
         NodoBloque hijo = new NodoBloque(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentenciaThen = hijo;
         return hijo;
     }
@@ -39,6 +41,7 @@ public class NodoIf extends NodoSentencia {
     public NodoBloque agregarSentenciaElse(){
         NodoBloque hijo = new NodoBloque(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentenciaElse = hijo;
         return hijo;
     }

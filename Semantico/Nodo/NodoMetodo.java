@@ -21,6 +21,7 @@ public class NodoMetodo extends NodoBloque {
     public NodoBloque agregarBloque(Funcion metodoContenedor){
         NodoBloque hijo = new NodoBloque(metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.bloque = hijo;
         return hijo;
     }

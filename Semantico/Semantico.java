@@ -21,6 +21,7 @@ public class Semantico {
     public Semantico(File archivo) {
         this.tablaDeSimbolos = new TablaDeSimbolos();
         this.AST = new NodoAST(null,null);
+        this.AST.establecerTablaDeSimbolos(tablaDeSimbolos);
         // Corroboramos la validez sintactica del codigo y rellenamos la tabla de
         // simbolos
         Sintactico sintacticoTS = new Sintactico(archivo, this.tablaDeSimbolos, this.AST);

@@ -21,6 +21,7 @@ public class NodoBloque extends Nodo {
     public NodoSentencia agregarSentencia() {
         NodoSentencia hijo = new NodoSentencia(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
         return hijo;
     }
@@ -28,6 +29,7 @@ public class NodoBloque extends Nodo {
     public NodoAsignacion agregarAsignacion() {
         NodoAsignacion hijo = new NodoAsignacion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
         return hijo;
     }
@@ -35,6 +37,7 @@ public class NodoBloque extends Nodo {
     public NodoWhile agregarWhile() {
         NodoWhile hijo = new NodoWhile(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
         return hijo;
     }
@@ -42,6 +45,7 @@ public class NodoBloque extends Nodo {
     public NodoIf agregarIf() {
         NodoIf hijo = new NodoIf(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
         return hijo;
     }
@@ -49,18 +53,21 @@ public class NodoBloque extends Nodo {
     public NodoReturn agregarReturn() {
         NodoReturn hijo = new NodoReturn(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
         return hijo;
     }
 
     public void agregarReturn(NodoReturn hijo) {
         this.sentencias.add(hijo);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         hijo.establecerPadre(this);
     }
 
     public NodoExpresion agregarExpresion() {
         NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
         return hijo;
     }
@@ -68,6 +75,7 @@ public class NodoBloque extends Nodo {
     // Sobrecarga para poder insertar expresiones de cualquier tipo
     public void agregarExpresion(NodoExpresion hijo) {
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.sentencias.add(hijo);
     }
 
