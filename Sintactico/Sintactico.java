@@ -499,8 +499,9 @@ public class Sintactico {
         } else if (aux.verifico("{")) {
             bloque(ASTBloque);
         } else if (aux.verifico("return")) {
-            aux.matcheo("return");
             NodoReturn ASTReturn = ASTBloque.agregarReturn();
+            ASTReturn.aux = aux.tokenActual;
+            aux.matcheo("return");
             NodoExpresion expresionRetorno = expresionP();
             ASTReturn.agregarExpresion(expresionRetorno);
         } else {

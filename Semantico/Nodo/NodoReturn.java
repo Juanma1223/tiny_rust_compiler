@@ -34,7 +34,7 @@ public class NodoReturn extends NodoSentencia {
         Tipo tipoRetorno = this.obtenerTipo();
         Tipo tipoMetodo = infoMetodo.obtenerTipoRetorno();
         if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
-            new ErrorSemantico(0, 0, "El tipo de retorno del metodo "+metodoContenedor.obtenerNombre()+" y su retorno no coinciden");
+            new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(), "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
         }
     }
 

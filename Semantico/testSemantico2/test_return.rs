@@ -1,4 +1,4 @@
-/*ERROR: LINEA 10 | COLUMNA 13 | Tipos incompatibles.*/
+/*ERROR: LINEA 10 | COLUMNA 3 | El retorno del metodo salida no coincide con su tipo de retorno.*/
 class Prueba {
 	I32: a;
 	Str: b;
