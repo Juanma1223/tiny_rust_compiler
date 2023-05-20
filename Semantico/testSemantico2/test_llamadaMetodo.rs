@@ -1,4 +1,4 @@
-/*ERROR: Método no declarado*/
+/*ERROR: LINEA 13 | COLUMNA 6 | El metodo suma no esta definido para la clase Prueba*/
 class Prueba {
 	I32: a;
 	Str: b;

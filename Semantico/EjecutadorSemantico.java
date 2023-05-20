@@ -14,7 +14,7 @@ public class EjecutadorSemantico {
 
         // Abrimos el archivo y almacenamos su informacion
         // File archivo = new File("/mnt/hdd/Facultad/Facultad/4to_año/Compiladores/Compilador/tiny_rust_compiler/Semantico/testSemantico2/test_prueba.rs");
-        File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/Semantico/testSemantico2/test_prueba.rs");
+        File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/Semantico/testSemantico2/test_llamadaMetodo1.rs");
         new Semantico(archivo);
         System.out.println("CORRECTO: SEMANTICO - SENTENCIAS");
     }

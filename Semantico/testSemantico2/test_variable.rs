@@ -1,4 +1,4 @@
-/*ERROR: Variable no declarada*/
+/*ERROR: LINEA 14 | COLUMNA 2 | La variable p no esta definida en el alcance actual*/
 class Prueba {
 	I32: a,b;
 	create(){
