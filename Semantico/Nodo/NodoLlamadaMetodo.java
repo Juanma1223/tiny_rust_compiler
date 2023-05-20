@@ -23,6 +23,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
 
     public void agregarArgumento(NodoExpresion exp) {
         this.argumentos.add(exp);
+        exp.establecerTablaDeSimbolos(tablaDeSimbolos);
         exp.establecerPadre(this);
     }
 

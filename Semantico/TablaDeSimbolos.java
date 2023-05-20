@@ -147,16 +147,21 @@ public class TablaDeSimbolos {
     // Este metodo obtiene una variable en el scope actual buscando primero en el metodo contenedor de la variable
     // y luego en su clase
     public Variable obtenerVarEnAlcanceActual(Funcion metodoPadre, Clase claseMadre, Token tokenActual) {
-        Variable infoVariable = metodoPadre.obtenerVariablePorNombre(tokenActual.obtenerLexema());
-        // Si no encontramos la variable en el metodo que recorre el sintactico
-        // actualmente, la buscamos en la clase
+        Variable infoVariable = metodoPadre.obtenerParametroPorNombre(tokenActual.obtenerLexema());
         if (infoVariable == null) {
-            infoVariable = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+            // Si no encontramos la variable en los parametros del metodo que recorre el sintactico
+            // actualmente, la buscamos en las variables locales del metodo
+            infoVariable = metodoPadre.obtenerVariablePorNombre(tokenActual.obtenerLexema());
             if (infoVariable == null) {
-                // La variable debe ser asignada luego de consolidar la tabla de simbolos y por
-                // tanto debe
-                // ser encontrada luego de realizar la resolucion de nombres
-                return new Variable(tokenActual.obtenerLexema(), null);
+                // Si no encontramos la variable en el metodo que recorre el sintactico
+                // actualmente, la buscamos en la clase
+                infoVariable = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+                if (infoVariable == null) {
+                    // La variable debe ser asignada luego de consolidar la tabla de simbolos y por
+                    // tanto debe
+                    // ser encontrada luego de realizar la resolucion de nombres
+                    return new Variable(tokenActual.obtenerLexema(), null);
+                }
             }
         }
         return infoVariable;

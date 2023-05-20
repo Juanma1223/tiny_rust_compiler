@@ -8,7 +8,7 @@ class Prueba {
 }
 fn main () {
 	Prueba : p1;
-	p1 = new Prueba();
 	Str: s0, s1;
+	p1 = new Prueba();
 	(p1.suma(s0));
 }

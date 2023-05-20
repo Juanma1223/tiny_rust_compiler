@@ -20,6 +20,12 @@ public class NodoVariable extends NodoExpresion {
 
     @Override
     public Tipo obtenerTipo() {
+        // Hay un caso raro en el cual la tabla de simbolos no se asigna y por tanto se
+        // hace en este punto
+        if (this.tablaDeSimbolos == null) {
+            this.tablaDeSimbolos = padre.tablaDeSimbolos;
+        }
+        
         // Cuando tenemos un encadenado nos interesa retornar el tipo que resuelve dicho encadenado
         if(this.encadenado != null && tipo != null){
             return encadenado.obtenerTipo();

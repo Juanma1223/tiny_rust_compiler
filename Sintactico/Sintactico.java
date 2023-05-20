@@ -1099,11 +1099,12 @@ public class Sintactico {
         if (aux.verifico("[")) {
             NodoVariable varA = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
             tablaDeSimbolos.obtenerClaseActual(),token);
+            exp.establecerEncadenado(varA);
             aux.matcheo("[");
             NodoExpresion accesoArray = expresion();
             varA.establecerEncadenado(accesoArray);
             aux.matcheo("]");
-            exp.establecerEncadenado(varA);
+
         } else if (aux.verifico("(")) {
             NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
             tablaDeSimbolos.obtenerClaseActual(),token);
