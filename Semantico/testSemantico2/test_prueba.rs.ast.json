@@ -120,16 +120,20 @@
 }
 ]
 ,
-"Nodo":"NodoLlamadaMetodo",
-"valor":"get_b",
-"encadenado":{
+"Nodo":"NodoAsignacion",
+"operador":"=",
+"hijos":[
+{
+"Nodo":"NodoVariable",
+"valor":"d"
+
+},
+{
 "Nodo":"NodoVariable",
 "valor":"a",
 "encadenado":{
 "Nodo":"NodoLlamadaMetodo",
-"valor":"get_a"
-
-}
+"valor":"get_f"
 
 }
 
@@ -138,12 +142,6 @@
 
 }
 ]
-,
-"Nodo":"NodoRetorno",
-"hijos":[
-{
-"Nodo":"NodoVariable",
-"valor":"a"
 
 }
 ]
@@ -163,7 +161,7 @@
 "hijos":[
 {
 "Nodo":"NodoVariable",
-"valor":"a"
+"valor":"z"
 
 }
 ]
@@ -231,7 +229,7 @@
 "hijos":[
 {
 "Nodo":"NodoVariable",
-"valor":"a"
+"valor":"f"
 
 }
 ]

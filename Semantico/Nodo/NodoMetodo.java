@@ -2,6 +2,8 @@ package Semantico.Nodo;
 
 import Semantico.Clase;
 import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
+import Semantico.Tipo.Tipo;
 
 public class NodoMetodo extends NodoBloque {
     private String nombre;
@@ -32,6 +34,18 @@ public class NodoMetodo extends NodoBloque {
             this.bloque.checkeoTipos();
         }
     }
+
+    @Override
+    public Tipo obtenerTipo(){
+        // Si el tipo es nulo, debemos resolverlo usando la tabla de simbolos
+        if(this.tipo == null){
+            Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre()).obtenerMetodoPorNombre(nombre);
+            this.tipo = infoMetodo.obtenerTipoRetorno();
+        }
+        return this.tipo;
+    }
+
+
 
     public String toJson() {
         // Construimos el json de forma recursiva

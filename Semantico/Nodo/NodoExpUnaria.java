@@ -38,6 +38,7 @@ public class NodoExpUnaria extends NodoExpresion {
 
     @Override
     public void checkeoTipos() {
+        ladoDer.checkeoTipos();
         Tipo tipoDer = ladoDer.obtenerTipo();
         this.checkeoOperadorValido(tipoDer, operador);
         this.establecerTipo(tipoDer);

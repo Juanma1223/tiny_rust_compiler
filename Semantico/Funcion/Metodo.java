@@ -6,7 +6,6 @@ import Semantico.Tipo.Tipo;
 import Semantico.Variable.Parametro;
 
 public class Metodo extends Funcion {
-    private String nombre;
     private boolean esEstatico;
     private Tipo tipoRetorno;
     private int posicion;
@@ -53,9 +52,6 @@ public class Metodo extends Funcion {
         return sb.toString();
     }
 
-    public String obtenerNombre() {
-        return this.nombre;
-    }
 
     public boolean obtenerEsEstatico() {
         return this.esEstatico;

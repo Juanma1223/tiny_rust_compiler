@@ -47,6 +47,7 @@ public class NodoIf extends NodoSentencia {
 
     @Override
     public void checkeoTipos(){
+        condicion.checkeoTipos();
         Tipo tipo = condicion.obtenerTipo();
         if(!tipo.obtenerTipo().equals("Bool")){
             new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(), "El tipo de la condicion if no es booleano!", true);

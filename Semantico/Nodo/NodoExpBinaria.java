@@ -47,6 +47,8 @@ public class NodoExpBinaria extends NodoExpresion {
 
     @Override
     public void checkeoTipos() {
+        ladoIzq.checkeoTipos();
+        ladoDer.checkeoTipos();
         Tipo tipoIzq = ladoIzq.obtenerTipo();
         Tipo tipoDer = ladoDer.obtenerTipo();
         if (!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())) {

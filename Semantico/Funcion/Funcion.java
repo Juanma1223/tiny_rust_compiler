@@ -12,6 +12,7 @@ public class Funcion {
 
     private HashMap<String, Parametro> parametros = new LinkedHashMap<String, Parametro>();
     private HashMap<String, Variable> variables = new HashMap<String, Variable>();
+    protected String nombre;
 
     public Parametro obtenerParametroPorNombre(String nombre) {
         return this.parametros.get(nombre);
@@ -23,6 +24,10 @@ public class Funcion {
 
     public HashMap<String, Variable> obtenerVariables() {
         return this.variables;
+    }
+
+    public String obtenerNombre() {
+        return this.nombre;
     }
 
     public void insertarParametro(Parametro parametro) {

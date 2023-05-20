@@ -1,15 +1,16 @@
 /*CORRECTO*/
 class Prueba {
-	I32: a;
-	Str: b;
+	Prueba2: a;
+	I32: z;
+	I32: b;
 	pub Array I32: c;
-	pub Char: d;
+	pub Str: d;
 	pub Bool: e;
 	create(I32: a, Str: b){
-		//a = 1;
-        //b = "pepe";
+		// z = 1;
+        // b = "pepe";
 	}
-	fn get_a() -> I32 {
+	fn get_a() -> Str {
 		if(1<=2) {
 			;
 		} else {
@@ -17,26 +18,27 @@ class Prueba {
 		}
 		while(false) {
 			(false || true && true || false);
-			(get_b(a,b).a.get_a());
+			d=(a.get_f());
 		}
-		return a;
+		// return a;
 	}
 	fn get_b(I32:a,I32:x) -> I32 {
-		return a;
+		return z;
 	}
 	static fn imprimo_algo() -> void {
 		// (IO.out_string("hola mundo"));
 	}
 }
-class Prueba2 : Prueba{
-	Bool: f;
+class Prueba2{
+	Str: f;
 	create(Bool: f){
 	}
-	fn get_f() -> Bool {
+	fn get_f() -> Str {
 		return f;
 	}
-	fn get_b(I32:a,I32:x) -> I32 {
-		return a;
+	fn get_b(I32:b,I32:x) -> Str {
+		// z = "Hola";
+		return f;
 	}
 }
 fn main () {

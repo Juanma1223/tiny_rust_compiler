@@ -9,6 +9,7 @@ public class NodoExpresion extends NodoSentencia {
 
     public void establecerEncadenado(NodoExpresion encadenado){
         encadenado.establecerPadre(this);
+        encadenado.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.encadenado = encadenado;
     }
     
@@ -16,6 +17,13 @@ public class NodoExpresion extends NodoSentencia {
         super(metodoContenedor,claseContenedora);
         this.metodoContenedor = metodoContenedor;
         this.claseContenedora = claseContenedora;
+    }
+
+    @Override
+    public void checkeoTipos(){
+        if(encadenado != null){
+            this.encadenado.checkeoTipos();
+        }
     }
 
 }

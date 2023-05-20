@@ -10,7 +10,7 @@ import Semantico.Tipo.Tipo;
 public class Nodo {
 
     // Esta variable guarda la información del padre de un nodo
-    private Nodo padre;
+    protected Nodo padre;
     // Esta variable la utilizamos para comunicar información hacia arriba en los nodos
     public Token aux;
     // Los nodos tienen un tipo que se utilizara en el checkeo de tipos
@@ -47,6 +47,11 @@ public class Nodo {
     
     // Todo nodo debe resolver a algun tipo, este metodo debe implementar la forma de obtenerlo
     public Tipo obtenerTipo(){
+        return this.tipo;
+    }
+
+    // Este metodo se utiliza cuando se requiere separar la obtencion de tipos primitivos y clases
+    public Tipo obtenerTipoClase(){
         return this.tipo;
     }
 

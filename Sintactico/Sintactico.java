@@ -983,6 +983,7 @@ public class Sintactico {
         if (aux.verifico("(")) {
             NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
             tablaDeSimbolos.obtenerClaseActual(),token);
+            llamadaM.establecerTablaDeSimbolos(tablaDeSimbolos);
             llamadaMetodoP(llamadaM);
             return llamadaM;
         } else {
@@ -1029,6 +1030,7 @@ public class Sintactico {
         // Usar token para definir el tipo del método (clase a la que pertenece)
         NodoLlamadaMetodo llamadaME = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
         tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+        llamadaME.establecerTablaDeSimbolos(tablaDeSimbolos);
         aux.matcheoId("id_objeto");
         argumentosActuales(llamadaME);
         encadenadoP(llamadaME);
@@ -1051,6 +1053,7 @@ public class Sintactico {
         if (aux.verifico("id_clase")) {
             NodoLlamadaMetodo llamadaC = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
             tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+            llamadaC.establecerTablaDeSimbolos(tablaDeSimbolos);
             aux.matcheoId("id_clase");
             argumentosActuales(llamadaC);
             encadenadoP(llamadaC);
@@ -1103,6 +1106,7 @@ public class Sintactico {
         } else if (aux.verifico("(")) {
             NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
             tablaDeSimbolos.obtenerClaseActual(),token);
+            llamadaM.establecerTablaDeSimbolos(tablaDeSimbolos);
             argumentosActuales(llamadaM);
             exp.establecerEncadenado(llamadaM);
             encadenadoP(llamadaM);

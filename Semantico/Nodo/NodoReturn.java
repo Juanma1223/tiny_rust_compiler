@@ -1,8 +1,11 @@
 package Semantico.Nodo;
 
+import Lexico.Token;
 import Semantico.Clase;
+import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Funcion.Metodo;
+import Semantico.Tipo.Tipo;
 
 public class NodoReturn extends NodoSentencia {
     private NodoExpresion retorno;
@@ -13,17 +16,26 @@ public class NodoReturn extends NodoSentencia {
         this.claseContenedora = claseContenedora;
     }
 
-    public NodoExpresion agregarExpresion(){
-        NodoExpresion hijo = new NodoExpresion(this.metodoContenedor,this.claseContenedora);
-        hijo.establecerPadre(this);
-        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
-        this.retorno = hijo;
-        return hijo;
-    }
-
     public void agregarExpresion(NodoExpresion retorno){
         this.retorno = retorno;
+        this.retorno.establecerTablaDeSimbolos(tablaDeSimbolos);
         retorno.establecerPadre(this);
+    }
+
+    public Tipo obtenerTipo(){
+        return this.retorno.obtenerTipo();
+    }
+
+    @Override
+    public void checkeoTipos(){
+        retorno.checkeoTipos();
+        // Debemos comprobar que el metodo retorna el mismo tipo que la expresion de retorno
+        Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre()).obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
+        Tipo tipoRetorno = this.obtenerTipo();
+        Tipo tipoMetodo = infoMetodo.obtenerTipoRetorno();
+        if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
+            new ErrorSemantico(0, 0, "El tipo de retorno del metodo "+metodoContenedor.obtenerNombre()+" y su retorno no coinciden");
+        }
     }
 
     public String toJson() {

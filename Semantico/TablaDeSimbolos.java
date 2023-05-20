@@ -34,7 +34,7 @@ public class TablaDeSimbolos {
         StringBuilder sb = new StringBuilder();
         // Construimos el json de forma recursiva
         sb.append("{").append(System.lineSeparator());
-        sb.append("\"nombre\":").append("\""+nombreArchivo+"\",").append(System.lineSeparator());
+        sb.append("\"nombre\":").append("\"" + nombreArchivo + "\",").append(System.lineSeparator());
         sb.append("\"clases\":[").append(System.lineSeparator());
         int i = 1;
         for (HashMap.Entry<String, Clase> clase : clases.entrySet()) {
@@ -44,7 +44,7 @@ public class TablaDeSimbolos {
                 sb.append(clase.getValue().toJson()).append(System.lineSeparator());
             }
             i++;
-        
+
         }
         sb.append("]").append(System.lineSeparator());
         sb.append("}").append(System.lineSeparator());
@@ -144,14 +144,17 @@ public class TablaDeSimbolos {
         this.clases.put("Array", cArray);
     }
 
-    // Este metodo obtiene una variable en el scope actual, si no la encuentra devuelve error
-    public Variable obtenerVarEnAlcanceActual(Token tokenActual){
-        Variable infoVariable = this.metodoActual.obtenerVariablePorNombre(tokenActual.obtenerLexema());
-        // Si no encontramos la variable en el metodo que recorre el sintactico actualmente, la buscamos en la clase
-        if(infoVariable == null){
-            infoVariable = this.claseActual.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
-            if(infoVariable == null){
-                // La variable debe ser asignada luego de consolidar la tabla de simbolos y por tanto debe
+    // Este metodo obtiene una variable en el scope actual buscando primero en el metodo contenedor de la variable
+    // y luego en su clase
+    public Variable obtenerVarEnAlcanceActual(Funcion metodoPadre, Clase claseMadre, Token tokenActual) {
+        Variable infoVariable = metodoPadre.obtenerVariablePorNombre(tokenActual.obtenerLexema());
+        // Si no encontramos la variable en el metodo que recorre el sintactico
+        // actualmente, la buscamos en la clase
+        if (infoVariable == null) {
+            infoVariable = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+            if (infoVariable == null) {
+                // La variable debe ser asignada luego de consolidar la tabla de simbolos y por
+                // tanto debe
                 // ser encontrada luego de realizar la resolucion de nombres
                 return new Variable(tokenActual.obtenerLexema(), null);
             }

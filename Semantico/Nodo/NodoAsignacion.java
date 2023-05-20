@@ -19,12 +19,14 @@ public class NodoAsignacion extends NodoExpresion{
 
     public void establecerLadoIzq(NodoExpresion ladoIzq){
         ladoIzq.establecerPadre(this);
+        ladoIzq.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.ladoIzq = ladoIzq;
     }
 
 
     public void establecerLadoDer(NodoExpresion ladoDer){
         ladoDer.establecerPadre(this);
+        ladoDer.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.ladoDer = ladoDer;
     }
 
@@ -34,6 +36,8 @@ public class NodoAsignacion extends NodoExpresion{
 
     @Override
     public void checkeoTipos(){
+        ladoIzq.checkeoTipos();
+        ladoDer.checkeoTipos();
         Tipo tipoIzq = ladoIzq.obtenerTipo();
         Tipo tipoDer = ladoDer.obtenerTipo();
         if(!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())){

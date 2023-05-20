@@ -26,6 +26,7 @@ public class NodoWhile extends NodoSentencia {
 
     public void agregarCondicion(NodoExpresion condicion){
         this.condicion = condicion;
+        condicion.establecerTablaDeSimbolos(tablaDeSimbolos);
         condicion.establecerPadre(this);
     }
     
@@ -39,6 +40,7 @@ public class NodoWhile extends NodoSentencia {
 
     @Override
     public void checkeoTipos(){
+        condicion.checkeoTipos();
         Tipo tipo = condicion.obtenerTipo();
         if(!tipo.obtenerTipo().equals("Bool")){
             new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(), "El tipo de la condicion while no es booleano!", true);
