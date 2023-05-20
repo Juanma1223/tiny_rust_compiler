@@ -21,7 +21,14 @@ public class NodoVariable extends NodoExpresion {
         // Construimos el json de forma recursiva
         StringBuilder sb = new StringBuilder();
         sb.append("\"Nodo\":").append("\"NodoVariable\",").append(System.lineSeparator());
-        sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\"").append(System.lineSeparator());
+        if(this.encadenado != null) {
+            sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\",").append(System.lineSeparator());
+            sb.append("\"encadenado\":{").append(System.lineSeparator());
+            sb.append(this.encadenado.toJson()).append(System.lineSeparator());
+            sb.append("}").append(System.lineSeparator());
+        } else {
+            sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\"").append(System.lineSeparator());
+        }
         return sb.toString();
     }
 

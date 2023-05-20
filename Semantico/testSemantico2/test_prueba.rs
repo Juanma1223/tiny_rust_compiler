@@ -16,7 +16,8 @@ class Prueba {
 			(2+1);
 		}
 		while(false) {
-			(true || false);
+			(false || true && true || false);
+			(get_b(a,b).a.get_a());
 		}
 		return a;
 	}

@@ -86,7 +86,28 @@
 "hijos":[
 {
 "Nodo":"NodoLiteral",
+"valor":"false"
+
+},
+{
+"Nodo":"NodoExpBinaria",
+"operador":"||",
+"hijos":[
+{
+"Nodo":"NodoExpBinaria",
+"operador":"&&",
+"hijos":[
+{
+"Nodo":"NodoLiteral",
 "valor":"true"
+
+},
+{
+"Nodo":"NodoLiteral",
+"valor":"true"
+
+}
+]
 
 },
 {
@@ -95,6 +116,22 @@
 
 }
 ]
+
+}
+]
+,
+"Nodo":"NodoLlamadaMetodo",
+"valor":"get_b",
+"encadenado":{
+"Nodo":"NodoVariable",
+"valor":"a",
+"encadenado":{
+"Nodo":"NodoLlamadaMetodo",
+"valor":"get_a"
+
+}
+
+}
 
 }
 ]
