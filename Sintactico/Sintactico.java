@@ -112,7 +112,8 @@ public class Sintactico {
         // Creamos el árbol de la clase Fantasma que contiene a main
         NodoClase ASTClaseM = AST.agregarHijo();
         ASTClaseM.establecerNombre("Fantasma");
-        NodoMetodo ASTMetodoM = ASTClaseM.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),tablaDeSimbolos.obtenerClaseActual());
+        NodoMetodo ASTMetodoM = ASTClaseM.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+                tablaDeSimbolos.obtenerClaseActual());
         ASTMetodoM.establecerNombre("main");
         NodoBloque ASTBloqueM = ASTMetodoM.agregarBloque(tablaDeSimbolos.obtenerMetodoActual());
         bloqueMetodo(ASTBloqueM);
@@ -183,12 +184,14 @@ public class Sintactico {
             atributo();
         } else {
             if (aux.verifico("create")) {
-                NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),tablaDeSimbolos.obtenerClaseActual());
+                NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+                        tablaDeSimbolos.obtenerClaseActual());
                 constructor(ASTMetodo);
             } else {
                 if (aux.verifico(ter1)) {
                     // Insertamos el metodo en el AST de la clase y continuamos el AST por el metodo
-                    NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),tablaDeSimbolos.obtenerClaseActual());
+                    NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),
+                            tablaDeSimbolos.obtenerClaseActual());
                     metodo(ASTMetodo);
                 } else {
                     Token tokenActual = aux.tokenActual;
@@ -548,7 +551,7 @@ public class Sintactico {
     private void asignacion(NodoAsignacion ASTAsignacion) {
         if (aux.verifico("id_objeto")) {
             NodoVariable ladoIzq = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionVarSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -557,7 +560,7 @@ public class Sintactico {
             ASTAsignacion.establecerLadoDer(ladoDer);
         } else if (aux.verifico("self")) {
             NodoVariable ladoIzq = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             ASTAsignacion.establecerLadoIzq(ladoIzq);
             asignacionSelfSimple(ladoIzq);
             ASTAsignacion.establecerOp(aux.tokenActual);
@@ -597,7 +600,7 @@ public class Sintactico {
         if (aux.verifico(".")) {
             aux.matcheo(".");
             NodoVariable varEnc = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             aux.matcheoId("id_objeto");
             var.establecerEncadenado(varEnc);
             encadenadoSimpleP(varEnc);
@@ -936,7 +939,7 @@ public class Sintactico {
             aux.matcheo(".");
             Token tokenO = aux.tokenActual;
             aux.matcheoId("id_objeto");
-            encadenado2(exp,tokenO);
+            encadenado2(exp, tokenO);
         }
     }
 
@@ -964,7 +967,7 @@ public class Sintactico {
             return primario;
 
         } else if (aux.verifico("id_clase")) {
-            
+
             return llamadaMetodoEstatico();
 
         } else if (aux.verifico("new")) {
@@ -983,13 +986,13 @@ public class Sintactico {
     private NodoExpresion primarioP(Token token) {
         if (aux.verifico("(")) {
             NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),token);
+                    tablaDeSimbolos.obtenerClaseActual(), token);
             llamadaM.establecerTablaDeSimbolos(tablaDeSimbolos);
             llamadaMetodoP(llamadaM);
             return llamadaM;
         } else {
             NodoVariable var = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),token);
+                    tablaDeSimbolos.obtenerClaseActual(), token);
             accesoVarP(var);
             return var;
         }
@@ -1030,7 +1033,7 @@ public class Sintactico {
     private NodoLlamadaMetodo llamadaMetodo(Token token) {
         // Usar token para definir el tipo del método (clase a la que pertenece)
         NodoLlamadaMetodo llamadaME = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
-        tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+                tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
         llamadaME.establecerClase(token.obtenerLexema());
         llamadaME.establecerForma(true);
         llamadaME.establecerTablaDeSimbolos(tablaDeSimbolos);
@@ -1055,7 +1058,7 @@ public class Sintactico {
     private NodoExpresion llamadaConstructorP() {
         if (aux.verifico("id_clase")) {
             NodoLlamadaMetodo llamadaC = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             llamadaC.establecerClase(aux.tokenActual.obtenerLexema());
             llamadaC.establecerTablaDeSimbolos(tablaDeSimbolos);
             aux.matcheoId("id_clase");
@@ -1102,7 +1105,7 @@ public class Sintactico {
     private void encadenado2(NodoExpresion exp, Token token) {
         if (aux.verifico("[")) {
             NodoVariable varA = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),token);
+                    tablaDeSimbolos.obtenerClaseActual(), token);
             exp.establecerEncadenado(varA);
             aux.matcheo("[");
             NodoExpresion accesoArray = expresion();
@@ -1111,14 +1114,14 @@ public class Sintactico {
 
         } else if (aux.verifico("(")) {
             NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),token);
+                    tablaDeSimbolos.obtenerClaseActual(), token);
             llamadaM.establecerTablaDeSimbolos(tablaDeSimbolos);
             argumentosActuales(llamadaM);
             exp.establecerEncadenado(llamadaM);
             encadenadoP(llamadaM);
         } else {
             NodoVariable var = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
-            tablaDeSimbolos.obtenerClaseActual(),token);
+                    tablaDeSimbolos.obtenerClaseActual(), token);
             exp.establecerEncadenado(var);
             encadenadoP(var);
         }

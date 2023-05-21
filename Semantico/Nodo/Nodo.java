@@ -59,9 +59,16 @@ public class Nodo {
         this.tipo = tipo;
     }
 
-
     public void establecerTablaDeSimbolos(TablaDeSimbolos tablaDeSimbolos){
         this.tablaDeSimbolos = tablaDeSimbolos;
+    }
+
+    // Este metodo devuelve la tabla de simbolos, si esta es nula, la busca en los ancestros
+    public TablaDeSimbolos obtenerTablaDeSimbolos(){
+        if(tablaDeSimbolos == null){
+            return padre.obtenerTablaDeSimbolos();
+        }
+        return tablaDeSimbolos;
     }
 
 }

@@ -107,6 +107,24 @@
 
 ]
 }
+,
+{
+"nombre":"prueba3",
+"static":"false",
+"retorno":"Prueba",
+"posicion":"2",
+"paramF":[
+]
+}
+,
+{
+"nombre":"prueba2",
+"static":"false",
+"retorno":"Prueba",
+"posicion":"1",
+"paramF":[
+]
+}
 
 ],
 "atributos":[

@@ -52,7 +52,7 @@ public class NodoVariable extends NodoExpresion {
     public Tipo obtenerTipoClase() {
         // El tipo aun no esta definido, lo buscamos en la tabla de simbolos
         if (this.tipo == null) {
-            Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
+            Variable infoVariable = this.obtenerTablaDeSimbolos().obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
                     token);
             // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
             if (infoVariable.obtenerTipo() == null) {
