@@ -7,6 +7,7 @@ import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Funcion.Metodo;
+import Semantico.Funcion.Constructor;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoReferencia;
 

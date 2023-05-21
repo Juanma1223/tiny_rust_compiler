@@ -2,6 +2,7 @@ package Semantico.Funcion;
 
 import java.util.HashMap;
 
+import Semantico.Tipo.Tipo;
 import Semantico.Variable.Parametro;
 
 public class Constructor extends Funcion {
@@ -22,5 +23,9 @@ public class Constructor extends Funcion {
         sb.append("]").append(System.lineSeparator());
         sb.append("}").append(System.lineSeparator());
         return sb.toString();
+    }
+
+    public Tipo obtenerTipoRetorno(){
+        return new Tipo(nombre);
     }
 }
