@@ -1,4 +1,4 @@
-/*ERROR: LINEA 26 | COLUMNA 2 | Metodo m3 mal redefinido (tipo de parametro p1 diferente)*/
+/*ERROR: LINEA 26 | COLUMNA 8 | No se puede cambiar el tipo de los parametros del método heredado*/
 class A {
 
     fn m1()->void

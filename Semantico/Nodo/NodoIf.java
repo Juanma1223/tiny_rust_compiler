@@ -25,8 +25,9 @@ public class NodoIf extends NodoSentencia {
     }
 
     public void agregarCondicion(NodoExpresion hijo){
-        this.condicion = hijo;
         hijo.establecerPadre(this);
+        hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
+        this.condicion = hijo;
     }
 
     public NodoBloque agregarSentenciaThen(){

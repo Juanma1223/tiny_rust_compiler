@@ -84,7 +84,12 @@ public class NodoExpBinaria extends NodoExpresion {
                     }
                 }
                 else {
-                    return tipoIzq;
+                    if (op.equals("==") || op.equals("!=")) {
+                        return new TipoPrimitivo("Bool");
+                    }
+                    else {
+                        return tipoIzq;
+                    }
                 }
             }
         }
