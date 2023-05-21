@@ -2,7 +2,6 @@
 class Prueba {
 	I32: a;
 	Str: b;
-	pub Array I32: c;
 	pub Char: d;
 	pub Bool: e;
 	create(I32: a, Str: b){
@@ -12,7 +11,7 @@ class Prueba {
 	fn get_a() -> I32 {
 		return a;
 	}
-	fn get_b(Int:a,Int:x) -> Str {
+	fn get_b(I32:a,I32:x) -> Str {
 		return b;
 	}
 	static fn imprimo_algo() -> void {
@@ -26,10 +25,11 @@ class Prueba2 : Prueba{
 	fn get_f() -> Bool {
 		return f;
 	}
-	fn get_b(Int:a,Int:y) -> Str {
+	fn get_b(I32:a,I32:y) -> Str {
 		return b;
 	}
 }
 fn main () {
+	Array I32: c;
 	c = new I32[1+2];
 }

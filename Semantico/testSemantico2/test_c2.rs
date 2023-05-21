@@ -2,7 +2,6 @@
 class Prueba {
 	I32: a;
 	Str: b;
-	pub Array I32: c;
 	pub Char: d;
 	pub Bool: e;
 	create(I32: a, Str: b){
@@ -28,5 +27,6 @@ class Prueba2 : Prueba{
 	}
 }
 fn main () {
+	Array I32: c;
 	c = new I32[1+2];
 }
