@@ -28,14 +28,14 @@ class Fibonacci {
         suma=0;
     }
     fn imprimo_numero(I32: num) -> void{
-        (IO.out_str("f_"));
-        (IO.out_int(num));
-        (IO.out_str("="));
+        (IO.out_string("f_"));
+        (IO.out_i32(num));
+        (IO.out_string("="));
     }
     fn imprimo_sucesion(I32: s) -> void{
         //"el valor es: ";
         (IO.out_i32(s));
-        (IO.out_str("\n"));
+        (IO.out_string("\n"));
     }
 }
 fn main(){

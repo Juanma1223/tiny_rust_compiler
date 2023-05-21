@@ -1031,7 +1031,8 @@ public class Sintactico {
         // Usar token para definir el tipo del método (clase a la que pertenece)
         NodoLlamadaMetodo llamadaME = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
         tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
-        llamadaME.establecerTipo(new TipoReferencia(token.obtenerLexema()));
+        llamadaME.establecerClase(token.obtenerLexema());
+        llamadaME.establecerForma(true);
         llamadaME.establecerTablaDeSimbolos(tablaDeSimbolos);
         aux.matcheoId("id_objeto");
         argumentosActuales(llamadaME);
@@ -1055,7 +1056,7 @@ public class Sintactico {
         if (aux.verifico("id_clase")) {
             NodoLlamadaMetodo llamadaC = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
             tablaDeSimbolos.obtenerClaseActual(),aux.tokenActual);
-            llamadaC.establecerTipo(new TipoReferencia(aux.tokenActual.obtenerLexema()));
+            llamadaC.establecerClase(aux.tokenActual.obtenerLexema());
             llamadaC.establecerTablaDeSimbolos(tablaDeSimbolos);
             aux.matcheoId("id_clase");
             argumentosActuales(llamadaC);
