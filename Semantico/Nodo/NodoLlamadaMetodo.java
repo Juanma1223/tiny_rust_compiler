@@ -37,14 +37,27 @@ public class NodoLlamadaMetodo extends NodoExpresion {
             }
             // Para verificar el tipo de retorno buscamos la informacion del metodo en la
             // tabla de simbolos
-            Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(padre.obtenerTipoClase().obtenerTipo());
-            Metodo infoMetodo = infoClase.obtenerMetodoPorNombre(token.obtenerLexema());
-            // Si el metodo es nulo, el metodo no se encuentra en la tabla de simbolos
-            if (infoMetodo == null) {
-                new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "El metodo " + token.obtenerLexema()
-                        + " no esta definido para la clase " + padre.obtenerTipoClase().obtenerTipo());
+            if (padre instanceof NodoVariable){
+                // Si el padre es un NodoVariable, el metodo debe estar definido en la clase de dicha variable
+                Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(padre.obtenerTipoClase().obtenerTipo());
+                Metodo infoMetodo = infoClase.obtenerMetodoPorNombre(token.obtenerLexema());
+                // Si el metodo es nulo, el metodo no se encuentra en la tabla de simbolos
+                if (infoMetodo == null) {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "El metodo " + token.obtenerLexema()
+                            + " no esta definido para la clase " + padre.obtenerTipoClase().obtenerTipo(),true);
+                }
+                this.tipo = infoMetodo.obtenerTipoRetorno();
+            } else {
+                // Sino, el metodo debe estar definido en la clase contenedora
+                Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(token.obtenerLexema());
+                // Si el metodo es nulo, el metodo no se encuentra en la tabla de simbolos
+                if (infoMetodo == null) {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "El metodo " + token.obtenerLexema()
+                            + " no esta definido para la clase " + claseContenedora.obtenerNombre(),true);
+                }
+                this.tipo = infoMetodo.obtenerTipoRetorno();
             }
-            this.tipo = infoMetodo.obtenerTipoRetorno();
+            
         }
         return this.tipo;
     }
