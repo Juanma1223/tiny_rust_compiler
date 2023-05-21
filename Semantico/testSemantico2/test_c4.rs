@@ -1,11 +1,5 @@
+/*CORRECTO*/
 class Prueba {
-	Array I32: a;
-	Str: nombre;
-
-	fn prueba() -> void {
-		a[1] = 1;
-	}
-
 	fn suma(I32:a,I32:b) -> I32 {
 		I32 : c;
 		c = a+b;
@@ -17,9 +11,10 @@ class Prueba {
 		return prueba;
 	}
 
-	fn prueba3() -> I32 {
+	fn prueba3() -> Prueba {
+		Prueba : prueba;
 		I32 : c;
-		return c;
+		return prueba;
 	}
 }
 fn main () {
@@ -27,7 +22,6 @@ fn main () {
 	I32 : s0;
 	I32 : s1;
 	p1 = new Prueba();
-	p1.nombre = "pepe";
-	//s0 = p1.prueba3().suma(s0,s1);
-	//s0 = p1.prueba3().prueba2().suma(s0,s1);
+	s0 = p1.prueba2().suma(s0,s1);
+	s0 = p1.prueba3().prueba2().suma(s0,s1);
 }

@@ -1,4 +1,4 @@
-/*ERROR: Prueba1 no esta declarado*/
+/*ERROR: LINEA 14 | COLUMNA 7 | No se puede crear un objeto de la clase Prueba1 porque no esta definida.*/
 class Prueba {
 	I32: a,b;
 	create(){

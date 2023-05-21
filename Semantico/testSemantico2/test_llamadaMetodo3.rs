@@ -1,11 +1,5 @@
+/*ERROR: LINEA 24 | COLUMNA 20 | El metodo suma no esta definido para la clase I32*/
 class Prueba {
-	Array I32: a;
-	Str: nombre;
-
-	fn prueba() -> void {
-		a[1] = 1;
-	}
-
 	fn suma(I32:a,I32:b) -> I32 {
 		I32 : c;
 		c = a+b;
@@ -27,7 +21,5 @@ fn main () {
 	I32 : s0;
 	I32 : s1;
 	p1 = new Prueba();
-	p1.nombre = "pepe";
-	//s0 = p1.prueba3().suma(s0,s1);
-	//s0 = p1.prueba3().prueba2().suma(s0,s1);
+	s0 = p1.prueba3().suma(s0,s1);
 }

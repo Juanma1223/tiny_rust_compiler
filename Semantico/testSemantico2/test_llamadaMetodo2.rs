@@ -1,4 +1,4 @@
-/*ERROR: Parámetros incompatibles en cantidad*/
+/*ERROR: LINEA 13 | COLUMNA 6 | Cantidad de argumentos incorrecta en el llamado a funcion!*/
 class Prueba {
 	fn suma(I32:a,I32:b) -> I32 {
 		I32 : c;

@@ -1,4 +1,4 @@
-/*ERROR: Parámetros incompatibles en tipo*/
+/*ERROR: LINEA 13 | COLUMNA 6 | El argumento en la posicion 0 deberia ser de tipo I32*/
 class Prueba {
 	fn suma(I32:a,I32:b) -> I32 {
 		I32 : c;
