@@ -3,7 +3,8 @@ class Prueba {
 	Array I32: a;
 
 	fn prueba() -> void {
-		a[0] = "Hola";
+		a[3+4] = 3;
+		a[1] = "Hola";
 	}
 }
 

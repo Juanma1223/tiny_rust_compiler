@@ -17,10 +17,22 @@
 "valor":"a",
 "encadenado":{
 "Nodo":"NodoVariable",
-"valor":"0",
+"valor":"3",
 "encadenado":{
+"Nodo":"NodoExpBinaria",
+"operador":"+",
+"hijos":[
+{
 "Nodo":"NodoLiteral",
-"valor":"0"
+"valor":"3"
+
+},
+{
+"Nodo":"NodoLiteral",
+"valor":"4"
+
+}
+]
 
 }
 
@@ -29,7 +41,7 @@
 },
 {
 "Nodo":"NodoLiteral",
-"valor":"1"
+"valor":"3"
 
 }
 ]
