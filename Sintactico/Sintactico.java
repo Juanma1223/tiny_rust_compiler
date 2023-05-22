@@ -1076,10 +1076,12 @@ public class Sintactico {
             //VER QUE HACER CON LA INICIALIZACION DEL ARRAY
             Tipo tArray = tipoPrimitivo();
             aux.matcheo("[");
+            NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(), tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             NodoExpresion expresion = expresion();
+            arreglo.establecerEncadenado(expresion);
             aux.matcheo("]");
             expresion.establecerTipo(tArray);
-            return expresion;
+            return arreglo;
         }
     }
 

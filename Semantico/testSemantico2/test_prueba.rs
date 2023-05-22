@@ -12,6 +12,5 @@ class Nombre {
 }
 
 fn main () {
-
 	(new I32["a"]);
 }
