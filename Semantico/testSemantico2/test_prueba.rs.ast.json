@@ -5,7 +5,7 @@
 "nombre":"Prueba",
 "metodos":[
 {
-"nombre":"prueba",
+"nombre":"constructor",
 "Bloque":{
 "Sentencias":[
 {
@@ -14,22 +14,17 @@
 "hijos":[
 {
 "Nodo":"NodoVariable",
-"valor":"a",
+"valor":"self",
 "encadenado":{
 "Nodo":"NodoVariable",
-"valor":"1",
-"encadenado":{
-"Nodo":"NodoLiteral",
-"valor":"1"
-
-}
+"valor":"nombre"
 
 }
 
 },
 {
 "Nodo":"NodoLiteral",
-"valor":"1"
+"valor":"pepe"
 
 }
 ]
@@ -51,41 +46,6 @@
 "Bloque":{
 "Sentencias":[
 {
-"Nodo":"NodoAsignacion",
-"operador":"=",
-"hijos":[
-{
-"Nodo":"NodoVariable",
-"valor":"p1"
-
-},
-{
-"Nodo":"NodoLlamadaMetodo",
-"valor":"Prueba"
-
-}
-]
-,
-"Nodo":"NodoAsignacion",
-"operador":"=",
-"hijos":[
-{
-"Nodo":"NodoVariable",
-"valor":"p1",
-"encadenado":{
-"Nodo":"NodoVariable",
-"valor":"nombre"
-
-}
-
-},
-{
-"Nodo":"NodoLiteral",
-"valor":"pepe"
-
-}
-]
-
 }
 ]
 
