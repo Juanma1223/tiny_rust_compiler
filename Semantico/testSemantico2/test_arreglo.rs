@@ -1,4 +1,4 @@
-/*ERROR: LINEA 6 | COLUMNA 3 | La expresion debe ser de tipo I32*/
+/*ERROR: LINEA 6 | COLUMNA 5 | Los arreglos solo pueden ser accedidos haciendo uso de enteros!*/
 class Prueba {
 	Array I32: a;
 

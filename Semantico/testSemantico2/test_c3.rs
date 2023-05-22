@@ -15,6 +15,7 @@ class Prueba {
 		return b;
 	}
 	static fn imprimo_algo() -> void {
+		//LLAMADA A METODO ESTATICO
 		(IO.out_string("hola mundo"));
 	}
 }
@@ -30,6 +31,7 @@ class Prueba2 : Prueba{
 	}
 }
 fn main () {
+	//ARREGLO
 	Array I32: c;
 	c = new I32[1+2];
 }

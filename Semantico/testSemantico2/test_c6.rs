@@ -1,4 +1,4 @@
-/*ERROR: LINEA 14 | COLUMNA 5 | La variable apellido no esta definida en el alcance actual*/
+/*CORRECTO*/
 class Prueba {
 	Array I32: a;
 	Str: nombre;
@@ -11,5 +11,6 @@ class Prueba {
 fn main () {
 	Prueba : p1;
 	p1 = new Prueba();
-	p1.apellido = "pepe";
+    //ACCESO ATRIBUTO
+	p1.nombre = "pepe";
 }

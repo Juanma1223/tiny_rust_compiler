@@ -1021,9 +1021,12 @@ public class Sintactico {
     private void accesoVarP(NodoExpresion var) {
         if (aux.verifico("[")) {
             aux.matcheo("[");
+            NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             NodoExpresion accesoArray = expresion();
             aux.matcheo("]");
-            var.establecerEncadenado(accesoArray);
+            arreglo.establecerEncadenado(accesoArray);
+            var.establecerEncadenado(arreglo);
         } else {
             encadenadoP(var);
         }
@@ -1070,6 +1073,7 @@ public class Sintactico {
             encadenadoP(llamadaC);
             return llamadaC;
         } else {
+            //VER QUE HACER CON LA INICIALIZACION DEL ARRAY
             Tipo tArray = tipoPrimitivo();
             aux.matcheo("[");
             NodoExpresion expresion = expresion();
@@ -1108,14 +1112,16 @@ public class Sintactico {
 
     private void encadenado2(NodoExpresion exp, Token token) {
         if (aux.verifico("[")) {
-            NodoVariable varA = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
+            NodoVariable var = new NodoVariable(tablaDeSimbolos.obtenerMetodoActual(),
                     tablaDeSimbolos.obtenerClaseActual(), token);
-            exp.establecerEncadenado(varA);
+            exp.establecerEncadenado(var);
             aux.matcheo("[");
+            NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             NodoExpresion accesoArray = expresion();
-            varA.establecerEncadenado(accesoArray);
+            arreglo.establecerEncadenado(accesoArray);
+            var.establecerEncadenado(arreglo);
             aux.matcheo("]");
-
         } else if (aux.verifico("(")) {
             NodoLlamadaMetodo llamadaM = new NodoLlamadaMetodo(tablaDeSimbolos.obtenerMetodoActual(),
                     tablaDeSimbolos.obtenerClaseActual(), token);
