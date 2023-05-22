@@ -13,6 +13,7 @@ public class Nodo {
     protected Nodo padre;
     // Esta variable la utilizamos para comunicar información hacia arriba en los nodos
     public Token aux;
+    protected Token token;
     // Los nodos tienen un tipo que se utilizara en el checkeo de tipos
     protected Tipo tipo;
     // Necesitamos acceso a la tabla de simbolos para las validaciones semanticas posteriores
@@ -71,4 +72,7 @@ public class Nodo {
         return tablaDeSimbolos;
     }
 
+    public Token obtenerToken(){
+        return this.token;
+    }
 }

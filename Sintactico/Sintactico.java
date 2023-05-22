@@ -14,6 +14,7 @@ import Semantico.Variable.Variable;
 import Semantico.Funcion.Constructor;
 import Semantico.Funcion.Metodo;
 import Semantico.Nodo.NodoAST;
+import Semantico.Nodo.NodoArreglo;
 import Semantico.Nodo.NodoAsignacion;
 import Semantico.Nodo.NodoBloque;
 import Semantico.Nodo.NodoClase;
@@ -584,8 +585,11 @@ public class Sintactico {
             encadenadoSimpleP(var);
         } else if (aux.verifico("[")) {
             aux.matcheo("[");
+            NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             NodoExpresion accesoArray = expresion();
-            var.establecerEncadenado(accesoArray);
+            arreglo.establecerEncadenado(accesoArray);
+            var.establecerEncadenado(arreglo);
             aux.matcheo("]");
         } else {
             Token tokenActual = aux.tokenActual;

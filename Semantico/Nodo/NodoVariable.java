@@ -27,7 +27,7 @@ public class NodoVariable extends NodoExpresion {
         }
         
         // Cuando tenemos un encadenado nos interesa retornar el tipo que resuelve dicho encadenado
-        if(this.encadenado != null && tipo != null){
+        if(this.encadenado != null){
             return encadenado.obtenerTipo();
         }
         // El tipo aun no esta definido, lo buscamos en la tabla de simbolos
@@ -73,6 +73,11 @@ public class NodoVariable extends NodoExpresion {
         if(this.encadenado != null){
             this.encadenado.checkeoTipos();
         }
+    }
+
+    @Override
+    public Token obtenerToken(){
+        return this.token;
     }
 
     public String toJson() {

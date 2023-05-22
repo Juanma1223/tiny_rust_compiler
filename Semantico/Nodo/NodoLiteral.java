@@ -16,22 +16,33 @@ public class NodoLiteral extends NodoExpresion{
         this.metodoContenedor = metodoContenedor;
         this.claseContenedora = claseContenedora;
     }
+
+    @Override
+    public void checkeoTipos(){
+        if(this.encadenado != null){
+            this.encadenado.checkeoTipos();
+        }
+    }
     
     @Override
     public Tipo obtenerTipo(){
-        switch(this.token.obtenerToken()){
-            case "lit_ent":
-            return new TipoPrimitivo("I32");
-            case "lit_car":
-            return new TipoPrimitivo("Char");
-            case "lit_cad":
-            return new TipoPrimitivo("Str");
-            case "p_true":
-            return new TipoPrimitivo("Bool");
-            case "p_false":
-            return new TipoPrimitivo("Bool");
-            default:
-            return new Tipo("");
+        if(this.encadenado != null){
+            return this.encadenado.obtenerTipo();
+        }else{
+            switch(this.token.obtenerToken()){
+                case "lit_ent":
+                return new TipoPrimitivo("I32");
+                case "lit_car":
+                return new TipoPrimitivo("Char");
+                case "lit_cad":
+                return new TipoPrimitivo("Str");
+                case "p_true":
+                return new TipoPrimitivo("Bool");
+                case "p_false":
+                return new TipoPrimitivo("Bool");
+                default:
+                return new Tipo("");
+            }
         }
     }
 
