@@ -25,20 +25,30 @@ public class NodoVariable extends NodoExpresion {
         if (this.tablaDeSimbolos == null) {
             this.tablaDeSimbolos = padre.tablaDeSimbolos;
         }
-        
-        // Cuando tenemos un encadenado nos interesa retornar el tipo que resuelve dicho encadenado
-        if(this.encadenado != null){
+        // Cuando tenemos un encadenado nos interesa retornar el tipo que resuelve dicho
+        // encadenado
+        if (this.encadenado != null) {
             return encadenado.obtenerTipo();
         }
         // El tipo aun no esta definido, lo buscamos en la tabla de simbolos
         if (this.tipo == null) {
             Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
                     token);
-            // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
             if (infoVariable.obtenerTipo() == null) {
-                new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                        "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual");
-                return new Tipo(null);
+                // Si el atributo sigue siendo nulo, es posible que estemos en un encadenado y
+                // que la clase contenedora
+                // sea la clase referencia del padre
+                Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(padre.obtenerTipoClase().obtenerTipo());
+                infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(new Funcion(), infoClase,
+                        token);
+                if (infoVariable.obtenerTipo() == null) {
+                    // Si el tipo sigue siendo nulo, entonces la vari6able no se encuentra definida
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual");
+                    return new Tipo(null);
+                } else {
+                    return infoVariable.obtenerTipo();
+                }
             } else {
                 this.tipo = infoVariable.obtenerTipo();
                 return this.tipo;
@@ -52,7 +62,8 @@ public class NodoVariable extends NodoExpresion {
     public Tipo obtenerTipoClase() {
         // El tipo aun no esta definido, lo buscamos en la tabla de simbolos
         if (this.tipo == null) {
-            Variable infoVariable = this.obtenerTablaDeSimbolos().obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
+            Variable infoVariable = this.obtenerTablaDeSimbolos().obtenerVarEnAlcanceActual(metodoContenedor,
+                    claseContenedora,
                     token);
             // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
             if (infoVariable.obtenerTipo() == null) {
@@ -69,14 +80,14 @@ public class NodoVariable extends NodoExpresion {
     }
 
     @Override
-    public void checkeoTipos(){
-        if(this.encadenado != null){
+    public void checkeoTipos() {
+        if (this.encadenado != null) {
             this.encadenado.checkeoTipos();
         }
     }
 
     @Override
-    public Token obtenerToken(){
+    public Token obtenerToken() {
         return this.token;
     }
 

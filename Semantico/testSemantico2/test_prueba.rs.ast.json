@@ -17,22 +17,10 @@
 "valor":"a",
 "encadenado":{
 "Nodo":"NodoVariable",
-"valor":"3",
+"valor":"1",
 "encadenado":{
-"Nodo":"NodoExpBinaria",
-"operador":"+",
-"hijos":[
-{
 "Nodo":"NodoLiteral",
-"valor":"3"
-
-},
-{
-"Nodo":"NodoLiteral",
-"valor":"4"
-
-}
-]
+"valor":"1"
 
 }
 
@@ -41,7 +29,7 @@
 },
 {
 "Nodo":"NodoLiteral",
-"valor":"3"
+"valor":"1"
 
 }
 ]
@@ -63,6 +51,41 @@
 "Bloque":{
 "Sentencias":[
 {
+"Nodo":"NodoAsignacion",
+"operador":"=",
+"hijos":[
+{
+"Nodo":"NodoVariable",
+"valor":"p1"
+
+},
+{
+"Nodo":"NodoLlamadaMetodo",
+"valor":"Prueba"
+
+}
+]
+,
+"Nodo":"NodoAsignacion",
+"operador":"=",
+"hijos":[
+{
+"Nodo":"NodoVariable",
+"valor":"p1",
+"encadenado":{
+"Nodo":"NodoVariable",
+"valor":"nombre"
+
+}
+
+},
+{
+"Nodo":"NodoLiteral",
+"valor":"pepe"
+
+}
+]
+
 }
 ]
 

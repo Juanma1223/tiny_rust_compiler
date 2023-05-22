@@ -104,6 +104,13 @@
 "public":"false",
 "posicion":"0"
 }
+,
+{
+"nombre":"nombre",
+"tipo":"Str",
+"public":"false",
+"posicion":"1"
+}
 
 ],
 "constructor":{

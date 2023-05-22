@@ -1,12 +1,15 @@
-/*ERROR: LINEA 6 | COLUMNA 3 | La expresion debe ser de tipo I32*/
+/*CORRECTO*/
 class Prueba {
 	Array I32: a;
+	// I32: nombre;
 
 	fn prueba() -> void {
-		a[3+4] = 3;
-		a[1] = "Hola";
+		a[1] = 1;
 	}
-}
 
+}
 fn main () {
+	Prueba : p1;
+	p1 = new Prueba();
+	p1.nombre = "pepe";
 }
