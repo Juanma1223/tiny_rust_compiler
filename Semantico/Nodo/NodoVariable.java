@@ -44,7 +44,7 @@ public class NodoVariable extends NodoExpresion {
                 if (infoVariable.obtenerTipo() == null) {
                     // Si el tipo sigue siendo nulo, entonces la vari6able no se encuentra definida
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual");
+                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
                     return new Tipo(null);
                 } else {
                     return infoVariable.obtenerTipo();

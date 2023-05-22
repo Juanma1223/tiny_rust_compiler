@@ -27,7 +27,7 @@ public class NodoArreglo extends NodoVariable {
         Tipo tipoAcceso = this.encadenado.obtenerTipo();
         if (!tipoAcceso.obtenerTipo().equals("I32")) {
             new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                    "Los arreglos solo pueden ser accedidos haciendo uso de enteros!");
+                    "Los arreglos solo pueden ser accedidos haciendo uso de enteros!",true);
         }
     }
 
@@ -39,5 +39,15 @@ public class NodoArreglo extends NodoVariable {
                     .obtenerTipo();
         }
         return this.tipo;
+    }
+
+    public String toJson() {
+        // Construimos el json de forma recursiva
+        StringBuilder sb = new StringBuilder();
+        sb.append("\"Nodo\":").append("\"NodoArreglo\",").append(System.lineSeparator());
+        sb.append("\"encadenado\":{").append(System.lineSeparator());
+        sb.append(this.encadenado.toJson()).append(System.lineSeparator());
+        sb.append("}").append(System.lineSeparator());
+        return sb.toString();
     }
 }
