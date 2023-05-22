@@ -65,11 +65,21 @@ public class NodoVariable extends NodoExpresion {
             Variable infoVariable = this.obtenerTablaDeSimbolos().obtenerVarEnAlcanceActual(metodoContenedor,
                     claseContenedora,
                     token);
-            // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
             if (infoVariable.obtenerTipo() == null) {
-                new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                        "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual");
-                return new Tipo(null);
+                // Si el atributo sigue siendo nulo, es posible que estemos en un encadenado y
+                // que la clase contenedora
+                // sea la clase referencia del padre
+                Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(padre.obtenerTipoClase().obtenerTipo());
+                infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(new Funcion(), infoClase,
+                        token);
+                if (infoVariable.obtenerTipo() == null) {
+                    // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
+                    return new Tipo(null);
+                } else {
+                    return infoVariable.obtenerTipo();
+                }
             } else {
                 this.tipo = infoVariable.obtenerTipo();
                 return this.tipo;
