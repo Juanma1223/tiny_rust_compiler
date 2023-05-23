@@ -1,7 +1,6 @@
 package Lexico.Automata;
 
 import java.io.BufferedReader;
-import java.io.File;
 
 import Lexico.Token;
 

@@ -1,6 +1,5 @@
 package Semantico.Nodo;
 
-import Lexico.Token;
 import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;

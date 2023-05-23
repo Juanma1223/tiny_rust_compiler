@@ -11,7 +11,6 @@ import Semantico.Funcion.Constructor;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Parametro;
-import Semantico.Variable.Variable;
 
 public class NodoLlamadaMetodo extends NodoExpresion {
 
