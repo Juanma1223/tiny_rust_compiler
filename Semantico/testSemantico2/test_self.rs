@@ -1,4 +1,4 @@
-/*ERROR: LINEA 5 | COLUMNA 3 | La variable self no esta definida en el alcance actual*/
+/*ERROR: LINEA 5 | COLUMNA 8 | La variable nombre no esta definida en el alcance actual*/
 class Prueba {
 
 	create() {

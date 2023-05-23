@@ -10,15 +10,19 @@ class Prueba {
 	fn m1(I32: n)-> I32{
         while (1<= n){
             if (a==0 || a!=1){
+                //OPERADORES LOGICOS
                 e = 1<2 || 2>1 && 1<=2 || 2>=1;
+                //OPERADOR UNARIO
 				e = !!!true;
             }
             else if(a>=0){
+                //OPERADORES ARITMETICOS
                 suma=suma+1*2;
             }
             else{
                 suma=suma-1%2;
             }
+            //OPERADOR UNARIO
 			(+-+-++3);
         }
 
