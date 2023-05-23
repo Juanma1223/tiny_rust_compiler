@@ -1,8 +1,12 @@
 /*CORRECTO*/
 class Prueba {
-	Nombre : nombre;
+	Str : nombre;
 
 	create() {
+		self.nombre = "pepe";
+	}
+	fn m1() -> Prueba {
+
 	}
 
 }
@@ -12,5 +16,5 @@ class Nombre {
 }
 
 fn main () {
-	(new I32["a"]);
+	(new Prueba().m1());
 }

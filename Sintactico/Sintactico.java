@@ -1080,7 +1080,7 @@ public class Sintactico {
             NodoExpresion expresion = expresion();
             arreglo.establecerEncadenado(expresion);
             aux.matcheo("]");
-            expresion.establecerTipo(tArray);
+            arreglo.establecerTipo(tArray);
             return arreglo;
         }
     }

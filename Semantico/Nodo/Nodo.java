@@ -51,6 +51,11 @@ public class Nodo {
         return this.tipo;
     }
 
+    // Todo nodo debe resolver a algun tipo, este metodo debe implementar la forma de obtenerlo
+    public Tipo obtenerTipoEncadenado(Tipo tipo){
+        return this.tipo;
+    }
+
     // Este metodo se utiliza cuando se requiere separar la obtencion de tipos primitivos y clases
     public Tipo obtenerTipoClase(){
         return this.tipo;

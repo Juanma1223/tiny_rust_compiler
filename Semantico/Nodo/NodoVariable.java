@@ -5,6 +5,7 @@ import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Variable;
 
 public class NodoVariable extends NodoExpresion {
@@ -20,68 +21,74 @@ public class NodoVariable extends NodoExpresion {
 
     @Override
     public Tipo obtenerTipo() {
-        // Hay un caso raro en el cual la tabla de simbolos no se asigna y por tanto se
-        // hace en este punto
-        if (this.tablaDeSimbolos == null) {
-            this.tablaDeSimbolos = padre.tablaDeSimbolos;
-        }
-        // Cuando tenemos un encadenado nos interesa retornar el tipo que resuelve dicho
-        // encadenado
-        if (this.encadenado != null) {
-            return encadenado.obtenerTipo();
-        }
-        // El tipo aun no esta definido, lo buscamos en la tabla de simbolos
         if (this.tipo == null) {
-            Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
-                    token);
-            if (infoVariable.obtenerTipo() == null) {
-                // Si el atributo sigue siendo nulo, es posible que estemos en un encadenado y
-                // que la clase contenedora
-                // sea la clase referencia del padre
-                Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(padre.obtenerTipoClase().obtenerTipo());
-                infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(new Funcion(), infoClase,
-                        token);
-                if (infoVariable.obtenerTipo() == null) {
-                    // Si el tipo sigue siendo nulo, entonces la vari6able no se encuentra definida
-                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
-                    return new Tipo(null);
+            // Hay casos donde no se asigna la tabla de simbolos, si este es el caso
+            // la buscamos en el padre o ancestros mediante el metodo heredado
+            // obtenerTablaDeSimbolos
+            if (this.tablaDeSimbolos == null) {
+                this.tablaDeSimbolos = obtenerTablaDeSimbolos();
+            }
+
+            if (token.obtenerLexema().equals("self")) {
+                Tipo tSelf = new TipoReferencia(claseContenedora.obtenerNombre());
+                this.tipo = tSelf;
+                if (this.encadenado != null) {
+                    this.tipo = this.encadenado.obtenerTipoEncadenado(tSelf);
+                    return this.tipo;
                 } else {
-                    return infoVariable.obtenerTipo();
+                    return this.tipo;
                 }
             } else {
-                this.tipo = infoVariable.obtenerTipo();
-                return this.tipo;
+                Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
+                    token);
+                if (infoVariable.obtenerTipo() == null) {
+                    // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                         "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
+                    return new Tipo(null);
+                }
+                Tipo tVar = infoVariable.obtenerTipo();
+                this.tipo = tVar;
+                if (this.encadenado != null) {
+                    if(this.encadenado instanceof NodoArreglo){
+                        this.encadenado.checkeoTipos();
+                        return this.tipo;
+                    } else {
+                        this.tipo = this.encadenado.obtenerTipoEncadenado(tVar);
+                        return this.tipo;
+                    }
+                } else {
+                    return this.tipo;
+                }
+
             }
         } else {
             return this.tipo;
         }
     }
 
-    // Esta funcion es utilizada cuando el tipo de la variable es una clase
-    public Tipo obtenerTipoClase() {
-        // El tipo aun no esta definido, lo buscamos en la tabla de simbolos
-        if (this.tipo == null) {
-            Variable infoVariable = this.obtenerTablaDeSimbolos().obtenerVarEnAlcanceActual(metodoContenedor,
-                    claseContenedora,
-                    token);
-            if (infoVariable.obtenerTipo() == null) {
-                // Si el atributo sigue siendo nulo, es posible que estemos en un encadenado y
-                // que la clase contenedora
-                // sea la clase referencia del padre
-                Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(padre.obtenerTipoClase().obtenerTipo());
-                infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(new Funcion(), infoClase,
-                        token);
-                if (infoVariable.obtenerTipo() == null) {
-                    // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
-                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
-                    return new Tipo(null);
-                } else {
-                    return infoVariable.obtenerTipo();
-                }
+    @Override
+    public Tipo obtenerTipoEncadenado(Tipo tipoPadre) {
+        if (this.tablaDeSimbolos == null) {
+            this.tablaDeSimbolos = obtenerTablaDeSimbolos();
+        }
+        // La variable debe estar definida en la clase del tipoPadre
+        Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoPadre.obtenerTipo());
+        Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(new Funcion(), infoClase, token);
+        if (infoVariable.obtenerTipo() == null) {
+            // Si el tipo es nulo, entonces la variable no se encuentra definida
+            new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
+            return new Tipo(null);
+        }
+        Tipo tVar = infoVariable.obtenerTipo();
+        this.tipo = tVar;
+        if (this.encadenado != null) {
+            if(this.encadenado instanceof NodoArreglo){
+                this.encadenado.checkeoTipos();
+                return this.tipo;
             } else {
-                this.tipo = infoVariable.obtenerTipo();
+                this.tipo = this.encadenado.obtenerTipoEncadenado(tVar);
                 return this.tipo;
             }
         } else {
@@ -91,9 +98,7 @@ public class NodoVariable extends NodoExpresion {
 
     @Override
     public void checkeoTipos() {
-        if (this.encadenado != null) {
-            this.encadenado.checkeoTipos();
-        }
+        this.obtenerTipo();
     }
 
     @Override

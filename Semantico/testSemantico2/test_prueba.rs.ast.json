@@ -9,6 +9,37 @@
 "Bloque":{
 "Sentencias":[
 {
+"Nodo":"NodoAsignacion",
+"operador":"=",
+"hijos":[
+{
+"Nodo":"NodoVariable",
+"valor":"self",
+"encadenado":{
+"Nodo":"NodoVariable",
+"valor":"nombre"
+
+}
+
+},
+{
+"Nodo":"NodoLiteral",
+"valor":"pepe"
+
+}
+]
+
+}
+]
+
+}
+}
+,
+{
+"nombre":"m1",
+"Bloque":{
+"Sentencias":[
+{
 }
 ]
 
@@ -32,10 +63,11 @@
 "Bloque":{
 "Sentencias":[
 {
-"Nodo":"NodoArreglo",
+"Nodo":"NodoLlamadaMetodo",
+"valor":"Prueba",
 "encadenado":{
-"Nodo":"NodoLiteral",
-"valor":"3"
+"Nodo":"NodoLlamadaMetodo",
+"valor":"m1"
 
 }
 
