@@ -79,6 +79,7 @@ public class Lexico {
                     filaActual = automataIdentificador.obtenerFila();
                     columnaActual = automataIdentificador.obtenerColumna();
                     leyendo = false;
+                    return token;
                 }
 
                 // Si encontramos un caracter que corresponda a un simbolo, se trata de un
@@ -92,6 +93,7 @@ public class Lexico {
                     filaActual = automataOperador.obtenerFila();
                     columnaActual = automataOperador.obtenerColumna();
                     leyendo = false;
+                    return token;
                 }
 
                 // Si encontramos una / puede ser un operador o un comentario
@@ -109,6 +111,7 @@ public class Lexico {
                         columnaActual = automataComentario.obtenerColumna();
 
                         leyendo = false;
+                        return sigToken(sinConsumir);
                     }
                     else { // sino es un operador
                         lector.reset();
@@ -120,6 +123,7 @@ public class Lexico {
                         columnaActual = automataOperador.obtenerColumna();
 
                         leyendo = false;
+                        return token;
                     }
                 }
 
@@ -136,6 +140,7 @@ public class Lexico {
                     columnaActual = automataLiteral.obtenerColumna();
 
                     leyendo = false;
+                    return token;
                 }
             } //modificamos el else a continuacion para leer crlf de Windows (ASCII 13 10)
             else {
