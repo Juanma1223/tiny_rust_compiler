@@ -5,6 +5,7 @@ import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Variable;
 
@@ -51,8 +52,14 @@ public class NodoVariable extends NodoExpresion {
                 this.tipo = tVar;
                 if (this.encadenado != null) {
                     if(this.encadenado instanceof NodoArreglo){
-                        this.encadenado.checkeoTipos();
-                        return this.tipo;
+                        if(tVar instanceof TipoArreglo){
+                            this.encadenado.checkeoTipos();
+                            return this.tipo;
+                        } else {
+                            new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "La variable " + token.obtenerLexema() + 
+                            " no es de tipo arreglo", true);
+                            return new Tipo(null);
+                        }
                     } else {
                         this.tipo = this.encadenado.obtenerTipoEncadenado(tVar);
                         return this.tipo;
@@ -85,8 +92,14 @@ public class NodoVariable extends NodoExpresion {
         this.tipo = tVar;
         if (this.encadenado != null) {
             if(this.encadenado instanceof NodoArreglo){
-                this.encadenado.checkeoTipos();
-                return this.tipo;
+                if(tVar instanceof TipoArreglo){
+                    this.encadenado.checkeoTipos();
+                    return this.tipo;
+                } else {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "La variable " + token.obtenerLexema() + 
+                    " no es de tipo arreglo", true);
+                    return new Tipo(null);
+                }
             } else {
                 this.tipo = this.encadenado.obtenerTipoEncadenado(tVar);
                 return this.tipo;

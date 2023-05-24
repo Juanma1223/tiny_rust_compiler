@@ -5,6 +5,7 @@ import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoArreglo;
 
 public class NodoAsignacion extends NodoExpresion{
     private NodoExpresion ladoIzq;
@@ -40,8 +41,15 @@ public class NodoAsignacion extends NodoExpresion{
         ladoDer.checkeoTipos();
         Tipo tipoIzq = ladoIzq.obtenerTipo();
         Tipo tipoDer = ladoDer.obtenerTipo();
+        if(ladoDer instanceof NodoArreglo){
+            if (!(tipoIzq instanceof TipoArreglo)){
+                new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(), 
+                "Los tipos de la asignacion no coinciden!",true);
+            }
+        }
         if(!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())){
-            new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(), "Los tipos de la asignacion no coinciden!",true);
+            new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(), 
+            "Los tipos de la asignacion no coinciden!",true);
         }
         this.establecerTipo(tipoDer);
     }
