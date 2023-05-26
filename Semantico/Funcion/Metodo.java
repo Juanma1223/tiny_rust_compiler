@@ -2,6 +2,7 @@ package Semantico.Funcion;
 
 import java.util.HashMap;
 
+import Lexico.Token;
 import Semantico.Tipo.Tipo;
 import Semantico.Variable.Parametro;
 
@@ -11,7 +12,7 @@ public class Metodo extends Funcion {
     private int posicion;
     private int fila, columna;
 
-    public Metodo(String nombre, boolean esEstatico) {
+    public Metodo(String nombre, boolean esEstatico ) {
         this.nombre = nombre;
         this.esEstatico = esEstatico;
     }

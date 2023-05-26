@@ -80,13 +80,13 @@ public class TablaDeSimbolos {
     }
 
     public void insertarClaseObject() {
-        Clase cObject = new Clase("Object");
+        Clase cObject = new Clase("Object",null);
         cObject.establecerHerencia(null);
         this.clases.put("Object", cObject);
     }
 
     public void insertarClaseIO() {
-        Clase cIO = new Clase("IO");
+        Clase cIO = new Clase("IO",null);
         cIO.establecerHerencia("Object");
 
         cIO.insertarMetodo(new Metodo("out_string", true, tVoid));
@@ -116,19 +116,19 @@ public class TablaDeSimbolos {
     }
 
     public void insertarClasesPrimitivas() {
-        Clase cChar = new Clase("Char");
+        Clase cChar = new Clase("Char",null);
         cChar.establecerHerencia("Object");
         this.clases.put("Char", cChar);
 
-        Clase cI32 = new Clase("I32");
+        Clase cI32 = new Clase("I32",null);
         cI32.establecerHerencia("Object");
         this.clases.put("I32", cI32);
 
-        Clase cBool = new Clase("Bool");
+        Clase cBool = new Clase("Bool",null);
         cBool.establecerHerencia("Object");
         this.clases.put("Bool", cBool);
 
-        Clase cStr = new Clase("Str");
+        Clase cStr = new Clase("Str",null);
         cStr.establecerHerencia("Object");
         cStr.insertarMetodo(new Metodo("length", false, tI32));
         cStr.insertarMetodo(new Metodo("concat", false, tStr));
@@ -138,7 +138,7 @@ public class TablaDeSimbolos {
         cStr.obtenerMetodoPorNombre("substr").insertarParametro(new Parametro("l", tI32));
         this.clases.put("Str", cStr);
 
-        Clase cArray = new Clase("Array");
+        Clase cArray = new Clase("Array",null);
         cArray.establecerHerencia("Object");
         cArray.insertarMetodo(new Metodo("length", false, tI32));
         this.clases.put("Array", cArray);

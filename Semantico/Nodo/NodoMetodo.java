@@ -1,6 +1,9 @@
 package Semantico.Nodo;
 
+import java.util.ArrayList;
+
 import Semantico.Clase;
+import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
@@ -9,8 +12,8 @@ public class NodoMetodo extends NodoBloque {
     private String nombre;
     private NodoBloque bloque;
 
-    public NodoMetodo(Funcion metodoContenedor, Clase claseContenedora){
-        super(metodoContenedor,claseContenedora);
+    public NodoMetodo(Funcion metodoContenedor, Clase claseContenedora) {
+        super(metodoContenedor, claseContenedora);
         this.claseContenedora = claseContenedora;
         this.metodoContenedor = metodoContenedor;
     }
@@ -19,8 +22,8 @@ public class NodoMetodo extends NodoBloque {
         this.nombre = nombre;
     }
 
-    public NodoBloque agregarBloque(Funcion metodoContenedor){
-        NodoBloque hijo = new NodoBloque(metodoContenedor,this.claseContenedora);
+    public NodoBloque agregarBloque(Funcion metodoContenedor) {
+        NodoBloque hijo = new NodoBloque(metodoContenedor, this.claseContenedora);
         hijo.establecerPadre(this);
         hijo.establecerTablaDeSimbolos(tablaDeSimbolos);
         this.bloque = hijo;
@@ -28,24 +31,45 @@ public class NodoMetodo extends NodoBloque {
     }
 
     @Override
-    public void checkeoTipos(){
+    public void checkeoTipos() {
         // El bloque puede llegar a ser null
-        if(this.bloque != null){
+        if (this.bloque != null) {
             this.bloque.checkeoTipos();
+        }
+        // Ademas debemos revisar que el bloque tenga un retorno del tipo del metodo
+        if (this.bloque != null && this.obtenerTipo().obtenerTipo() != "void") {
+            ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
+            Boolean tieneRetorno = false;
+            for (NodoSentencia sentencia : sentencias) {
+                if (sentencia instanceof NodoReturn) {
+                    Tipo tipoRetorno = sentencia.obtenerTipo();
+                    if (tipoRetorno.obtenerTipo().equals(this.obtenerTipo().obtenerTipo())) {
+                        tieneRetorno = true;
+                        break;
+                    }
+                }
+            }
+            if (!tieneRetorno) {
+                Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
+                        .obtenerMetodoPorNombre(nombre);
+                new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                        "El metodo " + infoMetodo.obtenerNombre() + " no tiene un retorno de tipo "
+                                + this.obtenerTipo().obtenerTipo(),
+                        true);
+            }
         }
     }
 
     @Override
-    public Tipo obtenerTipo(){
+    public Tipo obtenerTipo() {
         // Si el tipo es nulo, debemos resolverlo usando la tabla de simbolos
-        if(this.tipo == null){
-            Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre()).obtenerMetodoPorNombre(nombre);
+        if (this.tipo == null) {
+            Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
+                    .obtenerMetodoPorNombre(nombre);
             this.tipo = infoMetodo.obtenerTipoRetorno();
         }
         return this.tipo;
     }
-
-
 
     public String toJson() {
         // Construimos el json de forma recursiva

@@ -100,7 +100,7 @@ public class Sintactico {
     }
 
     private void metodoMain() {
-        Clase nuevaClase = new Clase("Fantasma");
+        Clase nuevaClase = new Clase("Fantasma", tablaDeSimbolos);
         nuevaClase.establecerHerencia("Object");
         tablaDeSimbolos.establecerClaseActual(nuevaClase);
         aux.matcheo("fn");
@@ -131,7 +131,7 @@ public class Sintactico {
         Clase checkeoClase = tablaDeSimbolos.obtenerClasePorNombre(tokenActual.obtenerLexema());
         if (checkeoClase == null) {
             Clase nuevaClase = new Clase(tokenActual.obtenerLexema(), tokenActual.obtenerFila(),
-                    tokenActual.obtenerColumna());
+                    tokenActual.obtenerColumna(), tablaDeSimbolos);
             tablaDeSimbolos.establecerClaseActual(nuevaClase);
             restoClase(ASTClase);
             tablaDeSimbolos.insertarClase(nuevaClase);
@@ -1073,10 +1073,11 @@ public class Sintactico {
             encadenadoP(llamadaC);
             return llamadaC;
         } else {
-            //VER QUE HACER CON LA INICIALIZACION DEL ARRAY
+            // VER QUE HACER CON LA INICIALIZACION DEL ARRAY
             Tipo tArray = tipoPrimitivo();
             aux.matcheo("[");
-            NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(), tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
+            NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(),
+                    tablaDeSimbolos.obtenerClaseActual(), aux.tokenActual);
             NodoExpresion expresion = expresion();
             arreglo.establecerEncadenado(expresion);
             aux.matcheo("]");

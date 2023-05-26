@@ -17,6 +17,10 @@ public class NodoBloque extends Nodo {
         this.claseContenedora = claseContenedora;
     }
 
+    public ArrayList<NodoSentencia> obtenerSentencias(){
+        return this.sentencias;
+    }
+
     public NodoSentencia agregarSentencia() {
         NodoSentencia hijo = new NodoSentencia(this.metodoContenedor,this.claseContenedora);
         hijo.establecerPadre(this);

@@ -16,15 +16,18 @@ public class Clase {
     private Constructor constructor = new Constructor();
     private int fila, columna;
     private Boolean tieneConstructor = false;
+    private TablaDeSimbolos tablaDeSimbolos;
 
-    public Clase(String nombre) {
+    public Clase(String nombre, TablaDeSimbolos tablaDeSimbolos) {
         this.nombre = nombre;
+        this.tablaDeSimbolos = tablaDeSimbolos;
     }
 
-    public Clase(String nombre, int fila, int columna) {
+    public Clase(String nombre, int fila, int columna, TablaDeSimbolos tablaDeSimbolos) {
         this.nombre = nombre;
         this.fila = fila;
         this.columna = columna;
+        this.tablaDeSimbolos = tablaDeSimbolos;
     }
 
     public String toJson() {
@@ -206,6 +209,19 @@ public class Clase {
         } else {
             return true;
         }
+    }
+
+    // Este metodo nos indica si esta clase es subclase de otra
+    public Boolean esSubclaseDe(String superclase){
+        Clase clasePadre = tablaDeSimbolos.obtenerClasePorNombre(this.heredaDe);
+        while(clasePadre != null){
+            if(clasePadre.nombre.equals(superclase)){
+                return true;
+            }
+            // Si no lo encontramos en el padre inmediato, buscamos hacia arriba
+            clasePadre = tablaDeSimbolos.obtenerClasePorNombre(clasePadre.heredaDe);
+        }
+        return false;
     }
 
     public int obtenerFila() {
