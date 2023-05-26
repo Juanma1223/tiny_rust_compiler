@@ -19,30 +19,39 @@ public class NodoLiteral extends NodoExpresion{
 
     @Override
     public void checkeoTipos(){
-        if(this.encadenado != null){
-            this.encadenado.checkeoTipos();
-        }
+        this.obtenerTipo();
     }
     
     @Override
     public Tipo obtenerTipo(){
+        Tipo tLit;
+        switch(this.token.obtenerToken()){
+            case "lit_ent":
+            tLit = new TipoPrimitivo("I32");
+            break;
+            case "lit_car":
+            tLit = new TipoPrimitivo("Char");
+            break;
+            case "lit_cad":
+            tLit = new TipoPrimitivo("Str");
+            break;
+            case "p_true":
+            tLit = new TipoPrimitivo("Bool");
+            break;
+            case "p_false":
+            tLit = new TipoPrimitivo("Bool");
+            break;
+            default:
+            tLit = new Tipo("");
+        }
+        //Si el literal tiene un encadenado es porque está dentro
+        //de una expresion parentizada
         if(this.encadenado != null){
-            return this.encadenado.obtenerTipo();
+            this.tipo = this.encadenado.obtenerTipoEncadenado(tLit);
+            return this.tipo;
         }else{
-            switch(this.token.obtenerToken()){
-                case "lit_ent":
-                return new TipoPrimitivo("I32");
-                case "lit_car":
-                return new TipoPrimitivo("Char");
-                case "lit_cad":
-                return new TipoPrimitivo("Str");
-                case "p_true":
-                return new TipoPrimitivo("Bool");
-                case "p_false":
-                return new TipoPrimitivo("Bool");
-                default:
-                return new Tipo("");
-            }
+            this.tipo = tLit;
+            return this.tipo;
         }
     }
 
@@ -50,7 +59,14 @@ public class NodoLiteral extends NodoExpresion{
         // Construimos el json de forma recursiva
         StringBuilder sb = new StringBuilder();
         sb.append("\"Nodo\":").append("\"NodoLiteral\",").append(System.lineSeparator());
-        sb.append("\"valor\":").append("\""+token.obtenerLexema()+"\"").append(System.lineSeparator());
+        if (this.encadenado != null) {
+            sb.append("\"valor\":").append("\"" + token.obtenerLexema() + "\",").append(System.lineSeparator());
+            sb.append("\"encadenado\":{").append(System.lineSeparator());
+            sb.append(this.encadenado.toJson()).append(System.lineSeparator());
+            sb.append("}").append(System.lineSeparator());
+        } else {
+            sb.append("\"valor\":").append("\"" + token.obtenerLexema() + "\"").append(System.lineSeparator());
+        }
         return sb.toString();
     }
 

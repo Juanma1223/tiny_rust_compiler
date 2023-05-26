@@ -130,17 +130,17 @@ public class TablaDeSimbolos {
 
         Clase cStr = new Clase("Str");
         cStr.establecerHerencia("Object");
-        cStr.insertarMetodo(new Metodo("length", true, tI32));
-        cStr.insertarMetodo(new Metodo("concat", true, tStr));
+        cStr.insertarMetodo(new Metodo("length", false, tI32));
+        cStr.insertarMetodo(new Metodo("concat", false, tStr));
         cStr.obtenerMetodoPorNombre("concat").insertarParametro(new Parametro("s", tStr));
-        cStr.insertarMetodo(new Metodo("substr", true, tStr));
+        cStr.insertarMetodo(new Metodo("substr", false, tStr));
         cStr.obtenerMetodoPorNombre("substr").insertarParametro(new Parametro("i", tI32));
         cStr.obtenerMetodoPorNombre("substr").insertarParametro(new Parametro("l", tI32));
         this.clases.put("Str", cStr);
 
         Clase cArray = new Clase("Array");
         cArray.establecerHerencia("Object");
-        cArray.insertarMetodo(new Metodo("length", true, tI32));
+        cArray.insertarMetodo(new Metodo("length", false, tI32));
         this.clases.put("Array", cArray);
     }
 
