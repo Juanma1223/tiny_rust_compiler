@@ -103,11 +103,13 @@ public class Sintactico {
         Clase nuevaClase = new Clase("Fantasma", tablaDeSimbolos);
         nuevaClase.establecerHerencia("Object");
         tablaDeSimbolos.establecerClaseActual(nuevaClase);
+        Token tokenActual = aux.tokenActual;
         aux.matcheo("fn");
         aux.matcheo("main");
         aux.matcheo("(");
         aux.matcheo(")");
-        Metodo nuevoMetodo = new Metodo("main", false);
+        Metodo nuevoMetodo = new Metodo("main", false,
+        tokenActual.obtenerFila(),tokenActual.obtenerColumna());
         nuevoMetodo.establecerTipoRetorno(new TipoVoid("void"));
         tablaDeSimbolos.establecerMetodoActual(nuevoMetodo);
         // Creamos el árbol de la clase Fantasma que contiene a main

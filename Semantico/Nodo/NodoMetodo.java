@@ -72,7 +72,7 @@ public class NodoMetodo extends NodoBloque {
                             true);
                 }
             }
-        } else {
+        } else if (this.nombre.equals("main")){
             if (this.bloque != null) {
                 ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
                 Boolean tieneRetorno = false;
@@ -83,8 +83,10 @@ public class NodoMetodo extends NodoBloque {
                     }
                 }
                 if (tieneRetorno) {
-                    new ErrorSemantico(aux.obtenerFila(), aux.obtenerColumna(),
-                            "Este metodo no puede tener una sentencia de retorno.",
+                    Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
+                            .obtenerMetodoPorNombre(nombre);
+                    new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                            "El metodo main no puede tener una sentencia de retorno.",
                             true);
                 }
             }
