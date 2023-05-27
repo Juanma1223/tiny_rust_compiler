@@ -6,6 +6,7 @@ import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
+import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoReferencia;
 
 public class NodoAsignacion extends NodoExpresion {
@@ -41,25 +42,41 @@ public class NodoAsignacion extends NodoExpresion {
         ladoDer.checkeoTipos();
         Tipo tipoIzq = ladoIzq.obtenerTipo();
         Tipo tipoDer = ladoDer.obtenerTipo();
-        if (ladoDer instanceof NodoArreglo) {
-            if (!(tipoIzq instanceof TipoArreglo)) {
+        if(tipoIzq instanceof TipoPrimitivo) {
+            if(tipoDer instanceof TipoPrimitivo) {
+                if (!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())) {
+                    new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                            "Los tipos de la asignacion no coinciden!", true);
+                }
+            } else {
                 new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
-                        "Los tipos de la asignacion no coinciden!", true);
+                            "Los tipos de la asignacion no coinciden!", true);
+            }
+        } else if(tipoIzq instanceof TipoReferencia) {
+            if(tipoDer instanceof TipoReferencia) {
+                Clase infoClaseDer = tablaDeSimbolos.obtenerClasePorNombre(tipoDer.obtenerTipo());
+                if (!infoClaseDer.esSubclaseDe(tipoIzq.obtenerTipo())) {
+                    if (!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())) {
+                        new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                            "Los tipos de la asignacion no coinciden!", true);
+                    }
+                }
+            } else {
+                new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                            "Los tipos de la asignacion no coinciden!", true);
+            }
+        } else if(tipoIzq instanceof TipoArreglo) {
+            if(tipoDer instanceof TipoArreglo) {
+                if(!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())){
+                    new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                            "Los tipos de la asignacion no coinciden!", true);
+                }
+            } else {
+                new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                            "Los tipos de la asignacion no coinciden!", true);
             }
         }
-        // Verificamos el caso de polimorfismo
-        if (tipoIzq instanceof TipoReferencia && tipoDer instanceof TipoReferencia) {
-            Clase infoClaseDer = tablaDeSimbolos.obtenerClasePorNombre(tipoDer.obtenerTipo());
-            if (!infoClaseDer.esSubclaseDe(tipoIzq.obtenerTipo())) {
-                new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
-                        "Los tipos de la asignacion no coinciden!", true);
-            }
-        }else{
-            if (!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())) {
-                new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
-                        "Los tipos de la asignacion no coinciden!", true);
-            }
-        }
+        
         this.establecerTipo(tipoDer);
     }
 

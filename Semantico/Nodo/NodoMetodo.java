@@ -36,26 +36,25 @@ public class NodoMetodo extends NodoBloque {
         if (this.bloque != null) {
             this.bloque.checkeoTipos();
         }
-        // Ademas debemos revisar que el bloque tenga un retorno del tipo del metodo
-        if (this.bloque != null && this.obtenerTipo().obtenerTipo() != "void") {
-            ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
-            Boolean tieneRetorno = false;
-            for (NodoSentencia sentencia : sentencias) {
-                if (sentencia instanceof NodoReturn) {
-                    Tipo tipoRetorno = sentencia.obtenerTipo();
-                    if (tipoRetorno.obtenerTipo().equals(this.obtenerTipo().obtenerTipo())) {
+        // Ademas debemos revisar que el bloque del metodo tenga un retorno
+        // Salvo el constructor
+        if (!(this.nombre.equals("constructor"))){
+            if (this.bloque != null && this.obtenerTipo().obtenerTipo() != "void") {
+                ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
+                Boolean tieneRetorno = false;
+                for (NodoSentencia sentencia : sentencias) {
+                    if (sentencia instanceof NodoReturn) {
                         tieneRetorno = true;
                         break;
                     }
                 }
-            }
-            if (!tieneRetorno) {
-                Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
-                        .obtenerMetodoPorNombre(nombre);
-                new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
-                        "El metodo " + infoMetodo.obtenerNombre() + " no tiene un retorno de tipo "
-                                + this.obtenerTipo().obtenerTipo(),
-                        true);
+                if (!tieneRetorno) {
+                    Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
+                            .obtenerMetodoPorNombre(nombre);
+                    new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                            "El metodo " + infoMetodo.obtenerNombre() + " no tiene la sentencia de retorno.",
+                            true);
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
+import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Variable;
 
@@ -54,6 +55,7 @@ public class NodoVariable extends NodoExpresion {
                     if(this.encadenado instanceof NodoArreglo){
                         if(tVar instanceof TipoArreglo){
                             this.encadenado.checkeoTipos();
+                            this.tipo = new TipoPrimitivo(this.tipo.obtenerTipo());
                             return this.tipo;
                         } else {
                             new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "La variable " + token.obtenerLexema() + 
@@ -94,6 +96,7 @@ public class NodoVariable extends NodoExpresion {
             if(this.encadenado instanceof NodoArreglo){
                 if(tVar instanceof TipoArreglo){
                     this.encadenado.checkeoTipos();
+                    this.tipo = new TipoPrimitivo(this.tipo.obtenerTipo());
                     return this.tipo;
                 } else {
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "La variable " + token.obtenerLexema() + 

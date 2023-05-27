@@ -528,7 +528,9 @@ public class Sintactico {
                 "id_clase", "new" };
         if (aux.verifico(";")) {
             aux.matcheo(";");
-            return new NodoExpresion(tablaDeSimbolos.obtenerMetodoActual(), tablaDeSimbolos.obtenerClaseActual());
+            NodoExpresion retVoid =  new NodoExpresion(tablaDeSimbolos.obtenerMetodoActual(), tablaDeSimbolos.obtenerClaseActual());
+            retVoid.establecerTipo(new TipoVoid("void"));
+            return retVoid;
         } else {
             if (aux.verifico(ter)) {
                 NodoExpresion retorno = expresion();
@@ -1081,7 +1083,7 @@ public class Sintactico {
             NodoExpresion expresion = expresion();
             arreglo.establecerEncadenado(expresion);
             aux.matcheo("]");
-            arreglo.establecerTipo(tArray);
+            arreglo.establecerTipo(new TipoArreglo(tArray.obtenerTipo()));
             return arreglo;
         }
     }

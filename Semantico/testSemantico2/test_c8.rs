@@ -25,7 +25,7 @@ class Prueba {
             //OPERADOR UNARIO
 			(+-+-++3);
         }
-
+		return a;
     }
 	fn get_a() -> I32 {
 		return (a);

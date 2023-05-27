@@ -9,6 +9,8 @@ import Semantico.Funcion.Funcion;
 import Semantico.Funcion.Metodo;
 import Semantico.Funcion.Constructor;
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoArreglo;
+import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Parametro;
 
@@ -163,10 +165,45 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         for (int i = 0; i < argOrdenados.size(); i++) {
             Tipo tipoArgLlamado = argumentos.get(i).obtenerTipo();
             Tipo tipoArgDeclarado = argOrdenados.get(i).obtenerTipo();
-            if (!tipoArgLlamado.obtenerTipo().equals(tipoArgDeclarado.obtenerTipo())) {
-                new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+            if(tipoArgDeclarado instanceof TipoPrimitivo) {
+                if(tipoArgLlamado instanceof TipoPrimitivo) {
+                    if (!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())) {
+                        new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
+                            true);
+                    }
+                } else {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
                         "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
                         true);
+                }
+            } else if(tipoArgDeclarado instanceof TipoReferencia) {
+                if(tipoArgLlamado instanceof TipoReferencia) {
+                    Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoArgLlamado.obtenerTipo());
+                    if (!infoClase.esSubclaseDe(tipoArgDeclarado.obtenerTipo())) {
+                        if (!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())) {
+                            new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                                "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
+                                true);
+                        }
+                    }
+                } else {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                        "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
+                        true);
+                }
+            } else if(tipoArgDeclarado instanceof TipoArreglo) {
+                if(tipoArgLlamado instanceof TipoArreglo) {
+                    if(!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())){
+                        new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
+                            true);
+                    }
+                } else {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                        "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
+                        true);
+                }
             }
         }
     }

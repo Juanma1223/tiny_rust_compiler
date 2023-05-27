@@ -5,6 +5,10 @@ import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
 import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoArreglo;
+import Semantico.Tipo.TipoPrimitivo;
+import Semantico.Tipo.TipoReferencia;
+import Semantico.Tipo.TipoVoid;
 
 public class NodoReturn extends NodoSentencia {
     private NodoExpresion retorno;
@@ -32,8 +36,44 @@ public class NodoReturn extends NodoSentencia {
         Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre()).obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
         Tipo tipoRetorno = this.obtenerTipo();
         Tipo tipoMetodo = infoMetodo.obtenerTipoRetorno();
-        if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
-            new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(), "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+        if(tipoMetodo instanceof TipoPrimitivo) {
+            if(tipoRetorno instanceof TipoPrimitivo) {
+                if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
+                    new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                    "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+                }
+            } else {
+                new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                    "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+            }
+        } else if(tipoMetodo instanceof TipoReferencia) {
+            if(tipoRetorno instanceof TipoReferencia) {
+                Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoRetorno.obtenerTipo());
+                if (!infoClase.esSubclaseDe(tipoMetodo.obtenerTipo())) {
+                    if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
+                        new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                        "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+                    }
+                }
+            } else {
+                new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                    "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+            }
+        } else if(tipoMetodo instanceof TipoArreglo) {
+            if(tipoRetorno instanceof TipoArreglo) {
+                if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
+                    new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                    "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+                }
+            } else {
+                new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                    "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+            }
+        } else {
+            if(!(tipoRetorno instanceof TipoVoid)) {
+                new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                    "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+            }
         }
     }
 
