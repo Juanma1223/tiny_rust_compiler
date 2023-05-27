@@ -2,7 +2,6 @@ package Semantico.Funcion;
 
 import java.util.HashMap;
 
-import Lexico.Token;
 import Semantico.Tipo.Tipo;
 import Semantico.Variable.Parametro;
 
