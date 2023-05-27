@@ -38,20 +38,35 @@ public class NodoMetodo extends NodoBloque {
         }
         // Ademas debemos revisar que el bloque del metodo tenga un retorno
         // Salvo el constructor
-        if (!(this.nombre.equals("constructor"))){
+        if (!(this.nombre.equals("constructor") || this.nombre.equals("main"))){
             if (this.bloque != null && this.obtenerTipo().obtenerTipo() != "void") {
                 ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
                 Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
                             .obtenerMetodoPorNombre(nombre);
-                for (int i = 0; i < sentencias.size()-1; i++) {
-                    if (sentencias.get(i) instanceof NodoReturn) {
+                int s = sentencias.size();
+                if(s>1){
+                    for (int i = 0; i < s-1; i++) {
+                        if (sentencias.get(i) instanceof NodoReturn) {
+                            new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                                "El metodo " + infoMetodo.obtenerNombre() + " tiene sentencia de retorno dentro del metodo." +
+                                " La sentencia de retorno debe estar al final.",
+                                true);
+                        }
+                    }
+                    if (!(sentencias.get(s-1) instanceof NodoReturn)) {
                         new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
-                            "El metodo " + infoMetodo.obtenerNombre() + " tiene sentencia de retorno dentro del metodo." +
-                            " La sentencia de retorno debe estar al final.",
+                                "El metodo " + infoMetodo.obtenerNombre() + " no tiene sentencia de retorno al final del metodo.",
+                                true);
+                    }
+                }
+                else if (s == 1) {
+                    if (!(sentencias.get(s-1) instanceof NodoReturn)) {
+                    new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                            "El metodo " + infoMetodo.obtenerNombre() + " no tiene sentencia de retorno al final del metodo.",
                             true);
                     }
                 }
-                if (!(sentencias.get(sentencias.size()-1) instanceof NodoReturn)) {
+                else {
                     new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
                             "El metodo " + infoMetodo.obtenerNombre() + " no tiene sentencia de retorno al final del metodo.",
                             true);
@@ -69,7 +84,7 @@ public class NodoMetodo extends NodoBloque {
                 }
                 if (tieneRetorno) {
                     new ErrorSemantico(aux.obtenerFila(), aux.obtenerColumna(),
-                            "El constructor no puede tener una sentencia de retorno.",
+                            "Este metodo no puede tener una sentencia de retorno.",
                             true);
                 }
             }
