@@ -187,6 +187,7 @@ public class Sintactico {
             if (aux.verifico("create")) {
                 NodoMetodo ASTMetodo = ASTClase.agregarMetodo(tablaDeSimbolos.obtenerMetodoActual(),
                         tablaDeSimbolos.obtenerClaseActual());
+                ASTMetodo.aux = aux.tokenActual;
                 constructor(ASTMetodo);
             } else {
                 if (aux.verifico(ter1)) {
@@ -1075,7 +1076,6 @@ public class Sintactico {
             encadenadoP(llamadaC);
             return llamadaC;
         } else {
-            // VER QUE HACER CON LA INICIALIZACION DEL ARRAY
             Tipo tArray = tipoPrimitivo();
             aux.matcheo("[");
             NodoArreglo arreglo = new NodoArreglo(tablaDeSimbolos.obtenerMetodoActual(),

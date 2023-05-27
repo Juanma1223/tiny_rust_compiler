@@ -12,6 +12,8 @@
 "Nodo":"NodoRetorno",
 "hijos":[
 {
+"Nodo":"NodoVariable",
+"valor":"a"
 
 }
 ]

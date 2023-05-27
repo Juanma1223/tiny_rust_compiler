@@ -1,12 +1,13 @@
 
 class Prueba {
-	fn suma() -> void {
+	fn suma() -> I32 {
 		I32 : a;
 		Bool : b;
 		Char : c;
 		Array Str : d;
 		Prueba : e;
-		return ;
+		return a;
+		
 	}
 }
 fn main () {

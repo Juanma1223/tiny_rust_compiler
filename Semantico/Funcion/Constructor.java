@@ -3,6 +3,7 @@ package Semantico.Funcion;
 import java.util.HashMap;
 
 import Semantico.Tipo.Tipo;
+import Semantico.Tipo.TipoReferencia;
 import Semantico.Variable.Parametro;
 
 public class Constructor extends Funcion {
@@ -26,6 +27,6 @@ public class Constructor extends Funcion {
     }
 
     public Tipo obtenerTipoRetorno(){
-        return new Tipo(nombre);
+        return new TipoReferencia(nombre);
     }
 }
