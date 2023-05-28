@@ -35,6 +35,11 @@ public class NodoReturn extends NodoSentencia {
         // Debemos comprobar que el metodo retorna el mismo tipo que la expresion de retorno
         Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre()).obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
         if(infoMetodo != null){
+            if(infoMetodo.obtenerNombre().equals("main")) {
+                new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                            "El metodo main no puede tener una sentencia de retorno.",
+                            true);
+            }
             Tipo tipoRetorno = this.obtenerTipo();
             Tipo tipoMetodo = infoMetodo.obtenerTipoRetorno();
             if(tipoMetodo instanceof TipoPrimitivo) {
