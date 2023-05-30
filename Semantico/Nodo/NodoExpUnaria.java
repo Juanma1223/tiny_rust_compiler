@@ -78,4 +78,30 @@ public class NodoExpUnaria extends NodoExpresion {
         sb.append("]").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        ladoDer.genCodigo();
+        genCodigoOperador();
+        return sb.toString();
+    }
+
+    public String genCodigoOperador() {
+        StringBuilder sb = new StringBuilder();
+        switch(this.operador.obtenerLexema()){
+            //Operaciones aritmeticas unarias
+            case "+":
+            sb.append("addiu $a0, $a0, 1");
+            break;
+            case "-":
+            sb.append("addiu $a0, $a0, -1");
+            break;
+            case "!":
+            sb.append("xori $a0, $a0, 1");
+            break;
+        }
+        return sb.toString();
+    }
+
 }

@@ -114,4 +114,75 @@ public class NodoExpBinaria extends NodoExpresion {
         return sb.toString();
     }
 
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        ladoIzq.genCodigo();
+        sb.append("sw $a0, 0($sp)");
+        sb.append("addiu $sp, $sp, -4");
+        ladoDer.genCodigo();
+        sb.append("lw $t1, 4($sp)");
+        genCodigoOperador();
+        sb.append("addiu $sp, $sp, 4");
+        return sb.toString();
+    }
+
+    public String genCodigoOperador() {
+        StringBuilder sb = new StringBuilder();
+        switch(this.operador.obtenerLexema()){
+            //Operaciones aritmeticas
+            case "+":
+            sb.append("add $a0, $t1, $a0");
+            break;
+            case "-":
+            sb.append("sub $a0, $t1, $a0");
+            break;
+            case "*":
+            sb.append("mul $a0, $t1, $a0");
+            break;
+            case "/":
+            sb.append("div $t1, $a0"); //recuperar Lo
+            sb.append("mflo $a0");
+            break;
+            case "%":
+            sb.append("div $t1, $a0"); //recuperar Hi
+            sb.append("mfhi $a0");
+            break;
+            //Operaciones logicas relacionales
+            case "<":
+            sb.append("slt $a0, $t1, $a0"); //izq < der
+            break;
+            case "<=":
+            sb.append("slt $a0, $a0, $t1"); // !(der < izq)
+            sb.append("xori $a0, $a0, 1");
+            break;
+            case ">":
+            sb.append("slt $a0, $a0, $t1"); //der < izq
+            break;
+            case ">=":
+            sb.append("slt $a0, $t1, $a0"); // !(izq < der)
+            sb.append("xori $a0, $a0, 1");
+            break;
+            //Operaciones logicas && y ||
+            case "&&":
+            sb.append("and $a0, $t1, $a0");
+            break;
+            case "||":
+            sb.append("or $a0, $t1, $a0");
+            break;
+            //Operaciones == y !=
+            case "==":
+            sb.append("xor $a0, $t1, $a0");
+            sb.append("sltu $a0, $a0, 1");
+            break;
+            case "!=":
+            sb.append("xor $a0, $t1, $a0");
+            sb.append("sltu $a0, $0, $a0");
+            break;
+            default:
+            sb.append("");
+        }
+        return sb.toString();
+    }
+
 }

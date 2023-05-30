@@ -48,6 +48,10 @@ public class Semantico {
         return this.tablaDeSimbolos;
     }
 
+    public NodoAST obtenerAST() {
+        return this.AST;
+    }
+
     private void consolidarTS() {
         chequeoTipos();
         establecerClases();
