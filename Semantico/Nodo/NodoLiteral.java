@@ -73,7 +73,7 @@ public class NodoLiteral extends NodoExpresion{
     @Override
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("li $a0, ").append(token.obtenerLexema());
+        sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
         return sb.toString();
     }
 

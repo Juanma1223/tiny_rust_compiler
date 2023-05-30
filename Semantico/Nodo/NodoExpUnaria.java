@@ -82,8 +82,8 @@ public class NodoExpUnaria extends NodoExpresion {
     @Override
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
-        ladoDer.genCodigo();
-        genCodigoOperador();
+        sb.append(ladoDer.genCodigo()).append(System.lineSeparator());
+        sb.append(genCodigoOperador()).append(System.lineSeparator());
         return sb.toString();
     }
 
@@ -92,13 +92,13 @@ public class NodoExpUnaria extends NodoExpresion {
         switch(this.operador.obtenerLexema()){
             //Operaciones aritmeticas unarias
             case "+":
-            sb.append("addiu $a0, $a0, 1");
+            sb.append("addiu $a0, $a0, 1").append(System.lineSeparator());
             break;
             case "-":
-            sb.append("addiu $a0, $a0, -1");
+            sb.append("addiu $a0, $a0, -1").append(System.lineSeparator());
             break;
             case "!":
-            sb.append("xori $a0, $a0, 1");
+            sb.append("xori $a0, $a0, 1").append(System.lineSeparator());
             break;
         }
         return sb.toString();

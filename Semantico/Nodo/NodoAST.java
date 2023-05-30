@@ -53,4 +53,13 @@ public class NodoAST extends Nodo {
         sb.append("}").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(".text").append(System.lineSeparator());
+        sb.append(".globl main").append(System.lineSeparator()); //main
+        clases.forEach((clase) -> sb.append(clase.genCodigo()).append(System.lineSeparator()));
+        return sb.toString();
+    }
 }

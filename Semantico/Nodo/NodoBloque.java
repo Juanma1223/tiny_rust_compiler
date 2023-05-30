@@ -108,4 +108,11 @@ public class NodoBloque extends Nodo {
         sb.append("]").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        sentencias.forEach((sentencia) -> sb.append(sentencia.genCodigo()).append(System.lineSeparator()));
+        return sb.toString();
+    }
 }

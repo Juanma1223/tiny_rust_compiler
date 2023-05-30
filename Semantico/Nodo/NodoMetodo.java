@@ -117,4 +117,14 @@ public class NodoMetodo extends NodoBloque {
         sb.append("}").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(nombre+":").append(System.lineSeparator());
+        sb.append(bloque.genCodigo()).append(System.lineSeparator());
+        sb.append("li $v0, 10").append(System.lineSeparator()); //exit
+        sb.append("syscall").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

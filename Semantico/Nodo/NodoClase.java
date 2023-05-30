@@ -58,4 +58,11 @@ public class NodoClase extends Nodo {
         return sb.toString();
     }
 
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        metodos.forEach((metodo) -> sb.append(metodo.genCodigo()).append(System.lineSeparator()));
+        return sb.toString();
+    }
+
 }
