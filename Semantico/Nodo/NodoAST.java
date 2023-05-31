@@ -62,4 +62,26 @@ public class NodoAST extends Nodo {
         clases.forEach((clase) -> sb.append(clase.genCodigo()).append(System.lineSeparator()));
         return sb.toString();
     }
+
+    public String genCodigoIO() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("out_i32:").append(System.lineSeparator());
+        sb.append("li $v0, 1").append(System.lineSeparator()); //print_int
+        sb.append("syscall").append(System.lineSeparator());
+
+        sb.append("out_string:").append(System.lineSeparator());
+        sb.append("li $v0, 4").append(System.lineSeparator()); //print_string
+        sb.append("syscall").append(System.lineSeparator());
+
+        sb.append("in_i32:").append(System.lineSeparator());
+        sb.append("li $v0, 5").append(System.lineSeparator()); //read_int
+        sb.append("syscall").append(System.lineSeparator());
+
+        sb.append("in_string:").append(System.lineSeparator());
+        sb.append("li $v0, 8").append(System.lineSeparator()); //read_string
+        sb.append("syscall").append(System.lineSeparator());
+
+        return sb.toString();
+    }
+
 }

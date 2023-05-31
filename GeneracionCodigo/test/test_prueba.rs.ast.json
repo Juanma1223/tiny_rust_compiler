@@ -24,8 +24,20 @@
 
 },
 {
+"Nodo":"NodoExpBinaria",
+"operador":"*",
+"hijos":[
+{
 "Nodo":"NodoLiteral",
 "valor":"2"
+
+},
+{
+"Nodo":"NodoLiteral",
+"valor":"3"
+
+}
+]
 
 }
 ]

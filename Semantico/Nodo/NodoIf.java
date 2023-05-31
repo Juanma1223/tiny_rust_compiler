@@ -80,4 +80,17 @@ public class NodoIf extends NodoSentencia {
         sb.append("]").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(condicion.genCodigo()).append(System.lineSeparator());
+        sb.append("bne $a0, 1, else").append(System.lineSeparator());
+        sb.append(sentenciaThen.genCodigo()).append(System.lineSeparator());
+        sb.append("j endif").append(System.lineSeparator());
+        sb.append("else:").append(System.lineSeparator());
+        sb.append(sentenciaElse.genCodigo()).append(System.lineSeparator());
+        sb.append("endif:").append(System.lineSeparator());
+        return sb.toString();
+    }
 }
