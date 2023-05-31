@@ -73,7 +73,27 @@ public class NodoLiteral extends NodoExpresion{
     @Override
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
-        sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
+        switch(this.token.obtenerToken()){
+            case "lit_ent":
+            sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
+            break;
+            case "lit_car":
+            //implementar
+            break;
+            case "lit_cad":
+            //implementar
+            sb.append("string: .asciiz ").append(token.obtenerLexema());
+            sb.append("la $a0, string").append(System.lineSeparator());
+            break;
+            case "p_true":
+            sb.append("li $a0, 1").append(System.lineSeparator());
+            break;
+            case "p_false":
+            sb.append("li $a0, 0").append(System.lineSeparator());
+            break;
+            default:
+            sb.append("li $a0, 0").append(System.lineSeparator());
+        }
         return sb.toString();
     }
 
