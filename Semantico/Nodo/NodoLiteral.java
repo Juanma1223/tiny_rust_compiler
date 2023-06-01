@@ -78,12 +78,15 @@ public class NodoLiteral extends NodoExpresion{
             sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
             break;
             case "lit_car":
-            //implementar
+            //ver
+            sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
             break;
             case "lit_cad":
-            //implementar
-            sb.append("string: .asciiz ").append(token.obtenerLexema());
-            sb.append("la $a0, string").append(System.lineSeparator());
+            sb.append(".data").append(System.lineSeparator());
+            int numString = tablaDeSimbolos.obtenerLabel();
+            sb.append("string"+numString+": .asciiz ").append(token.obtenerLexema()).append(System.lineSeparator());
+            sb.append("la $a0, string"+numString).append(System.lineSeparator());
+            sb.append(".text").append(System.lineSeparator());
             break;
             case "p_true":
             sb.append("li $a0, 1").append(System.lineSeparator());

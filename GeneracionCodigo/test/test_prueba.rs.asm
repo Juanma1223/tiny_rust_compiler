@@ -1,7 +1,7 @@
 .text
-.globl main
+.globl Fantasma_main
 
-main:
+Fantasma_main:
 li $a0, 1
 
 bne $a0, 1, else1
@@ -87,7 +87,7 @@ j while3
 endwhile3:
 
 
+
+
 li $v0, 10
 syscall
-
-
