@@ -17,6 +17,9 @@ public class TablaDeSimbolos {
     private Funcion metodoActual;
     private HashMap<String, Clase> clases = new HashMap<String, Clase>();
 
+    //Esta variable se utiliza para contar los labels en la generacion de codigo
+    private int contadorLabels = 0;
+
     Tipo tStr = new TipoPrimitivo("Str");
     Tipo tI32 = new TipoPrimitivo("I32");
     Tipo tBool = new TipoPrimitivo("Bool");
@@ -165,5 +168,11 @@ public class TablaDeSimbolos {
             }
         }
         return infoVariable;
+    }
+
+    //Este metodo retorna el numero de label que corresponde aplicar en la generacion de codigo
+    public int obtenerLabel() {
+        this.contadorLabels = this.contadorLabels + 1;
+        return this.contadorLabels;
     }
 }
