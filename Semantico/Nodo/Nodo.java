@@ -39,12 +39,6 @@ public class Nodo {
     public void checkeoTipos(){
         // La implementacion es responsabilidad de cada uno de los nodos
     }
-
-    // Este metodo sera el encargado de revisar la resolucion de nombres una vez que se haya consolidado la tabla de simbolos
-    public void resolucionNombres(){
-        // La implementacion es responsabilidad de cada uno de los nodos
-    }
-
     
     // Todo nodo debe resolver a algun tipo, este metodo debe implementar la forma de obtenerlo
     public Tipo obtenerTipo(){
@@ -53,11 +47,6 @@ public class Nodo {
 
     // Todo nodo debe resolver a algun tipo, este metodo debe implementar la forma de obtenerlo
     public Tipo obtenerTipoEncadenado(Tipo tipo){
-        return this.tipo;
-    }
-
-    // Este metodo se utiliza cuando se requiere separar la obtencion de tipos primitivos y clases
-    public Tipo obtenerTipoClase(){
         return this.tipo;
     }
 
@@ -79,5 +68,11 @@ public class Nodo {
 
     public Token obtenerToken(){
         return this.token;
+    }
+
+    //Este metodo sera el encargado de generar el codigo en cada nodo del AST
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        return sb.toString();
     }
 }

@@ -65,4 +65,17 @@ public class NodoWhile extends NodoSentencia {
         sb.append("]").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        int numWhile = tablaDeSimbolos.obtenerLabel();
+        sb.append("while"+numWhile+":").append(System.lineSeparator());
+        sb.append(condicion.genCodigo()).append(System.lineSeparator());
+        sb.append("bne $a0, 1, endwhile"+numWhile).append(System.lineSeparator());
+        sb.append(bloqueW.genCodigo()).append(System.lineSeparator());
+        sb.append("j while"+numWhile).append(System.lineSeparator());
+        sb.append("endwhile"+numWhile+":").append(System.lineSeparator());
+        return sb.toString();
+    }
 }

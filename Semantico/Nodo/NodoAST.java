@@ -53,4 +53,37 @@ public class NodoAST extends Nodo {
         sb.append("}").append(System.lineSeparator());
         return sb.toString();
     }
+
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(".text").append(System.lineSeparator());
+        sb.append(".globl Fantasma_main").append(System.lineSeparator()); //main
+        clases.forEach((clase) -> sb.append(clase.genCodigo()).append(System.lineSeparator()));
+        sb.append("li $v0, 10").append(System.lineSeparator()); //exit
+        sb.append("syscall").append(System.lineSeparator());
+        return sb.toString();
+    }
+
+    public String genCodigoIO() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("IO_out_i32:").append(System.lineSeparator());
+        sb.append("li $v0, 1").append(System.lineSeparator()); //print_int
+        sb.append("syscall").append(System.lineSeparator());
+
+        sb.append("IO_out_string:").append(System.lineSeparator());
+        sb.append("li $v0, 4").append(System.lineSeparator()); //print_string
+        sb.append("syscall").append(System.lineSeparator());
+
+        sb.append("IO_in_i32:").append(System.lineSeparator());
+        sb.append("li $v0, 5").append(System.lineSeparator()); //read_int
+        sb.append("syscall").append(System.lineSeparator());
+
+        sb.append("IO_in_string:").append(System.lineSeparator());
+        sb.append("li $v0, 8").append(System.lineSeparator()); //read_string
+        sb.append("syscall").append(System.lineSeparator());
+
+        return sb.toString();
+    }
+
 }

@@ -70,4 +70,34 @@ public class NodoLiteral extends NodoExpresion{
         return sb.toString();
     }
 
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        switch(this.token.obtenerToken()){
+            case "lit_ent":
+            sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
+            break;
+            case "lit_car":
+            //ver
+            sb.append("li $a0, ").append(token.obtenerLexema()).append(System.lineSeparator());
+            break;
+            case "lit_cad":
+            sb.append(".data").append(System.lineSeparator());
+            int numString = tablaDeSimbolos.obtenerLabel();
+            sb.append("string"+numString+": .asciiz ").append(token.obtenerLexema()).append(System.lineSeparator());
+            sb.append("la $a0, string"+numString).append(System.lineSeparator());
+            sb.append(".text").append(System.lineSeparator());
+            break;
+            case "p_true":
+            sb.append("li $a0, 1").append(System.lineSeparator());
+            break;
+            case "p_false":
+            sb.append("li $a0, 0").append(System.lineSeparator());
+            break;
+            default:
+            sb.append("li $a0, 0").append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
+
 }

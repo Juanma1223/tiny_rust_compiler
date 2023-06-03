@@ -114,4 +114,75 @@ public class NodoExpBinaria extends NodoExpresion {
         return sb.toString();
     }
 
+    @Override
+    public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ladoIzq.genCodigo()).append(System.lineSeparator());
+        sb.append("sw $a0, 0($sp)").append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, -4").append(System.lineSeparator());
+        sb.append(ladoDer.genCodigo()).append(System.lineSeparator());
+        sb.append("lw $t1, 4($sp)").append(System.lineSeparator());
+        sb.append(genCodigoOperador()).append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, 4").append(System.lineSeparator());
+        return sb.toString();
+    }
+
+    public String genCodigoOperador() {
+        StringBuilder sb = new StringBuilder();
+        switch(this.operador.obtenerLexema()){
+            //Operaciones aritmeticas
+            case "+":
+            sb.append("add $a0, $t1, $a0").append(System.lineSeparator());
+            break;
+            case "-":
+            sb.append("sub $a0, $t1, $a0").append(System.lineSeparator());
+            break;
+            case "*":
+            sb.append("mul $a0, $t1, $a0").append(System.lineSeparator());
+            break;
+            case "/":
+            sb.append("div $t1, $a0").append(System.lineSeparator()); //recuperar Lo
+            sb.append("mflo $a0").append(System.lineSeparator());
+            break;
+            case "%":
+            sb.append("div $t1, $a0").append(System.lineSeparator()); //recuperar Hi
+            sb.append("mfhi $a0").append(System.lineSeparator());
+            break;
+            //Operaciones logicas relacionales
+            case "<":
+            sb.append("slt $a0, $t1, $a0").append(System.lineSeparator()); //izq < der
+            break;
+            case "<=":
+            sb.append("slt $a0, $a0, $t1").append(System.lineSeparator()); // !(der < izq)
+            sb.append("xori $a0, $a0, 1").append(System.lineSeparator());
+            break;
+            case ">":
+            sb.append("slt $a0, $a0, $t1").append(System.lineSeparator()); //der < izq
+            break;
+            case ">=":
+            sb.append("slt $a0, $t1, $a0").append(System.lineSeparator()); // !(izq < der)
+            sb.append("xori $a0, $a0, 1").append(System.lineSeparator());
+            break;
+            //Operaciones logicas && y ||
+            case "&&":
+            sb.append("and $a0, $t1, $a0").append(System.lineSeparator());
+            break;
+            case "||":
+            sb.append("or $a0, $t1, $a0").append(System.lineSeparator());
+            break;
+            //Operaciones == y !=
+            case "==":
+            sb.append("xor $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("sltu $a0, $a0, 1").append(System.lineSeparator());
+            break;
+            case "!=":
+            sb.append("xor $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("sltu $a0, $0, $a0").append(System.lineSeparator());
+            break;
+            default:
+            sb.append("");
+        }
+        return sb.toString();
+    }
+
 }
