@@ -8,6 +8,7 @@ import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoReferencia;
+import Semantico.Variable.Atributo;
 import Semantico.Variable.Variable;
 
 public class NodoVariable extends NodoExpresion {
@@ -81,16 +82,23 @@ public class NodoVariable extends NodoExpresion {
         if (this.tablaDeSimbolos == null) {
             this.tablaDeSimbolos = obtenerTablaDeSimbolos();
         }
-        // La variable debe estar definida en la clase del tipoPadre
+        // El atributo debe estar definido en la clase del tipoPadre
         Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoPadre.obtenerTipo());
-        Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(new Funcion(), infoClase, token);
-        if (infoVariable.obtenerTipo() == null) {
-            // Si el tipo es nulo, entonces la variable no se encuentra definida
+        Atributo infoAtributo = this.tablaDeSimbolos.obtenerVarEncadenada(infoClase, token);
+        if (infoAtributo.obtenerTipo() == null) {
+            // Si el tipo es nulo, entonces el atributo no se encuentra definido
             new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
+                "El atributo " + token.obtenerLexema() + " no esta definido en el alcance actual",true);
             return new Tipo(null);
+        } else {
+            // Si el atributo es privado entonces no se puede acceder
+            if (infoAtributo.obtenerVisibilidad() == false) {
+                new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                "El atributo " + token.obtenerLexema() + " no se puede acceder porque es privado",true);
+                return new Tipo(null);
+            }
         }
-        Tipo tVar = infoVariable.obtenerTipo();
+        Tipo tVar = infoAtributo.obtenerTipo();
         this.tipo = tVar;
         if (this.encadenado != null) {
             if(this.encadenado instanceof NodoArreglo){

@@ -9,6 +9,7 @@ import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
 import Semantico.Tipo.TipoVoid;
+import Semantico.Variable.Atributo;
 import Semantico.Variable.Parametro;
 import Semantico.Variable.Variable;
 
@@ -165,5 +166,15 @@ public class TablaDeSimbolos {
             }
         }
         return infoVariable;
+    }
+
+    // Este metodo obtiene un atributo de la claseMadre
+    public Atributo obtenerVarEncadenada(Clase claseMadre, Token tokenActual) {
+        Atributo infoAtributo = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+        if (infoAtributo == null) {
+            // El atributo no esta definido para esta clase
+            return new Atributo(tokenActual.obtenerLexema(), null, false);
+        }
+        return infoAtributo;
     }
 }

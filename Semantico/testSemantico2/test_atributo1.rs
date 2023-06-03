@@ -1,7 +1,7 @@
-/*CORRECTO*/
+/*ERROR: LINEA 15 | COLUMNA 5 | El atributo nombre no se puede acceder porque es privado*/
 class Prueba {
 	Array I32: a;
-	pub Str: nombre;
+	Str: nombre;
 
 	fn prueba() -> void {
 		a[1] = 1;

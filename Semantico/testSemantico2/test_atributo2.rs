@@ -1,4 +1,4 @@
-/*CORRECTO*/
+/*ERROR: LINEA 18 | COLUMNA 12 | El atributo apellido no se puede acceder porque es privado*/
 class Prueba {
 	pub Nombre : nombre;
 
@@ -8,7 +8,7 @@ class Prueba {
 }
 
 class Nombre {
-	pub Str : apellido;
+	Str : apellido;
 }
 
 fn main () {
