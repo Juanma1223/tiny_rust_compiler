@@ -158,13 +158,26 @@ public class TablaDeSimbolos {
             infoVariable = metodoPadre.obtenerVariablePorNombre(tokenActual.obtenerLexema());
             if (infoVariable == null) {
                 // Si no encontramos la variable en el metodo que recorre el sintactico
-                // actualmente, la buscamos en la clase
-                infoVariable = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
-                if (infoVariable == null) {
-                    // La variable debe ser asignada luego de consolidar la tabla de simbolos y por
-                    // tanto debe
-                    // ser encontrada luego de realizar la resolucion de nombres
-                    return new Variable(tokenActual.obtenerLexema(), null);
+                // actualmente, puede ser una variable de instancia
+                if(metodoPadre.obtenerNombre() != null) {
+                    // Si el metodo no es el constructor entonces lo casteamos a metodo
+                    Metodo metodoPadre1 = (Metodo)metodoPadre;
+                    // Si el metodo es estatico no puede acceder a variables de instancia
+                    if(metodoPadre1.obtenerEsEstatico() == true) {
+                        return new Variable(tokenActual.obtenerLexema(), null);
+                    } else {
+                        infoVariable = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+                        if (infoVariable == null) {
+                            // La variable no se encuentra en los atributos de la clase madre
+                            return new Variable(tokenActual.obtenerLexema(), null);
+                        }
+                    }
+                } else {
+                    infoVariable = claseMadre.obtenerAtributoPorNombre(tokenActual.obtenerLexema());
+                    if (infoVariable == null) {
+                        // La variable no se encuentra en los atributos de la clase madre
+                        return new Variable(tokenActual.obtenerLexema(), null);
+                    }
                 }
             }
         }

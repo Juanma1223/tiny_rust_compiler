@@ -86,6 +86,12 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                                     + " no esta definido para la clase " + clase,
                             true);
                 }
+                if (infoMetodo.obtenerEsEstatico() == false) {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "El metodo " + token.obtenerLexema()
+                                    + " no esta definido como metodo estatico",
+                            true);
+                }
                 this.checkeoCantArgumentos(infoMetodo);
                 Tipo tMetodoE = infoMetodo.obtenerTipoRetorno();
                 this.tipo = tMetodoE;
@@ -104,6 +110,18 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                             "El metodo " + token.obtenerLexema()
                                     + " no esta definido para la clase " + claseContenedora.obtenerNombre(),
                             true);
+                }
+                // Si no estamos dentro de un constructor hay que verificar que el metodo no sea accedido desde
+                // un metodo estatico
+                if (metodoContenedor.obtenerNombre() != null) {
+                    Metodo metodoPadre = (Metodo)metodoContenedor;
+                    // Si el metodo es estatico no puede acceder a metodos dinamicos
+                    if(metodoPadre.obtenerEsEstatico() == true) {
+                        new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "El metodo " + token.obtenerLexema()
+                                    + " no puede ser accedido desde el metodo " + metodoPadre.obtenerNombre(),
+                            true);
+                    }
                 }
                 this.checkeoCantArgumentos(infoMetodo);
                 Tipo tMetodo = infoMetodo.obtenerTipoRetorno();
