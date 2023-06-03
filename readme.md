@@ -1,7 +1,3 @@
-# Diagrama de clases lexico
+# Diagrama de clases compilador TinyRust+
 
-## https://app.diagrams.net/#G1grRs0qVO1AAXRcOkJwSi4J-KmnTfq8PC
-
-# Diagrama de clases sintactico / semantico
-
-## https://app.diagrams.net/#G1UWRZpO8Y43QnANAVprPCnmMiIzT9cLl6
+## https://drive.google.com/file/d/1grRs0qVO1AAXRcOkJwSi4J-KmnTfq8PC/view?usp=sharing
