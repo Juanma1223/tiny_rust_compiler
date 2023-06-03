@@ -91,11 +91,14 @@ public class NodoVariable extends NodoExpresion {
                 "El atributo " + token.obtenerLexema() + " no esta definido en el alcance actual",true);
             return new Tipo(null);
         } else {
-            // Si el atributo es privado entonces no se puede acceder
-            if (infoAtributo.obtenerVisibilidad() == false) {
-                new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                "El atributo " + token.obtenerLexema() + " no se puede acceder porque es privado",true);
-                return new Tipo(null);
+            // Si la clase padre es distinta de la actual se debe verificar que el atributo sea publico
+            if (!(tipoPadre.obtenerTipo().equals(claseContenedora.obtenerNombre()))) {
+                // Si el atributo es privado entonces no se puede acceder
+                if (infoAtributo.obtenerVisibilidad() == false) {
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                    "El atributo " + token.obtenerLexema() + " no se puede acceder porque es privado",true);
+                    return new Tipo(null);
+                }
             }
         }
         Tipo tVar = infoAtributo.obtenerTipo();
