@@ -122,7 +122,14 @@ public class NodoMetodo extends NodoBloque {
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
         sb.append(claseContenedora.obtenerNombre()+"_"+nombre+":").append(System.lineSeparator());
+        //sb.append("move $fp, $sp").append(System.lineSeparator());
+        //sb.append("sw $ra, 0($sp)").append(System.lineSeparator());
+        //sb.append("addiu $sp, $sp, -4").append(System.lineSeparator());
         sb.append(bloque.genCodigo()).append(System.lineSeparator());
+        //sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
+        //sb.append("addiu $sp, $sp, z").append(System.lineSeparator()); //z = 4*n + 8 (diapositiva 31)
+        //sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
+        //sb.append("jr $ra").append(System.lineSeparator());
         return sb.toString();
     }
 }
