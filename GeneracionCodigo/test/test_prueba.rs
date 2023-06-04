@@ -1,22 +1,15 @@
-/*CORRECTO*/
 class Prueba {
-
+	I32: a,b;
+	create(){
+		a=0;
+		b=1;
+	}
+	fn suma(I32 : n) -> I32 {
+		n = 3+4;
+		return n;
+	}
 }
-
 fn main () {
-    if(true) {
-        (1 + 2 * 3);
-    } else {
-        (! true);
-        if (true || false) {
-            (5 / 2);
-        } else {
-            (5 % 2);
-        }
-    }
-
-    while(false) {
-
-    }
-    
+	Prueba : p1;
+	(p1.suma(2));
 }

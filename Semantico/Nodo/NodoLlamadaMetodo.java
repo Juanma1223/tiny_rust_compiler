@@ -21,6 +21,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
     private boolean estatico = false;
     // Este atributo define el nombre de la clase en la que el metodo fue definido
     private String clase;
+    private Tipo tipoPadre;
 
     public NodoLlamadaMetodo(Funcion metodoContenedor, Clase claseContenedora, Token token) {
         super(metodoContenedor, claseContenedora);
@@ -144,6 +145,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         if (this.tablaDeSimbolos == null) {
             this.tablaDeSimbolos = obtenerTablaDeSimbolos();
         }
+        this.tipoPadre = tipoPadre;
         // El metodo debe estar definido en la clase del tipoPadre
         Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoPadre.obtenerTipo());
         Metodo infoMetodo = infoClase.obtenerMetodoPorNombre(token.obtenerLexema());
@@ -235,30 +237,10 @@ public class NodoLlamadaMetodo extends NodoExpresion {
 
     @Override
     public String genCodigo() {
-        // Usamos la tabla de simbolos para obtener informacion acerca del metodo
-        Metodo infoMetodo = this.claseContenedora.obtenerMetodoPorNombre(this.token.obtenerLexema());
-
         // Generamos el registro de activacion del metodo que estamos llamando
         StringBuilder sb = new StringBuilder();
-        // Obtenemos la cantidad de memoria que requerimos alocar y desplazamos el stack pointer
-        sb.append("subu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
-        // Guardamos el RA del llamador
-        sb.append("sw $fp, 8($sp)").append(System.lineSeparator());
-        // Guardamos el punto de retorno al codigo del llamador
-        sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
-
-        // Insertamos luego del retorno, los valores de los parametros que recibe el metodo
-        // TO DO
-
-        // Luego de la construccion del RA movemos la ejecucion hacia la llamada a procedimiento
-        // haciendo uso de la etiqueta, guardamos a donde se debe retornar en el registro $ra
-        sb.append("jal "+this.token.obtenerLexema()).append(System.lineSeparator());
-        // Cuando el metodo retorna a este punto de su ejecucion, hacemos pop del RA actual 
-        sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
-        sb.append("lw $fp, 8($sp)").append(System.lineSeparator());
-        sb.append("addiu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
-        // Retornamos la ejecucion al punto posterior de la llamada
-        sb.append("jr $ra").append(System.lineSeparator());
+        // Redireccionamos la ejecucion al metodo correspondiente
+        sb.append("jal "+this.tipoPadre.obtenerTipo()+"_"+ this.token.obtenerLexema()).append(System.lineSeparator());
         return sb.toString();
     }
 

@@ -42,25 +42,28 @@ public class NodoVariable extends NodoExpresion {
                     return this.tipo;
                 }
             } else {
-                Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor, claseContenedora,
-                    token);
+                Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor,
+                        claseContenedora,
+                        token);
                 if (infoVariable.obtenerTipo() == null) {
                     // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                         "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual",true);
+                            "La variable " + token.obtenerLexema() + " no esta definida en el alcance actual", true);
                     return new Tipo(null);
                 }
                 Tipo tVar = infoVariable.obtenerTipo();
                 this.tipo = tVar;
                 if (this.encadenado != null) {
-                    if(this.encadenado instanceof NodoArreglo){
-                        if(tVar instanceof TipoArreglo){
+                    if (this.encadenado instanceof NodoArreglo) {
+                        if (tVar instanceof TipoArreglo) {
                             this.encadenado.checkeoTipos();
                             this.tipo = new TipoPrimitivo(this.tipo.obtenerTipo());
                             return this.tipo;
                         } else {
-                            new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "La variable " + token.obtenerLexema() + 
-                            " no es de tipo arreglo", true);
+                            new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                                    "La variable " + token.obtenerLexema() +
+                                            " no es de tipo arreglo",
+                                    true);
                             return new Tipo(null);
                         }
                     } else {
@@ -88,15 +91,16 @@ public class NodoVariable extends NodoExpresion {
         if (infoAtributo.obtenerTipo() == null) {
             // Si el tipo es nulo, entonces el atributo no se encuentra definido
             new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                "El atributo " + token.obtenerLexema() + " no esta definido en el alcance actual",true);
+                    "El atributo " + token.obtenerLexema() + " no esta definido en el alcance actual", true);
             return new Tipo(null);
         } else {
-            // Si la clase padre es distinta de la actual se debe verificar que el atributo sea publico
+            // Si la clase padre es distinta de la actual se debe verificar que el atributo
+            // sea publico
             if (!(tipoPadre.obtenerTipo().equals(claseContenedora.obtenerNombre()))) {
                 // Si el atributo es privado entonces no se puede acceder
                 if (infoAtributo.obtenerVisibilidad() == false) {
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                    "El atributo " + token.obtenerLexema() + " no se puede acceder porque es privado",true);
+                            "El atributo " + token.obtenerLexema() + " no se puede acceder porque es privado", true);
                     return new Tipo(null);
                 }
             }
@@ -104,14 +108,16 @@ public class NodoVariable extends NodoExpresion {
         Tipo tVar = infoAtributo.obtenerTipo();
         this.tipo = tVar;
         if (this.encadenado != null) {
-            if(this.encadenado instanceof NodoArreglo){
-                if(tVar instanceof TipoArreglo){
+            if (this.encadenado instanceof NodoArreglo) {
+                if (tVar instanceof TipoArreglo) {
                     this.encadenado.checkeoTipos();
                     this.tipo = new TipoPrimitivo(this.tipo.obtenerTipo());
                     return this.tipo;
                 } else {
-                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(), "La variable " + token.obtenerLexema() + 
-                    " no es de tipo arreglo", true);
+                    new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                            "La variable " + token.obtenerLexema() +
+                                    " no es de tipo arreglo",
+                            true);
                     return new Tipo(null);
                 }
             } else {
@@ -126,6 +132,17 @@ public class NodoVariable extends NodoExpresion {
     @Override
     public void checkeoTipos() {
         this.obtenerTipo();
+    }
+
+    @Override
+    public String genCodigo() {
+        if(this.encadenado != null){
+            StringBuilder sb = new StringBuilder();
+            // Redireccionamos la ejecucion al metodo correspondiente
+            sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
+            return sb.toString();
+        }
+        return "";
     }
 
     @Override

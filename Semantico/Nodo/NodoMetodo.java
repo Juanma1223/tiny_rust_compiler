@@ -38,41 +38,43 @@ public class NodoMetodo extends NodoBloque {
         }
         // Ademas debemos revisar que el bloque del metodo tenga un retorno
         // Salvo el constructor
-        if (!(this.nombre.equals("constructor") || this.nombre.equals("main"))){
+        if (!(this.nombre.equals("constructor") || this.nombre.equals("main"))) {
             if (this.bloque != null && this.obtenerTipo().obtenerTipo() != "void") {
                 ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
                 Metodo infoMetodo = tablaDeSimbolos.obtenerClasePorNombre(claseContenedora.obtenerNombre())
-                            .obtenerMetodoPorNombre(nombre);
+                        .obtenerMetodoPorNombre(nombre);
                 int s = sentencias.size();
-                if(s>1){
-                    for (int i = 0; i < s-1; i++) {
+                if (s > 1) {
+                    for (int i = 0; i < s - 1; i++) {
                         if (sentencias.get(i) instanceof NodoReturn) {
                             new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
-                                "El metodo " + infoMetodo.obtenerNombre() + " tiene sentencia de retorno dentro del metodo." +
-                                " La sentencia de retorno debe estar al final.",
-                                true);
+                                    "El metodo " + infoMetodo.obtenerNombre()
+                                            + " tiene sentencia de retorno dentro del metodo." +
+                                            " La sentencia de retorno debe estar al final.",
+                                    true);
                         }
                     }
-                    if (!(sentencias.get(s-1) instanceof NodoReturn)) {
+                    if (!(sentencias.get(s - 1) instanceof NodoReturn)) {
                         new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
-                                "El metodo " + infoMetodo.obtenerNombre() + " no tiene sentencia de retorno al final del metodo.",
+                                "El metodo " + infoMetodo.obtenerNombre()
+                                        + " no tiene sentencia de retorno al final del metodo.",
                                 true);
                     }
-                }
-                else if (s == 1) {
-                    if (!(sentencias.get(s-1) instanceof NodoReturn)) {
-                    new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
-                            "El metodo " + infoMetodo.obtenerNombre() + " no tiene sentencia de retorno al final del metodo.",
-                            true);
+                } else if (s == 1) {
+                    if (!(sentencias.get(s - 1) instanceof NodoReturn)) {
+                        new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
+                                "El metodo " + infoMetodo.obtenerNombre()
+                                        + " no tiene sentencia de retorno al final del metodo.",
+                                true);
                     }
-                }
-                else {
+                } else {
                     new ErrorSemantico(infoMetodo.obtenerFila(), infoMetodo.obtenerColumna(),
-                            "El metodo " + infoMetodo.obtenerNombre() + " no tiene sentencia de retorno al final del metodo.",
+                            "El metodo " + infoMetodo.obtenerNombre()
+                                    + " no tiene sentencia de retorno al final del metodo.",
                             true);
                 }
             }
-        } else if (this.nombre.equals("main")){
+        } else if (this.nombre.equals("main")) {
             if (this.bloque != null) {
                 ArrayList<NodoSentencia> sentencias = this.bloque.obtenerSentencias();
                 Boolean tieneRetorno = false;
@@ -120,16 +122,39 @@ public class NodoMetodo extends NodoBloque {
 
     @Override
     public String genCodigo() {
+
+        // El codigo del constructor es distinto a una llamada de metodo
+        if (this.aux != null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        sb.append(claseContenedora.obtenerNombre()+"_"+nombre+":").append(System.lineSeparator());
-        //sb.append("move $fp, $sp").append(System.lineSeparator());
-        //sb.append("sw $ra, 0($sp)").append(System.lineSeparator());
-        //sb.append("addiu $sp, $sp, -4").append(System.lineSeparator());
-        sb.append(bloque.genCodigo()).append(System.lineSeparator());
-        //sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
-        //sb.append("addiu $sp, $sp, z").append(System.lineSeparator()); //z = 4*n + 8 (diapositiva 31)
-        //sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
-        //sb.append("jr $ra").append(System.lineSeparator());
+        // Usamos la tabla de simbolos para obtener informacion acerca del metodo
+        Metodo infoMetodo = this.claseContenedora.obtenerMetodoPorNombre(this.nombre);
+
+        // Generamos el registro de activacion del metodo que estamos llamando
+        sb.append(claseContenedora.obtenerNombre() + "_" + nombre + ":").append(System.lineSeparator());
+        // Obtenemos la cantidad de memoria que requerimos alocar y desplazamos el stack
+        // pointer
+        sb.append("subu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
+        // Guardamos el RA del llamador
+        sb.append("sw $fp, 8($sp)").append(System.lineSeparator());
+        // Guardamos el punto de retorno al codigo del llamador
+        sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
+
+        // Insertamos luego del retorno, los valores de los parametros que recibe el
+        // metodo
+        // TO DO
+
+        // Luego de la construccion del RA generamos el codigo del metodo
+        String codigoBloque = this.bloque.genCodigo();
+        sb.append(this.bloque.genCodigo()).append(System.lineSeparator());
+        // Cuando el metodo retorna a este punto de su ejecucion, hacemos pop del RA
+        // actual
+        sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
+        sb.append("lw $fp, 8($sp)").append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
+        // Retornamos la ejecucion al punto posterior de la llamada
+        sb.append("jr $ra").append(System.lineSeparator());
         return sb.toString();
     }
 }
