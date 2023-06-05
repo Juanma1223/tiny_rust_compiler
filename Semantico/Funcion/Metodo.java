@@ -110,7 +110,7 @@ public class Metodo extends Funcion {
         }
 
         // Sumamos los valores fijos del registro de activacion
-        // Direccion de retornos = 4 bytes
+        // Direccion de retorno = 4 bytes
         // Direccion al puntero self = 4 bytes
         // Direccion al RA del llamador = 4 bytes
         // Direccion al puntero de retorno = 4 bytes
@@ -150,14 +150,10 @@ public class Metodo extends Funcion {
 
     // Este metodo calcula el offset de un parametro dentro del RA del metodo por su
     // nombre
-    public int offsetParametro(String nombreParametro) {
-        Parametro parametro = this.obtenerParametroPorNombre(nombreParametro);
-        // Los parametros se encuentran luego del retorno en el RA
+    public int offsetParametro(int posicionParametro) {
         int offset = 4;
-        // Desplazamos la memoria tanto como el tipo y posicion de la variable lo
-        // requiera
         ArrayList<Parametro> paramOrdenados = this.obtenerParamsOrdenados();
-        for (int i = 0; i < parametro.obtenerPosicion(); i++) {
+        for (int i = 0; i < posicionParametro; i++) {
             Parametro var = paramOrdenados.get(i);
             switch (var.obtenerTipo().obtenerTipo()) {
                 // Sumamos en bytes, todos los tipos

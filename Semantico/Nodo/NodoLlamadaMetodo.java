@@ -237,10 +237,19 @@ public class NodoLlamadaMetodo extends NodoExpresion {
 
     @Override
     public String genCodigo() {
+        Clase clase = this.tablaDeSimbolos.obtenerClasePorNombre(this.tipoPadre.obtenerTipo());
+        Metodo infoMetodo = clase.obtenerMetodoPorNombre(token.obtenerLexema());
         // Generamos el registro de activacion del metodo que estamos llamando
         StringBuilder sb = new StringBuilder();
         // Redireccionamos la ejecucion al metodo correspondiente
-        sb.append("jal "+this.tipoPadre.obtenerTipo()+"_"+ this.token.obtenerLexema()).append(System.lineSeparator());
+        for (int i = 0; i < argumentos.size(); i++) {
+            NodoExpresion argumento = argumentos.get(i);
+            sb.append(argumento.genCodigo()).append(System.lineSeparator());
+            int offset = infoMetodo.offsetParametro(i);
+            sb.append("sw $a0, -" + offset + "($sp)").append(System.lineSeparator());
+        }
+        sb.append("jal " + this.tipoPadre.obtenerTipo() + "_" + this.token.obtenerLexema())
+                .append(System.lineSeparator());
         return sb.toString();
     }
 
