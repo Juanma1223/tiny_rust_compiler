@@ -63,22 +63,23 @@ move $fp, $sp
 subu $sp, $sp, 28
 sw $fp, 8($sp)
 sw $ra, 4($sp)
+la $a0, -12($fp)
 
-la $t1, ($a0)
-li $a0, 3
+la $t0, ($a0)
+la $a0, -4($fp)
 
 sw $a0, 0($sp)
 addiu $sp, $sp, -4
-li $a0, 4
+la $a0, -8($fp)
 
 lw $t1, 4($sp)
-add $a0, $t1, $a0
+addu $a0, $t1, $a0
 
 addiu $sp, $sp, 4
 
-sw $a0, ($t1)
+sw $a0, ($t0)
 
-li $a0, 5
+la $a0, -12($fp)
 
 sw $a0, 0($fp)
 
@@ -91,16 +92,25 @@ jr $ra
 
 main:
 move $fp, $sp
-subu $sp, $sp, 20
+subu $sp, $sp, 24
 sw $fp, 8($sp)
 sw $ra, 4($sp)
+la $a0, -8($fp)
+
+la $t0, ($a0)
+la $a0, -4($fp)
 li $a0, 2
 
 sw $a0, -4($sp)
+li $a0, 3
+
+sw $a0, -8($sp)
 jal Prueba_suma
 
 
-li $a0, 3
+sw $a0, ($t0)
+
+la $a0, -8($fp)
 
 sw $a0, -4($sp)
 jal IO_out_i32
@@ -108,7 +118,7 @@ jal IO_out_i32
 
 lw $ra, 4($sp)
 lw $fp, 8($sp)
-addiu $sp, $sp, 20
+addiu $sp, $sp, 24
 jr $ra
 
 

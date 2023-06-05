@@ -132,7 +132,7 @@ public class NodoExpBinaria extends NodoExpresion {
         switch(this.operador.obtenerLexema()){
             //Operaciones aritmeticas
             case "+":
-            sb.append("add $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("addu $a0, $t1, $a0").append(System.lineSeparator());
             break;
             case "-":
             sb.append("sub $a0, $t1, $a0").append(System.lineSeparator());

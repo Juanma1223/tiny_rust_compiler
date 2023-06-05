@@ -55,7 +55,7 @@
 "hijos":[
 {
 "Nodo":"NodoVariable",
-"valor":"a"
+"valor":"c"
 
 },
 {
@@ -63,13 +63,13 @@
 "operador":"+",
 "hijos":[
 {
-"Nodo":"NodoLiteral",
-"valor":"3"
+"Nodo":"NodoVariable",
+"valor":"a"
 
 },
 {
-"Nodo":"NodoLiteral",
-"valor":"4"
+"Nodo":"NodoVariable",
+"valor":"b"
 
 }
 ]
@@ -80,8 +80,8 @@
 "Nodo":"NodoRetorno",
 "hijos":[
 {
-"Nodo":"NodoLiteral",
-"valor":"5"
+"Nodo":"NodoVariable",
+"valor":"c"
 
 }
 ]
@@ -103,6 +103,15 @@
 "Bloque":{
 "Sentencias":[
 {
+"Nodo":"NodoAsignacion",
+"operador":"=",
+"hijos":[
+{
+"Nodo":"NodoVariable",
+"valor":"resultado"
+
+},
+{
 "Nodo":"NodoVariable",
 "valor":"p1",
 "encadenado":{
@@ -110,6 +119,9 @@
 "valor":"suma"
 
 }
+
+}
+]
 ,
 "Nodo":"NodoLlamadaMetodo",
 "valor":"out_i32"

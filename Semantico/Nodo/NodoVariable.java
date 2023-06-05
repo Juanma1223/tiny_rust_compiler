@@ -4,6 +4,7 @@ import Lexico.Token;
 import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
@@ -136,13 +137,34 @@ public class NodoVariable extends NodoExpresion {
 
     @Override
     public String genCodigo() {
+        StringBuilder sb = new StringBuilder();
+        Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
+        Variable infoVariable = metodoContenedor.obtenerParametroPorNombre(token.obtenerLexema());
+        if (infoVariable != null) {
+            //La variable es un parámetro del método
+            int offset = infoMetodo.offsetParametro(infoVariable.obtenerPosicion());
+            sb.append("la $a0, -" + offset + "($fp)").append(System.lineSeparator());
+        } else {
+            infoVariable = metodoContenedor.obtenerVariablePorNombre(token.obtenerLexema());
+            if (infoVariable != null) {
+                //La variable es una variable local del método
+                int offset = infoMetodo.offsetVariable(infoVariable.obtenerNombre());
+                sb.append("la $a0, -" + offset + "($fp)").append(System.lineSeparator());
+
+            } else {
+                infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
+                //La variable es un atributo de la clase
+
+                //TO DO
+            }
+        }
+        //Si la variable tiene encadenado
         if(this.encadenado != null){
-            StringBuilder sb = new StringBuilder();
             // Redireccionamos la ejecucion al metodo correspondiente
             sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
-            return sb.toString();
+            
         }
-        return "";
+        return sb.toString();
     }
 
     @Override

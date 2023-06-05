@@ -94,9 +94,15 @@
 "posicion":"0",
 "paramF":[
 {
-"nombre":"n",
+"nombre":"a",
 "tipo":"I32",
 "posicion":"0"
+}
+,
+{
+"nombre":"b",
+"tipo":"I32",
+"posicion":"1"
 }
 
 ]

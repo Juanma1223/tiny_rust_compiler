@@ -100,9 +100,9 @@ public class NodoAsignacion extends NodoExpresion {
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
         sb.append(ladoIzq.genCodigo()).append(System.lineSeparator());
-        sb.append("la $t1, ($a0)").append(System.lineSeparator());
+        sb.append("la $t0, ($a0)").append(System.lineSeparator());
         sb.append(ladoDer.genCodigo()).append(System.lineSeparator());
-        sb.append("sw $a0, ($t1)").append(System.lineSeparator());
+        sb.append("sw $a0, ($t0)").append(System.lineSeparator());
         return sb.toString();
     }
 

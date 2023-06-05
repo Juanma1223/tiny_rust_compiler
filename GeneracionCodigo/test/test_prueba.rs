@@ -4,15 +4,15 @@ class Prueba {
 		a=0;
 		b=1;
 	}
-	fn suma(I32 : n) -> I32 {
-		I32 : a;
-		I32 : b;
-		a = 3+4;
-		return 5;
+	fn suma(I32 : a, I32 : b) -> I32 {
+		I32 : c;
+		c = a+b;
+		return c;
 	}
 }
 fn main () {
 	Prueba : p1;
-	(p1.suma(2));
-	(IO.out_i32(3));
+	I32 : resultado;
+	resultado = p1.suma(2,3);
+	(IO.out_i32(resultado));
 }
