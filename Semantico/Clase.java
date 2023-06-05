@@ -212,10 +212,10 @@ public class Clase {
     }
 
     // Este metodo nos indica si esta clase es subclase de otra
-    public Boolean esSubclaseDe(String superclase){
+    public Boolean esSubclaseDe(String superclase) {
         Clase clasePadre = tablaDeSimbolos.obtenerClasePorNombre(this.heredaDe);
-        while(clasePadre != null){
-            if(clasePadre.nombre.equals(superclase)){
+        while (clasePadre != null) {
+            if (clasePadre.nombre.equals(superclase)) {
                 return true;
             }
             // Si no lo encontramos en el padre inmediato, buscamos hacia arriba
