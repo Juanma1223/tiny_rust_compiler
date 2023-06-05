@@ -134,7 +134,7 @@ public class NodoMetodo extends NodoBloque {
         // Generamos el registro de activacion del metodo que estamos llamando
         String nombreEtiqueta = "";
         if (claseContenedora.obtenerNombre() == "Fantasma") {
-            nombreEtiqueta = "main";
+            nombreEtiqueta = "main:";
         } else {
             nombreEtiqueta = claseContenedora.obtenerNombre() + "_" + nombre + ":";
         }
