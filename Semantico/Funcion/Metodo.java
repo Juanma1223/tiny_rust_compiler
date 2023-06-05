@@ -1,5 +1,6 @@
 package Semantico.Funcion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import Semantico.Tipo.Tipo;
@@ -7,6 +8,7 @@ import Semantico.Variable.Parametro;
 import Semantico.Variable.Variable;
 
 public class Metodo extends Funcion {
+    private static final int ArrayList = 0;
     private boolean esEstatico;
     private Tipo tipoRetorno;
     private int posicion;
@@ -106,6 +108,18 @@ public class Metodo extends Funcion {
                     break;
             }
         }
+
+        // Sumamos los valores fijos del registro de activacion
+        // Direccion de retornos = 4 bytes
+        // Direccion al puntero self = 4 bytes
+        // Direccion al RA del llamador = 4 bytes
+        // Direccion al puntero de retorno = 4 bytes
+        int memTotal = 16 + this.memoriaParametros() + memVariables;
+        this.tamMemoria = memTotal;
+    }
+
+    // Este metodo retorna la memoria que ocupan los parametros en el RA
+    public int memoriaParametros() {
         int memParametros = 0;
         for (HashMap.Entry<String, Parametro> parametro : super.obtenerParametros().entrySet()) {
             switch (parametro.getValue().obtenerTipo().obtenerTipo()) {
@@ -124,19 +138,74 @@ public class Metodo extends Funcion {
                     break;
             }
         }
-        // Sumamos los valores fijos del registro de activacion
-        // Direccion de retornos = 4 bytes
-        // Direccion al puntero self = 4 bytes
-        // Direccion al RA del llamador = 4 bytes
-        // Direccion al puntero de retorno = 4 bytes
-        int memTotal = 16 + memParametros + memVariables;
-        this.tamMemoria = memTotal;
+        return memParametros;
     }
-    
-    public int obtenerTamMemoria(){
-        if(this.tamMemoria == 0){
+
+    public int obtenerTamMemoria() {
+        if (this.tamMemoria == 0) {
             calcularMemoria();
         }
         return this.tamMemoria;
+    }
+
+    // Este metodo calcula el offset de un parametro dentro del RA del metodo por su
+    // nombre
+    public int offsetParametro(String nombreParametro) {
+        Parametro parametro = this.obtenerParametroPorNombre(nombreParametro);
+        // Los parametros se encuentran luego del retorno en el RA
+        int offset = 4;
+        // Desplazamos la memoria tanto como el tipo y posicion de la variable lo
+        // requiera
+        ArrayList<Parametro> paramOrdenados = this.obtenerParamsOrdenados();
+        for (int i = 0; i < parametro.obtenerPosicion(); i++) {
+            Parametro var = paramOrdenados.get(i);
+            switch (var.obtenerTipo().obtenerTipo()) {
+                // Sumamos en bytes, todos los tipos
+                case "Str":
+                    // Esto esta sujeto a cambio segun cuanto espacio les demos para los strings
+                    offset += 4;
+                    break;
+                case "Array":
+                    // Aca vamos a tener que implementar el calculo de tamaño dentro del tipo
+                    // arreglo en funcion de
+                    // la cantidad de elementos y su tipo
+                    break;
+                default:
+                    offset += 4;
+                    break;
+            }
+        }
+        return offset;
+    }
+
+    // Este metodo calcula el offset de una variable dentro del RA del metodo por su
+    // nombre
+    public int offsetVariable(String nombreVariable) {
+        Variable variable = this.obtenerVariablePorNombre(nombreVariable);
+        // Las variables se encuentran luego de los parametros del metodo y el retorno
+        // dentro del RA
+        int offset = 4 + this.memoriaParametros();
+        // Desplazamos la memoria tanto como el tipo y posicion de la variable lo
+        // requiera
+        ArrayList<Variable> varOrdenadas = this.obtenerVarsOrdenadas();
+        for (int i = 0; i < variable.obtenerPosicion(); i++) {
+            Variable var = varOrdenadas.get(i);
+            switch (var.obtenerTipo().obtenerTipo()) {
+                // Sumamos en bytes, todos los tipos
+                case "Str":
+                    // Esto esta sujeto a cambio segun cuanto espacio les demos para los strings
+                    offset += 4;
+                    break;
+                case "Array":
+                    // Aca vamos a tener que implementar el calculo de tamaño dentro del tipo
+                    // arreglo en funcion de
+                    // la cantidad de elementos y su tipo
+                    break;
+                default:
+                    offset += 4;
+                    break;
+            }
+        }
+        return offset;
     }
 }

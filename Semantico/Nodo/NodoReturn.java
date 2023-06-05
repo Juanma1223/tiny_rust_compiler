@@ -88,6 +88,17 @@ public class NodoReturn extends NodoSentencia {
         
     }
 
+    @Override
+    public String genCodigo(){
+        // Generamos codigo para la expresion que se encuentra en el retorno
+        StringBuilder sb = new StringBuilder();
+        sb.append(retorno.genCodigo()).append(System.lineSeparator());
+        // El resultado de la expresion de retorno se encuentra en el acumulador
+        // la cargamos en la primera posicion del RA
+        sb.append("sw $a0, 0($fp)").append(System.lineSeparator());
+        return sb.toString();
+    }
+
     public String toJson() {
         // Construimos el json de forma recursiva
         StringBuilder sb = new StringBuilder();

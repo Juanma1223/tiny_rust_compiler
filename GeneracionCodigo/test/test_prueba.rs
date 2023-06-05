@@ -5,8 +5,7 @@ class Prueba {
 		b=1;
 	}
 	fn suma(I32 : n) -> I32 {
-		n = 3+4;
-		return n;
+		return 5;
 	}
 }
 fn main () {

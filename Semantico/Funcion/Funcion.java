@@ -94,4 +94,23 @@ public class Funcion {
         return ordenados;
     }
 
+    public ArrayList<Variable> obtenerVarsOrdenadas(){
+        ArrayList<Variable> ordenados = new ArrayList<Variable>();
+        ArrayList<Integer> aux = new ArrayList<Integer>();
+        // Insertamos las posiciones en un arreglo auxiliar para luego ordenarlas
+        for(HashMap.Entry<String,Variable> variable : this.variables.entrySet()){
+            aux.add(variable.getValue().obtenerPosicion());
+        }
+        Collections.sort(aux);
+        // Insertamos los parametros ordenados por posicion en un LinkedHashMap
+        for (int num : aux){
+            for (HashMap.Entry<String, Variable> variable : this.variables.entrySet()){
+                if(variable.getValue().obtenerPosicion() == num){
+                    ordenados.add(variable.getValue());
+                }
+            }
+        }
+        return ordenados;
+    }
+
 }

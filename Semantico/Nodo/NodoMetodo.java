@@ -132,7 +132,14 @@ public class NodoMetodo extends NodoBloque {
         Metodo infoMetodo = this.claseContenedora.obtenerMetodoPorNombre(this.nombre);
 
         // Generamos el registro de activacion del metodo que estamos llamando
-        sb.append(claseContenedora.obtenerNombre() + "_" + nombre + ":").append(System.lineSeparator());
+        String nombreEtiqueta = "";
+        if (claseContenedora.obtenerNombre() == "Fantasma") {
+            nombreEtiqueta = "main";
+        } else {
+            nombreEtiqueta = claseContenedora.obtenerNombre() + "_" + nombre + ":";
+        }
+        sb.append(nombreEtiqueta).append(System.lineSeparator());
+        sb.append("move $fp, $sp").append(System.lineSeparator());
         // Obtenemos la cantidad de memoria que requerimos alocar y desplazamos el stack
         // pointer
         sb.append("subu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
@@ -146,7 +153,6 @@ public class NodoMetodo extends NodoBloque {
         // TO DO
 
         // Luego de la construccion del RA generamos el codigo del metodo
-        String codigoBloque = this.bloque.genCodigo();
         sb.append(this.bloque.genCodigo()).append(System.lineSeparator());
         // Cuando el metodo retorna a este punto de su ejecucion, hacemos pop del RA
         // actual
