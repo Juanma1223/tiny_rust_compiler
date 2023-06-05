@@ -1,5 +1,5 @@
 .text
-.globl Fantasma_main
+.globl main
 
 Prueba_suma:
 move $fp, $sp
@@ -17,7 +17,7 @@ addiu $sp, $sp, 20
 jr $ra
 
 
-main
+main:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $fp, 8($sp)

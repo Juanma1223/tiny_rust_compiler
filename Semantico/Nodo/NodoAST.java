@@ -58,7 +58,7 @@ public class NodoAST extends Nodo {
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
         sb.append(".text").append(System.lineSeparator());
-        sb.append(".globl Fantasma_main").append(System.lineSeparator()); //main
+        sb.append(".globl main").append(System.lineSeparator()); //main
         clases.forEach((clase) -> sb.append(clase.genCodigo()).append(System.lineSeparator()));
         sb.append("li $v0, 10").append(System.lineSeparator()); //exit
         sb.append("syscall").append(System.lineSeparator());
