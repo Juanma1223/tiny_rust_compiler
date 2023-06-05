@@ -14,4 +14,5 @@ class Prueba {
 fn main () {
 	Prueba : p1;
 	(p1.suma(2));
+	(IO.out_i32(3));
 }

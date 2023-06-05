@@ -94,8 +94,16 @@ move $fp, $sp
 subu $sp, $sp, 20
 sw $fp, 8($sp)
 sw $ra, 4($sp)
+li $a0, 2
+
+sw $a0, -4($sp)
 jal Prueba_suma
 
+
+li $a0, 3
+
+sw $a0, -4($sp)
+jal IO_out_i32
 
 
 lw $ra, 4($sp)

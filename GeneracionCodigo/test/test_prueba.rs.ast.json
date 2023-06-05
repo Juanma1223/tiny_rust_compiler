@@ -110,6 +110,9 @@
 "valor":"suma"
 
 }
+,
+"Nodo":"NodoLlamadaMetodo",
+"valor":"out_i32"
 
 }
 ]
