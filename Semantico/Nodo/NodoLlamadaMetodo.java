@@ -21,6 +21,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
     private boolean estatico = false;
     // Este atributo define el nombre de la clase en la que el metodo fue definido
     private String clase;
+    private Tipo tipoPadre;
 
     public NodoLlamadaMetodo(Funcion metodoContenedor, Clase claseContenedora, Token token) {
         super(metodoContenedor, claseContenedora);
@@ -66,8 +67,8 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                 Tipo tConstructor = new TipoReferencia(clase);
                 this.tipo = tConstructor;
                 if (this.encadenado != null) {
-                    this.tipo = this.encadenado.obtenerTipoEncadenado(tConstructor);  
-                    return this.tipo; 
+                    this.tipo = this.encadenado.obtenerTipoEncadenado(tConstructor);
+                    return this.tipo;
                 } else {
                     return this.tipo;
                 }
@@ -111,16 +112,17 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                                     + " no esta definido para la clase " + claseContenedora.obtenerNombre(),
                             true);
                 }
-                // Si no estamos dentro de un constructor hay que verificar que el metodo no sea accedido desde
+                // Si no estamos dentro de un constructor hay que verificar que el metodo no sea
+                // accedido desde
                 // un metodo estatico
                 if (metodoContenedor.obtenerNombre() != null) {
-                    Metodo metodoPadre = (Metodo)metodoContenedor;
+                    Metodo metodoPadre = (Metodo) metodoContenedor;
                     // Si el metodo es estatico no puede acceder a metodos dinamicos
-                    if(metodoPadre.obtenerEsEstatico() == true) {
+                    if (metodoPadre.obtenerEsEstatico() == true) {
                         new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                            "El metodo " + token.obtenerLexema()
-                                    + " no puede ser accedido desde el metodo " + metodoPadre.obtenerNombre(),
-                            true);
+                                "El metodo " + token.obtenerLexema()
+                                        + " no puede ser accedido desde el metodo " + metodoPadre.obtenerNombre(),
+                                true);
                     }
                 }
                 this.checkeoCantArgumentos(infoMetodo);
@@ -143,6 +145,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         if (this.tablaDeSimbolos == null) {
             this.tablaDeSimbolos = obtenerTablaDeSimbolos();
         }
+        this.tipoPadre = tipoPadre;
         // El metodo debe estar definido en la clase del tipoPadre
         Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoPadre.obtenerTipo());
         Metodo infoMetodo = infoClase.obtenerMetodoPorNombre(token.obtenerLexema());
@@ -183,47 +186,62 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         for (int i = 0; i < argOrdenados.size(); i++) {
             Tipo tipoArgLlamado = argumentos.get(i).obtenerTipo();
             Tipo tipoArgDeclarado = argOrdenados.get(i).obtenerTipo();
-            if(tipoArgDeclarado instanceof TipoPrimitivo) {
-                if(tipoArgLlamado instanceof TipoPrimitivo) {
+            if (tipoArgDeclarado instanceof TipoPrimitivo) {
+                if (tipoArgLlamado instanceof TipoPrimitivo) {
                     if (!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())) {
                         new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                            "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
-                            true);
+                                "El argumento en la posicion " + i + " deberia ser de tipo "
+                                        + tipoArgDeclarado.obtenerTipo(),
+                                true);
                     }
                 } else {
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                        "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
-                        true);
+                            "El argumento en la posicion " + i + " deberia ser de tipo "
+                                    + tipoArgDeclarado.obtenerTipo(),
+                            true);
                 }
-            } else if(tipoArgDeclarado instanceof TipoReferencia) {
-                if(tipoArgLlamado instanceof TipoReferencia) {
+            } else if (tipoArgDeclarado instanceof TipoReferencia) {
+                if (tipoArgLlamado instanceof TipoReferencia) {
                     Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoArgLlamado.obtenerTipo());
                     if (!infoClase.esSubclaseDe(tipoArgDeclarado.obtenerTipo())) {
                         if (!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())) {
                             new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                                "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
-                                true);
+                                    "El argumento en la posicion " + i + " deberia ser de tipo "
+                                            + tipoArgDeclarado.obtenerTipo(),
+                                    true);
                         }
                     }
                 } else {
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                        "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
-                        true);
-                }
-            } else if(tipoArgDeclarado instanceof TipoArreglo) {
-                if(tipoArgLlamado instanceof TipoArreglo) {
-                    if(!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())){
-                        new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                            "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
+                            "El argumento en la posicion " + i + " deberia ser de tipo "
+                                    + tipoArgDeclarado.obtenerTipo(),
                             true);
+                }
+            } else if (tipoArgDeclarado instanceof TipoArreglo) {
+                if (tipoArgLlamado instanceof TipoArreglo) {
+                    if (!tipoArgDeclarado.obtenerTipo().equals(tipoArgLlamado.obtenerTipo())) {
+                        new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                                "El argumento en la posicion " + i + " deberia ser de tipo "
+                                        + tipoArgDeclarado.obtenerTipo(),
+                                true);
                     }
                 } else {
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
-                        "El argumento en la posicion " + i + " deberia ser de tipo " + tipoArgDeclarado.obtenerTipo(),
-                        true);
+                            "El argumento en la posicion " + i + " deberia ser de tipo "
+                                    + tipoArgDeclarado.obtenerTipo(),
+                            true);
                 }
             }
         }
+    }
+
+    @Override
+    public String genCodigo() {
+        // Generamos el registro de activacion del metodo que estamos llamando
+        StringBuilder sb = new StringBuilder();
+        // Redireccionamos la ejecucion al metodo correspondiente
+        sb.append("jal "+this.tipoPadre.obtenerTipo()+"_"+ this.token.obtenerLexema()).append(System.lineSeparator());
+        return sb.toString();
     }
 
     public String toJson() {
