@@ -640,7 +640,6 @@ public class Sintactico {
                     tablaDeSimbolos.obtenerClaseActual());
             newExpOr.establecerLadoIzq(and);
             newExpOr.establecerLadoDer(expOrP);
-            // El operador es enviado haciendo uso del auxiliar
             newExpOr.establecerOp(expOrP.aux);
             return newExpOr;
         } else {
@@ -660,8 +659,9 @@ public class Sintactico {
                         tablaDeSimbolos.obtenerClaseActual());
                 newExpOr.establecerLadoIzq(expAnd);
                 newExpOr.establecerLadoDer(expOrP);
+                newExpOr.establecerOp(expOrP.aux);
+                //El operador es enviado haciendo uso del auxiliar
                 newExpOr.aux = tokenActual;
-                newExpOr.establecerOp(tokenActual);
                 return newExpOr;
             } else {
                 expAnd.aux = tokenActual;
@@ -698,8 +698,9 @@ public class Sintactico {
                         tablaDeSimbolos.obtenerClaseActual());
                 newExpAnd.establecerLadoIzq(expIgual);
                 newExpAnd.establecerLadoDer(expAndP);
+                newExpAnd.establecerOp(expAndP.aux);
+                //El operador es enviado haciendo uso del auxiliar
                 newExpAnd.aux = tokenActual;
-                newExpAnd.establecerOp(tokenActual);
                 return newExpAnd;
             } else {
                 expIgual.aux = tokenActual;
@@ -736,7 +737,9 @@ public class Sintactico {
                         tablaDeSimbolos.obtenerClaseActual());
                 newExpCompuesta.establecerLadoIzq(expCompuesta);
                 newExpCompuesta.establecerLadoDer(expIgualP);
-                newExpCompuesta.establecerOp(operador);
+                newExpCompuesta.establecerOp(expIgualP.aux);
+                //El operador es enviado haciendo uso del auxiliar
+                newExpCompuesta.aux = operador;
                 return newExpCompuesta;
             } else {
                 expCompuesta.aux = operador;
@@ -748,14 +751,13 @@ public class Sintactico {
 
     private NodoExpresion expCompuesta() {
         NodoExpresion add = expAdd();
-        Token op = aux.tokenActual;
         NodoExpresion expCompuestaP = expCompuestaP();
         if (expCompuestaP != null) {
             NodoExpBinaria newExpComp = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
                     tablaDeSimbolos.obtenerClaseActual());
             newExpComp.establecerLadoIzq(add);
             newExpComp.establecerLadoDer(expCompuestaP);
-            newExpComp.establecerOp(op);
+            newExpComp.establecerOp(expCompuestaP.aux);
             return newExpComp;
         } else {
             return add;
@@ -766,26 +768,27 @@ public class Sintactico {
     private NodoExpresion expCompuestaP() {
         String[] terOpCompuesto = { "<", ">", "<=", ">=" };
         if (aux.verifico(terOpCompuesto)) {
-            opCompuesto();
-            return expAdd();
+            Token operador = opCompuesto();
+            NodoExpresion expAdd = expAdd();
+            //El operador es enviado haciendo uso del auxiliar
+            expAdd.aux = operador;
+            return expAdd;
         }
         return null;
     }
 
     private NodoExpresion expAdd() {
         NodoExpresion expMul = expMul();
-        // Checkeamos si es una expresion binaria o solamente un literal
         NodoExpresion expAddP = expAddP();
-        if (expAddP == null) {
-            return expMul;
-        } else {
+        if (expAddP != null) {
             NodoExpBinaria expBinaria = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
                     tablaDeSimbolos.obtenerClaseActual());
             expBinaria.establecerLadoIzq(expMul);
             expBinaria.establecerLadoDer(expAddP);
-            // Hacemos uso de la variable auxiliar de los nodos
             expBinaria.establecerOp(expAddP.aux);
             return expBinaria;
+        } else {
+            return expMul;
         }
     }
 
@@ -801,7 +804,9 @@ public class Sintactico {
                         tablaDeSimbolos.obtenerClaseActual());
                 newExpAdd.establecerLadoIzq(expMul);
                 newExpAdd.establecerLadoDer(expAddP);
-                newExpAdd.establecerOp(operador);
+                newExpAdd.establecerOp(expAddP.aux);
+                //El operador es enviado haciendo uso del auxiliar
+                newExpAdd.aux = operador;
                 return newExpAdd;
             } else {
                 expMul.aux = operador;
@@ -814,15 +819,15 @@ public class Sintactico {
     private NodoExpresion expMul() {
         NodoExpresion un = expUn();
         NodoExpresion expMulP = expMulP();
-        if (expMulP == null) {
-            return un;
-        } else {
+        if (expMulP != null) {
             NodoExpBinaria expBinaria = new NodoExpBinaria(tablaDeSimbolos.obtenerMetodoActual(),
                     tablaDeSimbolos.obtenerClaseActual());
-            expBinaria.establecerOp(expMulP.aux);
             expBinaria.establecerLadoIzq(un);
             expBinaria.establecerLadoDer(expMulP);
+            expBinaria.establecerOp(expMulP.aux);
             return expBinaria;
+        } else {
+            return un;
         }
     }
 
@@ -838,7 +843,9 @@ public class Sintactico {
                         tablaDeSimbolos.obtenerClaseActual());
                 newExpMul.establecerLadoIzq(expUn);
                 newExpMul.establecerLadoDer(expMulP);
-                newExpMul.establecerOp(operador);
+                newExpMul.establecerOp(expMulP.aux);
+                //El operador es enviado haciendo uso del auxiliar
+                newExpMul.aux = operador;
                 return newExpMul;
             } else {
                 expUn.aux = operador;
@@ -875,14 +882,16 @@ public class Sintactico {
         }
     }
 
-    private void opCompuesto() {
+    private Token opCompuesto() {
         Token tokenActual = aux.tokenActual;
         String[] ter = { "<", ">", "<=", ">=" };
         if (aux.verifico(ter)) {
             aux.matcheo(tokenActual.obtenerLexema());
+            return tokenActual;
         } else {
             ErrorSintactico error = new ErrorSintactico(tokenActual.obtenerFila(), tokenActual.obtenerColumna(),
                     "Se esperaba \"<\", \">\", \"<=\", o \">=\", se encontró: " + tokenActual.obtenerLexema());
+            return tokenActual;
         }
     }
 
