@@ -141,12 +141,26 @@ public class NodoExpBinaria extends NodoExpresion {
             sb.append("mul $a0, $t1, $a0").append(System.lineSeparator());
             break;
             case "/":
-            sb.append("div $t1, $a0").append(System.lineSeparator()); //recuperar Lo
-            sb.append("mflo $a0").append(System.lineSeparator());
+            this.tablaDeSimbolos = obtenerTablaDeSimbolos();
+            int numDiv = tablaDeSimbolos.obtenerLabel();
+            //Revisamos que el divisor sea distinto de 0
+            sb.append("bne $a0, $0, division"+numDiv).append(System.lineSeparator());
+            sb.append(".data").append(System.lineSeparator());
+            int numString = tablaDeSimbolos.obtenerLabel(); // creamos un mensaje de error
+            sb.append("string"+numString+": .asciiz ").append("\"" +"ERROR: Division por cero"+"\"").append(System.lineSeparator());
+            sb.append(".text").append(System.lineSeparator());
+            sb.append("la $a0, string"+numString).append(System.lineSeparator()); // cargamos el mensaje en el acumulador
+            sb.append("li $v0, 4").append(System.lineSeparator()); // print_string
+            sb.append("syscall").append(System.lineSeparator());
+            sb.append("li $v0, 10").append(System.lineSeparator()); // exit
+            sb.append("syscall").append(System.lineSeparator());
+            sb.append("division"+numDiv+":").append(System.lineSeparator()); // realizamos la division
+            sb.append("div $t1, $a0").append(System.lineSeparator());
+            sb.append("mflo $a0").append(System.lineSeparator());  //recuperar Lo
             break;
             case "%":
-            sb.append("div $t1, $a0").append(System.lineSeparator()); //recuperar Hi
-            sb.append("mfhi $a0").append(System.lineSeparator());
+            sb.append("div $t1, $a0").append(System.lineSeparator());
+            sb.append("mfhi $a0").append(System.lineSeparator()); //recuperar Hi
             break;
             //Operaciones logicas relacionales
             case "<":
