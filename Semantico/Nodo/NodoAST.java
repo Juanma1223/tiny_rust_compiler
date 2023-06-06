@@ -69,33 +69,33 @@ public class NodoAST extends Nodo {
         StringBuilder sb = new StringBuilder();
 
         sb.append("IO_out_i32:").append(System.lineSeparator());
-        sb.append(genCodigoMetodoInicio()).append(System.lineSeparator());
-        sb.append("li $v0, 1").append(System.lineSeparator()); // print_int
-        sb.append("syscall").append(System.lineSeparator());
-        sb.append(genCodigoMetodoFinal()).append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 1")).append(System.lineSeparator()); // print_int
+
+        sb.append("IO_out_bool:").append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 1")).append(System.lineSeparator()); // print_int
+
+        sb.append("IO_out_char:").append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 4")).append(System.lineSeparator()); // print_string
 
         sb.append("IO_out_string:").append(System.lineSeparator());
-        sb.append(genCodigoMetodoInicio()).append(System.lineSeparator());
-        sb.append("li $v0, 4").append(System.lineSeparator()); // print_string
-        sb.append("syscall").append(System.lineSeparator());
-        sb.append(genCodigoMetodoFinal()).append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 4")).append(System.lineSeparator()); // print_string
 
         sb.append("IO_in_i32:").append(System.lineSeparator());
-        sb.append(genCodigoMetodoInicio()).append(System.lineSeparator());
-        sb.append("li $v0, 5").append(System.lineSeparator()); // read_int
-        sb.append("syscall").append(System.lineSeparator());
-        sb.append(genCodigoMetodoFinal()).append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 5")).append(System.lineSeparator()); // read_int
+
+        sb.append("IO_in_bool:").append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 5")).append(System.lineSeparator()); // read_int
+
+        sb.append("IO_in_char:").append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 8")).append(System.lineSeparator()); // read_string
 
         sb.append("IO_in_string:").append(System.lineSeparator());
-        sb.append(genCodigoMetodoInicio()).append(System.lineSeparator());
-        sb.append("li $v0, 8").append(System.lineSeparator()); // read_string
-        sb.append("syscall").append(System.lineSeparator());
-        sb.append(genCodigoMetodoFinal()).append(System.lineSeparator());
+        sb.append(genCodigoMetodoIO("li $v0, 8")).append(System.lineSeparator()); // read_string
 
         return sb.toString();
     }
 
-    public String genCodigoMetodoInicio() {
+    public String genCodigoMetodoIO(String codigoIO) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("move $fp, $sp").append(System.lineSeparator());
@@ -108,17 +108,15 @@ public class NodoAST extends Nodo {
         sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
         sb.append("sw $a0, -4($fp)").append(System.lineSeparator());
 
-        return sb.toString();
-    }
+        //Generamos el codigo de IO
+        sb.append(codigoIO).append(System.lineSeparator());
+        sb.append("syscall").append(System.lineSeparator());
 
-    public String genCodigoMetodoFinal() {
-        StringBuilder sb = new StringBuilder();
-        // Cuando el metodo retorna a este punto de su ejecucion, hacemos pop del RA
-        // actual
         sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
         sb.append("lw $fp, 8($sp)").append(System.lineSeparator());
         sb.append("addiu $sp, $sp, 20").append(System.lineSeparator());
         sb.append("jr $ra").append(System.lineSeparator());
+
         return sb.toString();
     }
 

@@ -15,7 +15,7 @@ public class Ejecutador {
         // File archivo = new File(args[0]);
 
         //File archivo = new File("/home/juanma/Facultad/tiny_rust_compiler/GeneracionCodigo/test/test_prueba.rs");
-        File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/GeneracionCodigo/test/test_c4.rs");
+        File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/GeneracionCodigo/test/test_c5.rs");
         // File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/Semantico/testSemantico2/test_llamadaMetodo4.rs");
         new GeneradorCodigo(archivo);
         System.out.println("CORRECTO");
