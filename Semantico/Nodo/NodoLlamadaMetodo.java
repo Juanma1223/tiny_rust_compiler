@@ -267,6 +267,9 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         Metodo infoMetodo = clasePadre.obtenerMetodoPorNombre(token.obtenerLexema());
         // Generamos el registro de activacion del metodo que estamos llamando
         StringBuilder sb = new StringBuilder();
+        // El llamador gurada su valor de $fp
+        sb.append("sw $fp, 0($sp)").append(System.lineSeparator());
+        // Luego, almacena los argumentos en la pila
         for (int i = 0; i < argumentos.size(); i++) {
             NodoExpresion argumento = argumentos.get(i);
             sb.append(argumento.genCodigo()).append(System.lineSeparator());
@@ -279,7 +282,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         } else {
             prefijo = this.tipoPadre.obtenerTipo();
         }
-        // Redireccionamos la ejecucion al metodo correspondiente
+        // Finalmente, redireccionamos la ejecucion al metodo correspondiente
         sb.append("jal " + prefijo + "_" + this.token.obtenerLexema())
                 .append(System.lineSeparator());
         return sb.toString();

@@ -98,23 +98,27 @@ public class NodoAST extends Nodo {
     public String genCodigoMetodoIO(String codigoIO) {
         StringBuilder sb = new StringBuilder();
 
+        // Apuntamos el $fp a la primer posicion del stack frame
         sb.append("move $fp, $sp").append(System.lineSeparator());
-        // Obtenemos la cantidad de memoria que requerimos alocar y desplazamos el stack
-        // pointer
+        // Obtenemos la cantidad de memoria que requerimos alocar y 
+        // desplazamos el stack pointer
         sb.append("subu $sp, $sp, " + 20).append(System.lineSeparator());
-        // Guardamos el RA del llamador
-        sb.append("sw $fp, 8($sp)").append(System.lineSeparator());
         // Guardamos el punto de retorno al codigo del llamador
         sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
+
+        // Cargamos en el acumulador el parametro recibido
         sb.append("sw $a0, -4($fp)").append(System.lineSeparator());
 
         //Generamos el codigo de IO
         sb.append(codigoIO).append(System.lineSeparator());
         sb.append("syscall").append(System.lineSeparator());
 
+        // Cuando el metodo retorna a este punto de su ejecucion,
+        // hacemos pop del RA actual
         sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
-        sb.append("lw $fp, 8($sp)").append(System.lineSeparator());
-        sb.append("addiu $sp, $sp, 20").append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, " + 20).append(System.lineSeparator());
+        sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
+        // Retornamos la ejecucion al punto posterior de la llamada
         sb.append("jr $ra").append(System.lineSeparator());
 
         return sb.toString();

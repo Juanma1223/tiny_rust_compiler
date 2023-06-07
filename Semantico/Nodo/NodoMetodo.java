@@ -139,26 +139,23 @@ public class NodoMetodo extends NodoBloque {
             nombreEtiqueta = claseContenedora.obtenerNombre() + "_" + nombre + ":";
         }
         sb.append(nombreEtiqueta).append(System.lineSeparator());
+        
+        // Apuntamos el $fp a la primer posicion del stack frame
         sb.append("move $fp, $sp").append(System.lineSeparator());
-        // Obtenemos la cantidad de memoria que requerimos alocar y desplazamos el stack
-        // pointer
+        // Obtenemos la cantidad de memoria que requerimos alocar y 
+        // desplazamos el stack pointer
         sb.append("subu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
-        // Guardamos el RA del llamador
-        sb.append("sw $fp, 8($sp)").append(System.lineSeparator());
         // Guardamos el punto de retorno al codigo del llamador
         sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
 
-        // Insertamos luego del retorno, los valores de los parametros que recibe el
-        // metodo
-        // TO DO
-
         // Luego de la construccion del RA generamos el codigo del metodo
         sb.append(this.bloque.genCodigo()).append(System.lineSeparator());
-        // Cuando el metodo retorna a este punto de su ejecucion, hacemos pop del RA
-        // actual
+
+        // Cuando el metodo retorna a este punto de su ejecucion,
+        // hacemos pop del RA actual
         sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
-        sb.append("lw $fp, 8($sp)").append(System.lineSeparator());
         sb.append("addiu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
+        sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
         // Retornamos la ejecucion al punto posterior de la llamada
         sb.append("jr $ra").append(System.lineSeparator());
         return sb.toString();

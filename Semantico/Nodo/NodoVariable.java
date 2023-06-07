@@ -143,13 +143,13 @@ public class NodoVariable extends NodoExpresion {
         if (infoVariable != null) {
             //La variable es un parámetro del método
             int offset = infoMetodo.offsetParametro(infoVariable.obtenerPosicion());
-            sb.append("la $a0, -" + offset + "($fp)").append(System.lineSeparator());
+            sb.append("lw $a0, -" + offset + "($fp)").append(System.lineSeparator());
         } else {
             infoVariable = metodoContenedor.obtenerVariablePorNombre(token.obtenerLexema());
             if (infoVariable != null) {
                 //La variable es una variable local del método
                 int offset = infoMetodo.offsetVariable(infoVariable.obtenerNombre());
-                sb.append("la $a0, -" + offset + "($fp)").append(System.lineSeparator());
+                sb.append("lw $a0, -" + offset + "($fp)").append(System.lineSeparator());
 
             } else {
                 infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
