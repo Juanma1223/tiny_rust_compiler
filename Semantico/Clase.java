@@ -1,6 +1,7 @@
 package Semantico;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import Semantico.Variable.Atributo;
@@ -17,6 +18,10 @@ public class Clase {
     private int fila, columna;
     private Boolean tieneConstructor = false;
     private TablaDeSimbolos tablaDeSimbolos;
+    private int tamMemoria = 0;
+
+    // Este valor indica un identificador para cada instancia de la clase
+    public int numeroInstancia = 0;
 
     public Clase(String nombre, TablaDeSimbolos tablaDeSimbolos) {
         this.nombre = nombre;
@@ -232,4 +237,93 @@ public class Clase {
         return this.columna;
     }
 
+    // Calculamos cuanto espacio en memoria se requiere para almacenar el CIR de
+    // esta
+    // clase
+    public void calcularMemoria() {
+        // Calculamos el espacio de las variables locales segun su tipo
+        int memVariables = 0;
+        for (HashMap.Entry<String, Atributo> variable : this.atributos.entrySet()) {
+            switch (variable.getValue().obtenerTipo().obtenerTipo()) {
+                // Sumamos en bytes, todos los tipos
+                case "Str":
+                    // Esto esta sujeto a cambio segun cuanto espacio les demos para los strings
+                    memVariables = memVariables + 4;
+                    break;
+                case "Array":
+                    // Aca vamos a tener que implementar el calculo de tamaño dentro del tipo
+                    // arreglo en funcion de
+                    // la cantidad de elementos y su tipo
+                    break;
+                default:
+                    memVariables = memVariables + 4;
+                    break;
+            }
+        }
+
+        // Sumamos los valores fijos del CIR
+        // Direccion de la VT = 4 bytes
+        int memTotal = 4 + memVariables;
+        this.tamMemoria = memTotal;
+    }
+
+    public int obtenerTamMemoria() {
+        if(this.tamMemoria == 0){
+            this.calcularMemoria();
+        }    
+        return this.tamMemoria;
+    }
+
+    // Este metodo calcula el offset de acceso a un atributo de clase en el CIR
+    public int offsetAtributo(String nombreAtributo) {
+        Atributo variable = this.obtenerAtributoPorNombre(nombreAtributo);
+        ArrayList<Atributo> varOrdenadas = this.obtenerAtributosOrdenadas();
+        int offset = 0;
+        // Desplazamos la memoria tanto como el tipo y posicion de la variable lo
+        // requiera
+        for (int i = 0; i < variable.obtenerPosicion(); i++) {
+            Atributo var = varOrdenadas.get(i);
+            switch (var.obtenerTipo().obtenerTipo()) {
+                // Sumamos en bytes, todos los tipos
+                case "Str":
+                    // Esto esta sujeto a cambio segun cuanto espacio les demos para los strings
+                    offset += 4;
+                    break;
+                case "Array":
+                    // Aca vamos a tener que implementar el calculo de tamaño dentro del tipo
+                    // arreglo en funcion de
+                    // la cantidad de elementos y su tipo
+                    break;
+                default:
+                    offset += 4;
+                    break;
+            }
+        }
+        return offset;
+    }
+
+    public ArrayList<Atributo> obtenerAtributosOrdenadas(){
+        ArrayList<Atributo> ordenados = new ArrayList<Atributo>();
+        ArrayList<Integer> aux = new ArrayList<Integer>();
+        // Insertamos las posiciones en un arreglo auxiliar para luego ordenarlas
+        for(HashMap.Entry<String,Atributo> variable : this.atributos.entrySet()){
+            aux.add(variable.getValue().obtenerPosicion());
+        }
+        Collections.sort(aux);
+        // Insertamos los parametros ordenados por posicion en un LinkedHashMap
+        for (int num : aux){
+            for (HashMap.Entry<String, Atributo> variable : this.atributos.entrySet()){
+                if(variable.getValue().obtenerPosicion() == num){
+                    ordenados.add(variable.getValue());
+                }
+            }
+        }
+        return ordenados;
+    }
+
+    public int obtenerNumeroInstancia(){
+        int instanciaActual = this.numeroInstancia;
+        this.numeroInstancia += 1;
+        return instanciaActual;
+    }
 }

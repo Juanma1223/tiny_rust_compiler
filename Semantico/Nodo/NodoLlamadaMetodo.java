@@ -237,10 +237,29 @@ public class NodoLlamadaMetodo extends NodoExpresion {
 
     @Override
     public String genCodigo() {
-        if(this.tipoPadre == null){
-            if(this.estatico){
+        // Checkeamos si es un constructor
+        if (this.token != null) {
+            if (this.token.obtenerToken() == "id_clase") {
+                Clase infoClase = this.tablaDeSimbolos.obtenerClasePorNombre(this.token.obtenerLexema());
+                // Generamos el espacio en el heap para el CIR
+                // Aca falta el manejo de envio de parametros al constructor
+                StringBuilder sb = new StringBuilder();
+                sb.append(".data # Constructor de "+this.token.obtenerLexema()).append(System.lineSeparator());
+                // Alocamos la cantidad de memoria necesaria para el CIR
+                String etiqueta = this.token.obtenerLexema() + infoClase.obtenerNumeroInstancia();
+                sb.append("." +etiqueta+ ": .space " + infoClase.obtenerTamMemoria()).append(System.lineSeparator());
+                // Por ser esto una instanciacion, estamos en el lado derecho de una asignacion
+                // por tanto, cargamos en el acumulador la posicion donde comienza el nuevo CIR
+                sb.append(".text").append(System.lineSeparator());
+                sb.append("la $a0, "+etiqueta+"($0)").append(System.lineSeparator());
+                // Luego de haber creado el CIR, queda en $a0 una referencia al inicio de la posicion del mismo
+                return sb.toString();
+            }
+        }
+        if (this.tipoPadre == null) {
+            if (this.estatico) {
                 this.tipoPadre = new TipoReferencia(this.clase);
-            }else{
+            } else {
                 this.tipoPadre = new TipoReferencia(claseContenedora.obtenerNombre());
             }
         }
@@ -248,7 +267,6 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         Metodo infoMetodo = clasePadre.obtenerMetodoPorNombre(token.obtenerLexema());
         // Generamos el registro de activacion del metodo que estamos llamando
         StringBuilder sb = new StringBuilder();
-        // Redireccionamos la ejecucion al metodo correspondiente
         for (int i = 0; i < argumentos.size(); i++) {
             NodoExpresion argumento = argumentos.get(i);
             sb.append(argumento.genCodigo()).append(System.lineSeparator());
@@ -261,6 +279,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         } else {
             prefijo = this.tipoPadre.obtenerTipo();
         }
+        // Redireccionamos la ejecucion al metodo correspondiente
         sb.append("jal " + prefijo + "_" + this.token.obtenerLexema())
                 .append(System.lineSeparator());
         return sb.toString();
