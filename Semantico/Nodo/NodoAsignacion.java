@@ -4,6 +4,7 @@ import Lexico.Token;
 import Semantico.Clase;
 import Semantico.ErrorSemantico;
 import Semantico.Funcion.Funcion;
+import Semantico.Funcion.Metodo;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoArreglo;
 import Semantico.Tipo.TipoPrimitivo;
@@ -99,12 +100,18 @@ public class NodoAsignacion extends NodoExpresion {
     @Override
     public String genCodigo() {
         StringBuilder sb = new StringBuilder();
-        sb.append(ladoIzq.genCodigo()).append(System.lineSeparator());
-        sb.append("sw $a0, 0($sp)").append(System.lineSeparator());
+        // Obtenemos la variable del lado izquierdo para saber a donde apuntar en el RA o el CIR
+        NodoVariable ladoIzqNodoVariable = ladoIzq.obtenerNodoVariable();
+        String nombreVariable = ladoIzqNodoVariable.token.obtenerLexema();
+        Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
+        // sb.append(ladoIzq.genCodigo()).append(System.lineSeparator());
+        sb.append("sw $a0, 0($sp) # Comienzo asignacion").append(System.lineSeparator());
         sb.append("subu $sp, $sp, 4").append(System.lineSeparator());
         sb.append(ladoDer.genCodigo()).append(System.lineSeparator());
-        sb.append("sw $a0, 4($sp)").append(System.lineSeparator());
-        sb.append("addiu $sp, $sp, 4").append(System.lineSeparator());
+        // Asignamos a la posicion de memoria de la variable el valor del lado derecho
+        sb.append("sw $a0,-"+ infoMetodo.offsetVariable(nombreVariable)+"($fp)").append(System.lineSeparator());
+        sb.append("lw $a0, 4($sp)").append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, 4 # Fin asignacion").append(System.lineSeparator());
         return sb.toString();
     }
 

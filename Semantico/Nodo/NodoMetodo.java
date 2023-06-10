@@ -141,7 +141,7 @@ public class NodoMetodo extends NodoBloque {
         sb.append(nombreEtiqueta).append(System.lineSeparator());
         
         // Apuntamos el $fp a la primer posicion del stack frame
-        sb.append("move $fp, $sp").append(System.lineSeparator());
+        sb.append("move $fp, $sp # Comienza la creacion de RA de "+this.nombre).append(System.lineSeparator());
         // Obtenemos la cantidad de memoria que requerimos alocar y 
         // desplazamos el stack pointer
         sb.append("subu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
@@ -153,7 +153,7 @@ public class NodoMetodo extends NodoBloque {
 
         // Cuando el metodo retorna a este punto de su ejecucion,
         // hacemos pop del RA actual
-        sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
+        sb.append("lw $ra, 4($sp) # Comenzamos el pop del metodo "+this.nombre).append(System.lineSeparator());
         sb.append("addiu $sp, $sp, " + infoMetodo.obtenerTamMemoria()).append(System.lineSeparator());
         sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
         // Retornamos la ejecucion al punto posterior de la llamada

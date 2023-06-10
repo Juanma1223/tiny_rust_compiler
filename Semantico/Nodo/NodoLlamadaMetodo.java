@@ -274,7 +274,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
             NodoExpresion argumento = argumentos.get(i);
             sb.append(argumento.genCodigo()).append(System.lineSeparator());
             int offset = infoMetodo.offsetParametro(i);
-            sb.append("sw $a0, -" + offset + "($sp)").append(System.lineSeparator());
+            sb.append("sw $a0, -" + offset + "($sp) # Guardamos el parameotro "+i+" en el RA").append(System.lineSeparator());
         }
         String prefijo;
         if (infoMetodo.obtenerEsEstatico()) {

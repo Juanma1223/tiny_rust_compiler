@@ -75,4 +75,8 @@ public class Nodo {
         StringBuilder sb = new StringBuilder();
         return sb.toString();
     }
+
+    public NodoVariable obtenerNodoVariable(){
+        return new NodoVariable(metodoContenedor, claseContenedora, token);
+    }
 }

@@ -140,29 +140,30 @@ public class NodoVariable extends NodoExpresion {
         StringBuilder sb = new StringBuilder();
         Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
         Variable infoVariable = metodoContenedor.obtenerParametroPorNombre(token.obtenerLexema());
-        if (infoVariable != null) {
-            //La variable es un parámetro del método
-            int offset = infoMetodo.offsetParametro(infoVariable.obtenerPosicion());
-            sb.append("lw $a0, -" + offset + "($fp)").append(System.lineSeparator());
-        } else {
-            infoVariable = metodoContenedor.obtenerVariablePorNombre(token.obtenerLexema());
-            if (infoVariable != null) {
-                //La variable es una variable local del método
-                int offset = infoMetodo.offsetVariable(infoVariable.obtenerNombre());
-                sb.append("lw $a0, -" + offset + "($fp)").append(System.lineSeparator());
-
-            } else {
-                infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
-                //La variable es un atributo de la clase
-
-                //TO DO
-            }
-        }
         //Si la variable tiene encadenado
         if(this.encadenado != null){
             // Redireccionamos la ejecucion al metodo correspondiente
             sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
             
+        }else{
+            if (infoVariable != null) {
+                //La variable es un parámetro del método
+                int offset = infoMetodo.offsetParametro(infoVariable.obtenerPosicion());
+                sb.append("lw $a0, -" + offset + "($fp) # Acceso a parametro").append(System.lineSeparator());
+            } else {
+                infoVariable = metodoContenedor.obtenerVariablePorNombre(token.obtenerLexema());
+                if (infoVariable != null) {
+                    //La variable es una variable local del método
+                    int offset = infoMetodo.offsetVariable(infoVariable.obtenerNombre());
+                    sb.append("lw $a0, -" + offset + "($fp) # Acceso a la variable "+infoVariable.obtenerNombre()).append(System.lineSeparator());
+    
+                } else {
+                    infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
+                    //La variable es un atributo de la clase
+    
+                    //TO DO
+                }
+            }
         }
         return sb.toString();
     }
@@ -185,6 +186,15 @@ public class NodoVariable extends NodoExpresion {
             sb.append("\"valor\":").append("\"" + token.obtenerLexema() + "\"").append(System.lineSeparator());
         }
         return sb.toString();
+    }
+
+    @Override
+    public NodoVariable obtenerNodoVariable(){
+        if(this.encadenado != null){
+            return this.encadenado.obtenerNodoVariable();
+        }else{
+            return this;
+        }
     }
 
 }
