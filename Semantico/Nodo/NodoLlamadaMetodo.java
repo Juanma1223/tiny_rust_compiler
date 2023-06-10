@@ -244,14 +244,13 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                 // Generamos el espacio en el heap para el CIR
                 // Aca falta el manejo de envio de parametros al constructor
                 StringBuilder sb = new StringBuilder();
-                sb.append(".data # Constructor de "+this.token.obtenerLexema()).append(System.lineSeparator());
-                // Alocamos la cantidad de memoria necesaria para el CIR
-                String etiqueta = this.token.obtenerLexema() + infoClase.obtenerNumeroInstancia();
-                sb.append("." +etiqueta+ ": .space " + infoClase.obtenerTamMemoria()).append(System.lineSeparator());
+                // Para generar un nuevo CIR, debemos guardar espacio en el heap y devolver un puntero en $a0
+                sb.append("li $v0, 9 # Alocamos en el heap el constructor de "+this.token.obtenerLexema()).append(System.lineSeparator());
+                sb.append("li $a0,"+infoClase.obtenerTamMemoria()).append(System.lineSeparator());
+                sb.append("syscall").append(System.lineSeparator());
                 // Por ser esto una instanciacion, estamos en el lado derecho de una asignacion
                 // por tanto, cargamos en el acumulador la posicion donde comienza el nuevo CIR
-                sb.append(".text").append(System.lineSeparator());
-                sb.append("la $a0, "+etiqueta+"($0)").append(System.lineSeparator());
+                sb.append("move $a0, $v0 # $a0 contiene el puntero al CIR de "+this.token.obtenerLexema()).append(System.lineSeparator());
                 // Luego de haber creado el CIR, queda en $a0 una referencia al inicio de la posicion del mismo
                 return sb.toString();
             }

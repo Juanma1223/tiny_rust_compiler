@@ -144,7 +144,6 @@ public class NodoVariable extends NodoExpresion {
         if(this.encadenado != null){
             // Redireccionamos la ejecucion al metodo correspondiente
             sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
-            
         }else{
             if (infoVariable != null) {
                 //La variable es un parámetro del método
@@ -158,10 +157,18 @@ public class NodoVariable extends NodoExpresion {
                     sb.append("lw $a0, -" + offset + "($fp) # Acceso a la variable "+infoVariable.obtenerNombre()).append(System.lineSeparator());
     
                 } else {
+                    // Obtenemos el padre para obtener la posicion de memoria en el heap del CIR
+                    NodoVariable padre = this.padre.obtenerNodoVariable();
+                    String nombreVariablePadre = padre.obtenerToken().obtenerLexema();
+                    Variable variablePadre = metodoContenedor.obtenerVariablePorNombre(nombreVariablePadre);
                     infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
+                    Clase clasePadre = tablaDeSimbolos.obtenerClasePorNombre(variablePadre.obtenerTipo().obtenerTipo());
+                    int offset = metodoContenedor.offsetVariable(nombreVariablePadre);
                     //La variable es un atributo de la clase
-    
-                    //TO DO
+                    sb.append("lw $t1, -" + offset + "($fp) # Acceso al CIR de  "+nombreVariablePadre).append(System.lineSeparator());
+                    offset = clasePadre.offsetAtributo(token.obtenerLexema());
+                    sb.append("lw $a0, -" + offset + "($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR").append(System.lineSeparator());
+
                 }
             }
         }
@@ -190,11 +197,7 @@ public class NodoVariable extends NodoExpresion {
 
     @Override
     public NodoVariable obtenerNodoVariable(){
-        if(this.encadenado != null){
-            return this.encadenado.obtenerNodoVariable();
-        }else{
-            return this;
-        }
+        return this;
     }
 
 }
