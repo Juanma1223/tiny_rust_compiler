@@ -107,6 +107,21 @@
 
 ]
 }
+,
+{
+"nombre":"resta_uno",
+"static":"false",
+"retorno":"I32",
+"posicion":"1",
+"paramF":[
+{
+"nombre":"r",
+"tipo":"I32",
+"posicion":"0"
+}
+
+]
+}
 
 ],
 "atributos":[

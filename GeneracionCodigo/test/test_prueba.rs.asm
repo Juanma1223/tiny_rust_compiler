@@ -4,6 +4,7 @@ IO_out_i32:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
+
 sw $a0, -4($fp)
 li $v0, 1
 syscall
@@ -16,6 +17,7 @@ IO_out_bool:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
+
 sw $a0, -4($fp)
 li $v0, 1
 syscall
@@ -28,6 +30,7 @@ IO_out_char:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
+
 sw $a0, -4($fp)
 li $v0, 4
 syscall
@@ -40,6 +43,7 @@ IO_out_string:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
+
 sw $a0, -4($fp)
 li $v0, 4
 syscall
@@ -52,9 +56,10 @@ IO_in_i32:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
-sw $a0, -4($fp)
+
 li $v0, 5
 syscall
+move $a0, $v0
 lw $ra, 4($sp)
 addiu $sp, $sp, 20
 lw $fp, 0($sp)
@@ -64,9 +69,10 @@ IO_in_bool:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
-sw $a0, -4($fp)
+
 li $v0, 5
 syscall
+move $a0, $v0
 lw $ra, 4($sp)
 addiu $sp, $sp, 20
 lw $fp, 0($sp)
@@ -76,7 +82,7 @@ IO_in_char:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
-sw $a0, -4($fp)
+
 li $v0, 8
 syscall
 lw $ra, 4($sp)
@@ -88,7 +94,7 @@ IO_in_string:
 move $fp, $sp
 subu $sp, $sp, 20
 sw $ra, 4($sp)
-sw $a0, -4($fp)
+
 li $v0, 8
 syscall
 lw $ra, 4($sp)
@@ -99,8 +105,10 @@ jr $ra
 
 Prueba_suma:
 move $fp, $sp # Comienza la creacion de RA de suma
-subu $sp, $sp, 24
+subu $sp, $sp, 28
 sw $ra, 4($sp)
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
 lw $a0, -4($fp) # Acceso a parametro
 
 sw $a0, 0($sp)
@@ -112,10 +120,56 @@ addu $a0, $t1, $a0
 
 addiu $sp, $sp, 4
 
+sw $a0,-12($fp)
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+sw $fp, 0($sp)
+lw $a0, -12($fp) # Acceso a la variable c
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal IO_out_i32
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+sw $fp, 0($sp)
+lw $a0, -12($fp) # Acceso a la variable c
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal Prueba_resta_uno
+
+sw $a0,-12($fp)
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+lw $a0, -12($fp) # Acceso a la variable c
+
 
 
 lw $ra, 4($sp) # Comenzamos el pop del metodo suma
-addiu $sp, $sp, 24
+addiu $sp, $sp, 28
+lw $fp, 0($sp)
+jr $ra
+
+Prueba_resta_uno:
+move $fp, $sp # Comienza la creacion de RA de resta_uno
+subu $sp, $sp, 20
+sw $ra, 4($sp)
+lw $a0, -4($fp) # Acceso a parametro
+
+sw $a0, 0($sp)
+addiu $sp, $sp, -4
+li $a0, 1
+
+lw $t1, 4($sp)
+subu $a0, $t1, $a0
+
+addiu $sp, $sp, 4
+
+
+
+lw $ra, 4($sp) # Comenzamos el pop del metodo resta_uno
+addiu $sp, $sp, 20
 lw $fp, 0($sp)
 jr $ra
 
