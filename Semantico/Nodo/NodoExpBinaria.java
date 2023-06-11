@@ -132,80 +132,80 @@ public class NodoExpBinaria extends NodoExpresion {
         switch(this.operador.obtenerLexema()){
             //Operaciones aritmeticas
             case "+":
-            sb.append("addu $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("addu $a0, $t1, $a0 # Suma").append(System.lineSeparator());
             break;
             case "-":
-            sb.append("subu $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("subu $a0, $t1, $a0 # Resta").append(System.lineSeparator());
             break;
             case "*":
-            sb.append("mul $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("mul $a0, $t1, $a0 # Multiplicacion").append(System.lineSeparator());
             break;
             case "/":
             this.tablaDeSimbolos = obtenerTablaDeSimbolos();
             int numDiv = tablaDeSimbolos.obtenerLabel();
             //Revisamos que el divisor sea distinto de 0
-            sb.append("bne $a0, $0, division"+numDiv).append(System.lineSeparator());
+            sb.append("bne $a0, $0, division"+numDiv+" # Control division por cero").append(System.lineSeparator());
             sb.append(".data").append(System.lineSeparator());
             int numString = tablaDeSimbolos.obtenerLabel(); // creamos un mensaje de error
             sb.append("string"+numString+": .asciiz ").append("\"" +"ERROR: Division por cero"+"\"").append(System.lineSeparator());
             sb.append(".text").append(System.lineSeparator());
             sb.append("la $a0, string"+numString).append(System.lineSeparator()); // cargamos el mensaje en el acumulador
-            sb.append("li $v0, 4").append(System.lineSeparator()); // print_string
+            sb.append("li $v0, 4 # Print string").append(System.lineSeparator()); // print_string
             sb.append("syscall").append(System.lineSeparator());
-            sb.append("li $v0, 10").append(System.lineSeparator()); // exit
+            sb.append("li $v0, 10 # Exit").append(System.lineSeparator()); // exit
             sb.append("syscall").append(System.lineSeparator());
             sb.append("division"+numDiv+":").append(System.lineSeparator()); // realizamos la division
-            sb.append("div $t1, $a0").append(System.lineSeparator());
-            sb.append("mflo $a0").append(System.lineSeparator());  //recuperar Lo
+            sb.append("div $t1, $a0 # Division").append(System.lineSeparator());
+            sb.append("mflo $a0 # Recupero resultado division").append(System.lineSeparator());  //recuperar Lo
             break;
             case "%":
             this.tablaDeSimbolos = obtenerTablaDeSimbolos();
             int numMod = tablaDeSimbolos.obtenerLabel();
             //Revisamos que el divisor sea distinto de 0
-            sb.append("bne $a0, $0, modulo"+numMod).append(System.lineSeparator());
+            sb.append("bne $a0, $0, modulo"+numMod+" # Control division por cero").append(System.lineSeparator());
             sb.append(".data").append(System.lineSeparator());
             int numStr = tablaDeSimbolos.obtenerLabel(); // creamos un mensaje de error
             sb.append("string"+numStr+": .asciiz ").append("\"" +"ERROR: Modulo-Division por cero"+"\"").append(System.lineSeparator());
             sb.append(".text").append(System.lineSeparator());
             sb.append("la $a0, string"+numStr).append(System.lineSeparator()); // cargamos el mensaje en el acumulador
-            sb.append("li $v0, 4").append(System.lineSeparator()); // print_string
+            sb.append("li $v0, 4 # Print string").append(System.lineSeparator()); // print_string
             sb.append("syscall").append(System.lineSeparator());
-            sb.append("li $v0, 10").append(System.lineSeparator()); // exit
+            sb.append("li $v0, 10 # Exit").append(System.lineSeparator()); // exit
             sb.append("syscall").append(System.lineSeparator());
             sb.append("modulo"+numMod+":").append(System.lineSeparator()); // realizamos la division para obtener el modulo
-            sb.append("div $t1, $a0").append(System.lineSeparator());
-            sb.append("mfhi $a0").append(System.lineSeparator()); //recuperar Hi
+            sb.append("div $t1, $a0 # Division").append(System.lineSeparator());
+            sb.append("mfhi $a0 # Recupero resultado modulo").append(System.lineSeparator()); //recuperar Hi
             break;
             //Operaciones logicas relacionales
             case "<":
-            sb.append("slt $a0, $t1, $a0").append(System.lineSeparator()); //izq < der
+            sb.append("slt $a0, $t1, $a0 # Comparacion <").append(System.lineSeparator()); //izq < der
             break;
             case "<=":
-            sb.append("slt $a0, $a0, $t1").append(System.lineSeparator()); // !(der < izq)
-            sb.append("xori $a0, $a0, 1").append(System.lineSeparator());
+            sb.append("slt $a0, $a0, $t1 # Comparacion <=").append(System.lineSeparator()); // !(der < izq)
+            sb.append("xori $a0, $a0, 1 # Comparacion <=").append(System.lineSeparator());
             break;
             case ">":
-            sb.append("slt $a0, $a0, $t1").append(System.lineSeparator()); //der < izq
+            sb.append("slt $a0, $a0, $t1 # Comparacion >").append(System.lineSeparator()); //der < izq
             break;
             case ">=":
-            sb.append("slt $a0, $t1, $a0").append(System.lineSeparator()); // !(izq < der)
-            sb.append("xori $a0, $a0, 1").append(System.lineSeparator());
+            sb.append("slt $a0, $t1, $a0 # Comparacion >=").append(System.lineSeparator()); // !(izq < der)
+            sb.append("xori $a0, $a0, 1 # Comparacion >=").append(System.lineSeparator());
             break;
             //Operaciones logicas && y ||
             case "&&":
-            sb.append("and $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("and $a0, $t1, $a0 # Operacion &&").append(System.lineSeparator());
             break;
             case "||":
-            sb.append("or $a0, $t1, $a0").append(System.lineSeparator());
+            sb.append("or $a0, $t1, $a0 # Operacion ||").append(System.lineSeparator());
             break;
             //Operaciones == y !=
             case "==":
-            sb.append("xor $a0, $t1, $a0").append(System.lineSeparator());
-            sb.append("sltu $a0, $a0, 1").append(System.lineSeparator());
+            sb.append("xor $a0, $t1, $a0 # Operacion ==").append(System.lineSeparator());
+            sb.append("sltu $a0, $a0, 1 # Operacion ==").append(System.lineSeparator());
             break;
             case "!=":
-            sb.append("xor $a0, $t1, $a0").append(System.lineSeparator());
-            sb.append("sltu $a0, $0, $a0").append(System.lineSeparator());
+            sb.append("xor $a0, $t1, $a0 # Operacion !=").append(System.lineSeparator());
+            sb.append("sltu $a0, $0, $a0 # Operacion !=").append(System.lineSeparator());
             break;
             default:
             sb.append("");

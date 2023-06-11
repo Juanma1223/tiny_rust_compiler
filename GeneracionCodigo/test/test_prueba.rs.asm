@@ -150,8 +150,8 @@ addiu $sp, $sp, -4
 lw $a0, -4($fp) # Acceso a parametro
 
 lw $t1, 4($sp)
-slt $a0, $a0, $t1
-xori $a0, $a0, 1
+slt $a0, $a0, $t1 # Comparacion <=
+xori $a0, $a0, 1 # Comparacion <=
 
 addiu $sp, $sp, 4
 
@@ -180,7 +180,7 @@ lw $t1, -12($fp) # Acceso al CIR de  j
 lw $a0, -8($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
 lw $t1, 4($sp)
-addu $a0, $t1, $a0
+addu $a0, $t1, $a0 # Suma
 
 addiu $sp, $sp, 4
 
@@ -218,7 +218,7 @@ addiu $sp, $sp, -4
 li $a0, 1
 
 lw $t1, 4($sp)
-addu $a0, $t1, $a0
+addu $a0, $t1, $a0 # Suma
 
 addiu $sp, $sp, 4
 

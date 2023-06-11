@@ -92,10 +92,10 @@ public class NodoLiteral extends NodoExpresion{
             sb.append("la $a0, string"+numString).append(System.lineSeparator());
             break;
             case "p_true":
-            sb.append("li $a0, 1").append(System.lineSeparator());
+            sb.append("li $a0, 1 # Cargo true").append(System.lineSeparator());
             break;
             case "p_false":
-            sb.append("li $a0, 0").append(System.lineSeparator());
+            sb.append("li $a0, 0 # Cargo false").append(System.lineSeparator());
             break;
             default:
             sb.append("li $a0, 0").append(System.lineSeparator());

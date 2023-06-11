@@ -92,13 +92,13 @@ public class NodoExpUnaria extends NodoExpresion {
         switch(this.operador.obtenerLexema()){
             //Operaciones aritmeticas unarias
             case "+":
-            sb.append("addiu $a0, $a0, 1").append(System.lineSeparator());
+            sb.append("addiu $a0, $a0, 1 # Op unaria +").append(System.lineSeparator());
             break;
             case "-":
-            sb.append("addiu $a0, $a0, -1").append(System.lineSeparator());
+            sb.append("addiu $a0, $a0, -1 # Op unaria -").append(System.lineSeparator());
             break;
             case "!":
-            sb.append("xori $a0, $a0, 1").append(System.lineSeparator());
+            sb.append("xori $a0, $a0, 1 # Op unaria !").append(System.lineSeparator());
             break;
         }
         return sb.toString();
