@@ -147,7 +147,7 @@ public class NodoAsignacion extends NodoExpresion {
                 // Este es un atributo de clase, pero nos referimos a la clase actual y no una instancia
                 infoVariable = claseContenedora.obtenerAtributoPorNombre(nombreVariable);
                 // La variable es un atributo de la clase
-                int offsetSelf = metodoContenedor.offsetSelf();
+                int offsetSelf = infoMetodo.offsetSelf();
                 sb.append("lw $t1, -" + offsetSelf + "($fp) # Acceso al CIR de self")
                         .append(System.lineSeparator());
                 int offset = claseContenedora.offsetAtributo(nombreVariable);

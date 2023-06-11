@@ -58,7 +58,8 @@ public class NodoAST extends Nodo {
         StringBuilder sb = new StringBuilder();
         sb.append(".text").append(System.lineSeparator());
         sb.append(".globl main").append(System.lineSeparator()); // main
-        sb.append(genCodigoIO()).append(System.lineSeparator());
+        sb.append(genCodigoIO()).append(System.lineSeparator()); // genero codigo de la clase IO
+        sb.append(genCodigoStr()).append(System.lineSeparator()); // genero codigo de la clase Str
         clases.forEach((clase) -> sb.append(clase.genCodigo()).append(System.lineSeparator()));
         sb.append("li $v0, 10").append(System.lineSeparator()); // exit
         sb.append("syscall").append(System.lineSeparator());
@@ -113,7 +114,7 @@ public class NodoAST extends Nodo {
         sb.append("move $fp, $sp").append(System.lineSeparator());
         // Obtenemos la cantidad de memoria que requerimos alocar y 
         // desplazamos el stack pointer
-        sb.append("subu $sp, $sp, " + 20).append(System.lineSeparator());
+        sb.append("subu $sp, $sp, " + 16).append(System.lineSeparator());
         // Guardamos el punto de retorno al codigo del llamador
         sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
 
@@ -123,12 +124,41 @@ public class NodoAST extends Nodo {
         // Cuando el metodo retorna a este punto de su ejecucion,
         // hacemos pop del RA actual
         sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
-        sb.append("addiu $sp, $sp, " + 20).append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, " + 16).append(System.lineSeparator());
         sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
         // Retornamos la ejecucion al punto posterior de la llamada
         sb.append("jr $ra").append(System.lineSeparator());
 
         return sb.toString();
     }
+
+    public String genCodigoStr() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Str_length:").append(System.lineSeparator());
+        // Inicio del metodo
+        sb.append("move $fp, $sp").append(System.lineSeparator());
+        sb.append("subu $sp, $sp, " + 12).append(System.lineSeparator());
+        sb.append("sw $ra, 4($sp)").append(System.lineSeparator());
+        // Ejecucion del metodo
+        sb.append("lw $a0, 8($sp) # cargo la palabra de self").append(System.lineSeparator());
+        sb.append("li $t0, 0 # inicializa contador en 0").append(System.lineSeparator());
+        sb.append("loop_length:").append(System.lineSeparator());
+        sb.append("lb $t1, 0($a0) # carga el siguiente caracter en t1").append(System.lineSeparator());
+        sb.append("beqz $t1, exit_length # chequea si se llego al final de la cadena").append(System.lineSeparator());
+        sb.append("addiu $a0, $a0, 1 # incrementa el puntero de la cadena").append(System.lineSeparator());
+        sb.append("addiu $t0, $t0, 1 # incrementa el contador").append(System.lineSeparator());
+        sb.append("j loop_length # vuelve al loop").append(System.lineSeparator());
+        sb.append("exit_length:").append(System.lineSeparator());
+        sb.append("move $a0 $t0 # guarda el resultado en el acumulador").append(System.lineSeparator());
+        // Final del metodo
+        sb.append("lw $ra, 4($sp)").append(System.lineSeparator());
+        sb.append("addiu $sp, $sp, " + 12).append(System.lineSeparator());
+        sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
+        // Retorno
+        sb.append("jr $ra").append(System.lineSeparator());
+        return sb.toString();
+    }
+
+    
 
 }

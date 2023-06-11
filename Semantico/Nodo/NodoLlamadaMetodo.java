@@ -279,7 +279,7 @@ public class NodoLlamadaMetodo extends NodoExpresion {
             int offset = metodoContenedor.offsetVariable(padreVariable.obtenerToken().obtenerLexema());
             // Guardamos la referencia en la posicion correspondiente en el RA
             sb.append("lw $t1,-"+offset+"($fp)").append(System.lineSeparator());
-            int offsetSelf = metodoContenedor.offsetSelf();
+            int offsetSelf = infoMetodo.offsetSelf();
             sb.append("sw $t1,-"+offsetSelf+"($sp)").append(System.lineSeparator());
         }
         

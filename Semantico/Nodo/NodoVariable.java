@@ -182,7 +182,7 @@ public class NodoVariable extends NodoExpresion {
                         infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
                         int offset = claseContenedora.offsetAtributo(token.obtenerLexema());
                         // La variable es un atributo de la clase
-                        int offsetSelf = metodoContenedor.offsetSelf();
+                        int offsetSelf = infoMetodo.offsetSelf();
                         sb.append("lw $t1, -" + offsetSelf + "($fp) # Acceso al CIR de  " + token.obtenerLexema())
                                 .append(System.lineSeparator());
                         offset = claseContenedora.offsetAtributo(token.obtenerLexema());
