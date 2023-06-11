@@ -233,5 +233,12 @@ public class Funcion {
         }
         return offset;
     }
+
+    // Este metodo calcula el offset del puntero a self
+    // dentro del RA del metodo
+    public int offsetSelf() {
+        int offset = this.obtenerTamMemoria()-8;
+        return offset;
+    }
 }
 

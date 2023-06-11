@@ -1,11 +1,9 @@
 package Semantico.Funcion;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import Semantico.Tipo.Tipo;
 import Semantico.Variable.Parametro;
-import Semantico.Variable.Variable;
 
 public class Metodo extends Funcion {
     private static final int ArrayList = 0;

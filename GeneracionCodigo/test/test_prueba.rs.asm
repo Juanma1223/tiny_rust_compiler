@@ -111,7 +111,7 @@ sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
 li $a0, 0
 
-lw $t1, 0($fp) # Acceso al CIR de self
+lw $t1, -12($fp) # Acceso al CIR de self
 sw $a0, -4($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
@@ -120,7 +120,7 @@ sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
 li $a0, 1
 
-lw $t1, 0($fp) # Acceso al CIR de self
+lw $t1, -12($fp) # Acceso al CIR de self
 sw $a0, -8($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
@@ -129,7 +129,7 @@ sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
 li $a0, 0
 
-lw $t1, 0($fp) # Acceso al CIR de self
+lw $t1, -12($fp) # Acceso al CIR de self
 sw $a0, -0($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
@@ -163,7 +163,7 @@ sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
 jal Fibonacci_out_idx
 
 sw $fp, 0($sp)
-lw $t1, 0($fp) # Acceso al CIR de  i
+lw $t1, -12($fp) # Acceso al CIR de  i
 lw $a0, -4($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
 sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
@@ -171,12 +171,12 @@ jal Fibonacci_out_val
 
 sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
-lw $t1, 0($fp) # Acceso al CIR de  i
+lw $t1, -12($fp) # Acceso al CIR de  i
 lw $a0, -4($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
 sw $a0, 0($sp)
 addiu $sp, $sp, -4
-lw $t1, 0($fp) # Acceso al CIR de  j
+lw $t1, -12($fp) # Acceso al CIR de  j
 lw $a0, -8($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
 lw $t1, 4($sp)
@@ -184,27 +184,27 @@ addu $a0, $t1, $a0
 
 addiu $sp, $sp, 4
 
-lw $t1, 0($fp) # Acceso al CIR de self
+lw $t1, -12($fp) # Acceso al CIR de self
 sw $a0, -0($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
 
 sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
-lw $t1, 0($fp) # Acceso al CIR de  j
+lw $t1, -12($fp) # Acceso al CIR de  j
 lw $a0, -8($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
-lw $t1, 0($fp) # Acceso al CIR de self
+lw $t1, -12($fp) # Acceso al CIR de self
 sw $a0, -4($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
 
 sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
-lw $t1, 0($fp) # Acceso al CIR de  suma
+lw $t1, -12($fp) # Acceso al CIR de  suma
 lw $a0, -0($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
-lw $t1, 0($fp) # Acceso al CIR de self
+lw $t1, -12($fp) # Acceso al CIR de self
 sw $a0, -8($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
@@ -322,7 +322,7 @@ addiu $sp, $sp, 4 # Fin asignacion
 
 sw $fp, 0($sp)
 lw $t1,-4($fp)
-sw $t1,0($sp)
+sw $t1,-12($sp)
 lw $a0, -8($fp) # Acceso a la variable n
 
 sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA

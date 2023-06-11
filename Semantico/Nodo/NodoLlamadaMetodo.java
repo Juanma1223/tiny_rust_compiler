@@ -277,9 +277,10 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         if(padreVariable.obtenerToken() != null){
             // Obtenemos la direccion del CIR que se encuentra en la variable padre
             int offset = metodoContenedor.offsetVariable(padreVariable.obtenerToken().obtenerLexema());
-            // Guardamos la referencia al inicio del RA
+            // Guardamos la referencia en la posicion correspondiente en el RA
             sb.append("lw $t1,-"+offset+"($fp)").append(System.lineSeparator());
-            sb.append("sw $t1,0($sp)").append(System.lineSeparator());
+            int offsetSelf = metodoContenedor.offsetSelf();
+            sb.append("sw $t1,-"+offsetSelf+"($sp)").append(System.lineSeparator());
         }
         
         // Luego, almacena los argumentos en la pila

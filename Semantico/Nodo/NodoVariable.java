@@ -179,11 +179,11 @@ public class NodoVariable extends NodoExpresion {
                                 .append(System.lineSeparator());
                     } else {
                         // Estamos accediendo a una variable de la clase actual
-                        Variable variable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
                         infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
                         int offset = claseContenedora.offsetAtributo(token.obtenerLexema());
                         // La variable es un atributo de la clase
-                        sb.append("lw $t1, 0($fp) # Acceso al CIR de  " + token.obtenerLexema())
+                        int offsetSelf = metodoContenedor.offsetSelf();
+                        sb.append("lw $t1, -" + offsetSelf + "($fp) # Acceso al CIR de  " + token.obtenerLexema())
                                 .append(System.lineSeparator());
                         offset = claseContenedora.offsetAtributo(token.obtenerLexema());
                         sb.append("lw $a0, -" + offset
