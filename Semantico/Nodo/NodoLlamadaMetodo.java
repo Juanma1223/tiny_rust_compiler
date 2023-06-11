@@ -248,6 +248,8 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                 sb.append("li $v0, 9 # Alocamos en el heap el constructor de "+this.token.obtenerLexema()).append(System.lineSeparator());
                 sb.append("li $a0,"+infoClase.obtenerTamMemoria()).append(System.lineSeparator());
                 sb.append("syscall").append(System.lineSeparator());
+                // Guardamos en la ultima posicion del CIR 
+
                 // Por ser esto una instanciacion, estamos en el lado derecho de una asignacion
                 // por tanto, cargamos en el acumulador la posicion donde comienza el nuevo CIR
                 sb.append("move $a0, $v0 # $a0 contiene el puntero al CIR de "+this.token.obtenerLexema()).append(System.lineSeparator());
@@ -268,6 +270,18 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         StringBuilder sb = new StringBuilder();
         // El llamador gurada su valor de $fp
         sb.append("sw $fp, 0($sp)").append(System.lineSeparator());
+        
+        // Guardamos la direccion de self de la clase a la que pertenece el metodo
+        NodoVariable padreVariable = this.padre.obtenerNodoVariable();
+        // Si el padre es una variable, entonces el self debe apuntar al CIR que se encuentra en la variable padre
+        if(padreVariable.obtenerToken() != null){
+            // Obtenemos la direccion del CIR que se encuentra en la variable padre
+            int offset = metodoContenedor.offsetVariable(padreVariable.obtenerToken().obtenerLexema());
+            // Guardamos la referencia al inicio del RA
+            sb.append("lw $t1,-"+offset+"($fp)").append(System.lineSeparator());
+            sb.append("sw $t1,0($sp)").append(System.lineSeparator());
+        }
+        
         // Luego, almacena los argumentos en la pila
         for (int i = 0; i < argumentos.size(); i++) {
             NodoExpresion argumento = argumentos.get(i);

@@ -103,47 +103,210 @@ lw $fp, 0($sp)
 jr $ra
 
 
-Prueba_suma:
-move $fp, $sp # Comienza la creacion de RA de suma
-subu $sp, $sp, 28
+Fibonacci_sucesion_fib:
+move $fp, $sp # Comienza la creacion de RA de sucesion_fib
+subu $sp, $sp, 20
 sw $ra, 4($sp)
 sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
-lw $a0, -4($fp) # Acceso a parametro
+li $a0, 0
+
+lw $t1, 0($fp) # Acceso al CIR de self
+sw $a0, -4($t1) # Guardamos en el CIR el valor asignado
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+li $a0, 1
+
+lw $t1, 0($fp) # Acceso al CIR de self
+sw $a0, -8($t1) # Guardamos en el CIR el valor asignado
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+li $a0, 0
+
+lw $t1, 0($fp) # Acceso al CIR de self
+sw $a0, -0($t1) # Guardamos en el CIR el valor asignado
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+li $a0, 0
+
+sw $a0,-8($fp)
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+while1:
+lw $a0, -8($fp) # Acceso a la variable idx
 
 sw $a0, 0($sp)
 addiu $sp, $sp, -4
-lw $a0, -8($fp) # Acceso a parametro
+lw $a0, -4($fp) # Acceso a parametro
+
+lw $t1, 4($sp)
+slt $a0, $a0, $t1
+xori $a0, $a0, 1
+
+addiu $sp, $sp, 4
+
+bne $a0, 1, endwhile1
+sw $fp, 0($sp)
+lw $a0, -8($fp) # Acceso a la variable idx
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal Fibonacci_out_idx
+
+sw $fp, 0($sp)
+lw $t1, 0($fp) # Acceso al CIR de  i
+lw $a0, -4($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal Fibonacci_out_val
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+lw $t1, 0($fp) # Acceso al CIR de  i
+lw $a0, -4($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
+
+sw $a0, 0($sp)
+addiu $sp, $sp, -4
+lw $t1, 0($fp) # Acceso al CIR de  j
+lw $a0, -8($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
 
 lw $t1, 4($sp)
 addu $a0, $t1, $a0
 
 addiu $sp, $sp, 4
 
-sw $a0,-12($fp)
+lw $t1, 0($fp) # Acceso al CIR de self
+sw $a0, -0($t1) # Guardamos en el CIR el valor asignado
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
 
-lw $a0, -12($fp) # Acceso a la variable c
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+lw $t1, 0($fp) # Acceso al CIR de  j
+lw $a0, -8($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
+
+lw $t1, 0($fp) # Acceso al CIR de self
+sw $a0, -4($t1) # Guardamos en el CIR el valor asignado
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+lw $t1, 0($fp) # Acceso al CIR de  suma
+lw $a0, -0($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
+
+lw $t1, 0($fp) # Acceso al CIR de self
+sw $a0, -8($t1) # Guardamos en el CIR el valor asignado
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
+
+sw $a0, 0($sp) # Comienzo asignacion
+subu $sp, $sp, 4
+lw $a0, -8($fp) # Acceso a la variable idx
+
+sw $a0, 0($sp)
+addiu $sp, $sp, -4
+li $a0, 1
+
+lw $t1, 4($sp)
+addu $a0, $t1, $a0
+
+addiu $sp, $sp, 4
+
+sw $a0,-8($fp)
+lw $a0, 4($sp)
+addiu $sp, $sp, 4 # Fin asignacion
 
 
+j while1
+endwhile1:
 
-lw $ra, 4($sp) # Comenzamos el pop del metodo suma
-addiu $sp, $sp, 28
+
+lw $ra, 4($sp) # Comenzamos el pop del metodo sucesion_fib
+addiu $sp, $sp, 20
+lw $fp, 0($sp)
+jr $ra
+
+
+Fibonacci_out_idx:
+move $fp, $sp # Comienza la creacion de RA de out_idx
+subu $sp, $sp, 16
+sw $ra, 4($sp)
+sw $fp, 0($sp)
+.data
+string2: .asciiz "f_"
+.text
+la $a0, string2
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal IO_out_string
+
+sw $fp, 0($sp)
+lw $a0, -4($fp) # Acceso a parametro
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal IO_out_i32
+
+sw $fp, 0($sp)
+.data
+string3: .asciiz "="
+.text
+la $a0, string3
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal IO_out_string
+
+
+lw $ra, 4($sp) # Comenzamos el pop del metodo out_idx
+addiu $sp, $sp, 16
+lw $fp, 0($sp)
+jr $ra
+
+Fibonacci_out_val:
+move $fp, $sp # Comienza la creacion de RA de out_val
+subu $sp, $sp, 16
+sw $ra, 4($sp)
+sw $fp, 0($sp)
+lw $a0, -4($fp) # Acceso a parametro
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal IO_out_i32
+
+sw $fp, 0($sp)
+.data
+string4: .asciiz "\n"
+.text
+la $a0, string4
+
+sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
+jal IO_out_string
+
+
+lw $ra, 4($sp) # Comenzamos el pop del metodo out_val
+addiu $sp, $sp, 16
 lw $fp, 0($sp)
 jr $ra
 
 
 main:
 move $fp, $sp # Comienza la creacion de RA de main
-subu $sp, $sp, 28
+subu $sp, $sp, 20
 sw $ra, 4($sp)
 sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
-li $v0, 9 # Alocamos en el heap el constructor de Prueba
-li $a0,12
+li $v0, 9 # Alocamos en el heap el constructor de Fibonacci
+li $a0,20
 syscall
-move $a0, $v0 # $a0 contiene el puntero al CIR de Prueba
+move $a0, $v0 # $a0 contiene el puntero al CIR de Fibonacci
 
 sw $a0,-4($fp)
 lw $a0, 4($sp)
@@ -151,51 +314,24 @@ addiu $sp, $sp, 4 # Fin asignacion
 
 sw $a0, 0($sp) # Comienzo asignacion
 subu $sp, $sp, 4
-li $a0, 5
+li $a0, 12
 
-lw $t1, -4($fp) # Cargamos el puntero al CIR de p1
-sw $a0, -0($t1) # Guardamos en el CIR el valor asignado
+sw $a0,-8($fp)
 lw $a0, 4($sp)
 addiu $sp, $sp, 4 # Fin asignacion
 
 sw $fp, 0($sp)
-lw $t1, -4($fp) # Acceso al CIR de  p1
-lw $a0, -0($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
-
-
-sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
-jal IO_out_i32
-
-sw $a0, 0($sp) # Comienzo asignacion
-subu $sp, $sp, 4
-li $a0, 7
-
-lw $t1, -4($fp) # Cargamos el puntero al CIR de p1
-sw $a0, -4($t1) # Guardamos en el CIR el valor asignado
-lw $a0, 4($sp)
-addiu $sp, $sp, 4 # Fin asignacion
-
-sw $fp, 0($sp)
-sw $fp, 0($sp)
-lw $t1, -4($fp) # Acceso al CIR de  p1
-lw $a0, -0($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
-
+lw $t1,-4($fp)
+sw $t1,0($sp)
+lw $a0, -8($fp) # Acceso a la variable n
 
 sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
-lw $t1, -4($fp) # Acceso al CIR de  p1
-lw $a0, -4($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR
+jal Fibonacci_sucesion_fib
 
-
-sw $a0, -8($sp) # Guardamos el parameotro 1 en el RA
-jal Prueba_suma
-
-
-sw $a0, -4($sp) # Guardamos el parameotro 0 en el RA
-jal IO_out_i32
 
 
 lw $ra, 4($sp) # Comenzamos el pop del metodo main
-addiu $sp, $sp, 28
+addiu $sp, $sp, 20
 lw $fp, 0($sp)
 jr $ra
 

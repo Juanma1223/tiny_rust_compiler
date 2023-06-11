@@ -140,34 +140,56 @@ public class NodoVariable extends NodoExpresion {
         StringBuilder sb = new StringBuilder();
         Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
         Variable infoVariable = metodoContenedor.obtenerParametroPorNombre(token.obtenerLexema());
-        //Si la variable tiene encadenado
-        if(this.encadenado != null){
+        // Si la variable tiene encadenado
+        if (this.encadenado != null) {
             // Redireccionamos la ejecucion al metodo correspondiente
             sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
-        }else{
+        } else {
             if (infoVariable != null) {
-                //La variable es un parámetro del método
+                // La variable es un parámetro del método
                 int offset = infoMetodo.offsetParametro(infoVariable.obtenerPosicion());
                 sb.append("lw $a0, -" + offset + "($fp) # Acceso a parametro").append(System.lineSeparator());
             } else {
                 infoVariable = metodoContenedor.obtenerVariablePorNombre(token.obtenerLexema());
                 if (infoVariable != null) {
-                    //La variable es una variable local del método
+                    // La variable es una variable local del método
                     int offset = infoMetodo.offsetVariable(infoVariable.obtenerNombre());
-                    sb.append("lw $a0, -" + offset + "($fp) # Acceso a la variable "+infoVariable.obtenerNombre()).append(System.lineSeparator());
-    
+                    sb.append("lw $a0, -" + offset + "($fp) # Acceso a la variable " + infoVariable.obtenerNombre())
+                            .append(System.lineSeparator());
+
                 } else {
                     // Obtenemos el padre para obtener la posicion de memoria en el heap del CIR
                     NodoVariable padre = this.padre.obtenerNodoVariable();
-                    String nombreVariablePadre = padre.obtenerToken().obtenerLexema();
-                    Variable variablePadre = metodoContenedor.obtenerVariablePorNombre(nombreVariablePadre);
-                    infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
-                    Clase clasePadre = tablaDeSimbolos.obtenerClasePorNombre(variablePadre.obtenerTipo().obtenerTipo());
-                    int offset = metodoContenedor.offsetVariable(nombreVariablePadre);
-                    //La variable es un atributo de la clase
-                    sb.append("lw $t1, -" + offset + "($fp) # Acceso al CIR de  "+nombreVariablePadre).append(System.lineSeparator());
-                    offset = clasePadre.offsetAtributo(token.obtenerLexema());
-                    sb.append("lw $a0, -" + offset + "($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR").append(System.lineSeparator());
+
+                    // Verificamos si estamos accediendo a una variable que viene de un encadenado
+                    // de una clase
+                    if (padre.obtenerToken() != null) {
+                        String nombreVariablePadre = padre.obtenerToken().obtenerLexema();
+                        Variable variablePadre = metodoContenedor.obtenerVariablePorNombre(nombreVariablePadre);
+                        infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
+                        Clase clasePadre = tablaDeSimbolos
+                                .obtenerClasePorNombre(variablePadre.obtenerTipo().obtenerTipo());
+                        int offset = metodoContenedor.offsetVariable(nombreVariablePadre);
+                        // La variable es un atributo de la clase
+                        sb.append("lw $t1, -" + offset + "($fp) # Acceso al CIR de  " + nombreVariablePadre)
+                                .append(System.lineSeparator());
+                        offset = clasePadre.offsetAtributo(token.obtenerLexema());
+                        sb.append("lw $a0, -" + offset
+                                + "($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR")
+                                .append(System.lineSeparator());
+                    } else {
+                        // Estamos accediendo a una variable de la clase actual
+                        Variable variable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
+                        infoVariable = claseContenedora.obtenerAtributoPorNombre(token.obtenerLexema());
+                        int offset = claseContenedora.offsetAtributo(token.obtenerLexema());
+                        // La variable es un atributo de la clase
+                        sb.append("lw $t1, 0($fp) # Acceso al CIR de  " + token.obtenerLexema())
+                                .append(System.lineSeparator());
+                        offset = claseContenedora.offsetAtributo(token.obtenerLexema());
+                        sb.append("lw $a0, -" + offset
+                                + "($t1) # Guardamos en $a0 el valor de la variable almacenada en el CIR")
+                                .append(System.lineSeparator());
+                    }
 
                 }
             }
@@ -196,7 +218,7 @@ public class NodoVariable extends NodoExpresion {
     }
 
     @Override
-    public NodoVariable obtenerNodoVariable(){
+    public NodoVariable obtenerNodoVariable() {
         return this;
     }
 

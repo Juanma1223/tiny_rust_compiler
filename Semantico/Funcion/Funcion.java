@@ -140,11 +140,10 @@ public class Funcion {
         }
 
         // Sumamos los valores fijos del registro de activacion
-        // Direccion de retorno = 4 bytes
         // Direccion al puntero self = 4 bytes
         // Direccion al RA del llamador = 4 bytes
         // Direccion al puntero de retorno = 4 bytes
-        int memTotal = 16 + this.memoriaParametros() + memVariables;
+        int memTotal = 12 + this.memoriaParametros() + memVariables;
         this.tamMemoria = memTotal;
     }
 

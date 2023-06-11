@@ -263,7 +263,8 @@ public class Clase {
 
         // Sumamos los valores fijos del CIR
         // Direccion de la VT = 4 bytes
-        int memTotal = 4 + memVariables;
+        // Direccion de self = 4 bytes
+        int memTotal = 8 + memVariables;
         this.tamMemoria = memTotal;
     }
 

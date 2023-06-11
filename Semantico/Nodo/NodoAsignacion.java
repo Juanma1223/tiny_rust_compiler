@@ -105,7 +105,7 @@ public class NodoAsignacion extends NodoExpresion {
         // o el CIR
         NodoVariable ladoIzqNodoVariable = ladoIzq.obtenerNodoVariable();
         String nombreVariable = ladoIzqNodoVariable.token.obtenerLexema();
-        String alcanceVariable = this.alcanceVariable(nombreVariable,ladoIzqNodoVariable);
+        String alcanceVariable = this.alcanceVariable(nombreVariable, ladoIzqNodoVariable);
         Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
         Variable infoVariable;
         sb.append("sw $a0, 0($sp) # Comienzo asignacion").append(System.lineSeparator());
@@ -134,13 +134,25 @@ public class NodoAsignacion extends NodoExpresion {
 
                 // Obtenemos la primera posicion del CIR mediante el puntero guardado en la
                 // variable y la guardamos en $t1
-                sb.append("lw $t1, -" + infoMetodo.offsetVariable(nombreVariable) + "($fp) # Cargamos el puntero al CIR de "+nombreVariable)
+                sb.append("lw $t1, -" + infoMetodo.offsetVariable(nombreVariable)
+                        + "($fp) # Cargamos el puntero al CIR de " + nombreVariable)
                         .append(System.lineSeparator());
                 // Guardamos el valor de la asignacion en el CIR
                 String nombreAtributo = ladoIzqNodoVariable.encadenado.obtenerToken().obtenerLexema();
-                sb.append("sw $a0, -" + infoClase.offsetAtributo(nombreAtributo) + "($t1) # Guardamos en el CIR el valor asignado")
+                sb.append("sw $a0, -" + infoClase.offsetAtributo(nombreAtributo)
+                        + "($t1) # Guardamos en el CIR el valor asignado")
                         .append(System.lineSeparator());
                 break;
+            case "atributo":
+                // Este es un atributo de clase, pero nos referimos a la clase actual y no una instancia
+                infoVariable = claseContenedora.obtenerAtributoPorNombre(nombreVariable);
+                // La variable es un atributo de la clase
+                sb.append("lw $t1, 0($fp) # Acceso al CIR de self")
+                        .append(System.lineSeparator());
+                int offset = claseContenedora.offsetAtributo(nombreVariable);
+                sb.append("sw $a0, -" + offset
+                        + "($t1) # Guardamos en el CIR el valor asignado")
+                        .append(System.lineSeparator());
             default:
                 break;
         }
@@ -165,14 +177,14 @@ public class NodoAsignacion extends NodoExpresion {
                 // sb.append("lw $a0, -" + offset + "($fp) # Acceso a la variable " +
                 // infoVariable.obtenerNombre())
                 // .append(System.lineSeparator());
-                if(ladoIzq.encadenado != null){
+                if (ladoIzq.encadenado != null) {
                     return "clase";
-                }else{
+                } else {
                     return "local";
                 }
             }
         }
-        return "";
+        return "atributo";
     }
 
 }

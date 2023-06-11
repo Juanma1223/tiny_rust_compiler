@@ -48,6 +48,6 @@ fn main(){
     I32: n;
     fib = new Fibonacci();
     // n = IO.in_i32();
-	n = 12;
+	n = 5;
     (fib.sucesion_fib(n));
 }
