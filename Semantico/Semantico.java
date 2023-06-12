@@ -19,6 +19,11 @@ public class Semantico {
     private NodoAST AST;
 
     public Semantico(File archivo) {
+
+        // Obtenemos la ruta del archivo sin la extension
+        String ruta = archivo.getAbsolutePath();
+        ruta = ruta.substring(0,ruta.length()-3);
+
         this.tablaDeSimbolos = new TablaDeSimbolos();
         this.AST = new NodoAST(null, null);
         this.AST.establecerTablaDeSimbolos(tablaDeSimbolos);
@@ -31,14 +36,14 @@ public class Semantico {
         // Realizamos el checkeo de tipos sobre el AST
         this.AST.checkeoTipos();
         // Creamos el json de la Tabla de Simbolos
-        try (FileWriter escritorTDS = new FileWriter(archivo + ".ts.json")) {
-            escritorTDS.write(this.tablaDeSimbolos.toJson(archivo.getName()));
+        try (FileWriter escritorTDS = new FileWriter(ruta + ".ts.json")) {
+            escritorTDS.write(this.tablaDeSimbolos.toJson(ruta + ".ts.json"));
         } catch (IOException e) {
             System.out.println("Error al intentar escribir el json de la TDS");
         }
         // Creamos el json del AST
-        try (FileWriter escritorAST = new FileWriter(archivo + ".ast.json")) {
-            escritorAST.write(this.AST.toJson(archivo.getName()));
+        try (FileWriter escritorAST = new FileWriter(ruta + ".ast.json")) {
+            escritorAST.write(this.AST.toJson(ruta + ".ast.json"));
         } catch (IOException e) {
             System.out.println("Error al intentar escribir el json del AST");
         }
