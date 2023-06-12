@@ -12,9 +12,9 @@ fn main(){
     Array I32: a;
     a = new I32[3];
     a[0] = 3;
-    a[1] = 7;
+    a[5] = 7;
     (IO.out_i32(a[0]))
-    (IO.out_i32(a[1]))
+    (IO.out_i32(a[5]))
 	// Prueba : p1;
 	// p1 = new Prueba();
 }

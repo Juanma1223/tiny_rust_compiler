@@ -16,7 +16,7 @@ fn main () {
 	Prueba : p1;
 	I32 : resultado;
 	I32 : resultado2;
-	//p1 = new Prueba();
+	p1 = new Prueba();
 	//LLamada metodo suma
 	resultado = p1.suma(2,3) + 2; //resultado vale 6
 	(IO.out_i32(resultado));
