@@ -103,4 +103,14 @@ public class NodoLiteral extends NodoExpresion{
         return sb.toString();
     }
 
+    @Override
+    public NodoLiteral obtenerNodoLiteral(){
+        return this;
+    }
+
+    @Override
+    public Token obtenerToken(){
+        return this.token;
+    }
+
 }

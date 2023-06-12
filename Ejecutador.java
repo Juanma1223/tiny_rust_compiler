@@ -14,8 +14,8 @@ public class Ejecutador {
         // Abrimos el archivo y almacenamos su informacion
         // File archivo = new File(args[0]);
 
-        //File archivo = new File("/mnt/hdd/Facultad/Facultad/4to_año/Compiladores/Compilador/tiny_rust_compiler/GeneracionCodigo/test/test_prueba.rs");
-        File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/GeneracionCodigo/test/test_prueba.rs");
+        File archivo = new File("/mnt/hdd/Facultad/Facultad/4to_año/Compiladores/Compilador/tiny_rust_compiler/GeneracionCodigo/test/test_prueba.rs");
+        // File archivo = new File("/C:/Users/marie/Documents/Compiladores/tiny_rust_compiler/GeneracionCodigo/test/test_prueba.rs");
         new GeneradorCodigo(archivo);
         System.out.println("CORRECTO");
     }

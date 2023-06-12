@@ -142,8 +142,20 @@ public class NodoVariable extends NodoExpresion {
         Variable infoVariable = metodoContenedor.obtenerParametroPorNombre(token.obtenerLexema());
         // Si la variable tiene encadenado
         if (this.encadenado != null) {
-            // Redireccionamos la ejecucion al metodo correspondiente
-            sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
+            // Si la variable es de tipo arreglo, debemos accederlo de manera especial, caso contrario generamos codigo
+            // para el encadenado correspondiente
+            if(this.encadenado instanceof NodoArreglo){
+                // Accedemos al CIR mediante el nombre de la variable que es instancia de Array
+                int offsetVariable = metodoContenedor.offsetVariable(this.token.obtenerLexema());
+                sb.append("lw $t1, -" + offsetVariable + "($fp) # Acceso a CIR de arreglo").append(System.lineSeparator());
+                NodoLiteral nodoindiceAcceso = this.encadenado.encadenado.obtenerNodoLiteral();
+                int indiceAcceso = Integer.parseInt(nodoindiceAcceso.obtenerToken().obtenerLexema());
+                // Devolvemos mediante $a0 el valor que se encuentra dentro del arreglo
+                sb.append("lw $a0, -" + 4*indiceAcceso + "($t1)").append(System.lineSeparator());
+            }else{
+                // Redireccionamos la ejecucion al metodo correspondiente
+                sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
+            }
         } else {
             if (infoVariable != null) {
                 // La variable es un parámetro del método

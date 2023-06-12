@@ -76,7 +76,13 @@ public class Nodo {
         return sb.toString();
     }
 
+
+    // Metodos auxiliares para obtener un tipo especifico de hijo o padre
     public NodoVariable obtenerNodoVariable(){
         return new NodoVariable(metodoContenedor, claseContenedora, token);
+    }
+
+    public NodoLiteral obtenerNodoLiteral(){
+        return new NodoLiteral(metodoContenedor, claseContenedora, token);
     }
 }

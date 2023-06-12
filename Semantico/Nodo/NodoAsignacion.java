@@ -144,7 +144,8 @@ public class NodoAsignacion extends NodoExpresion {
                         .append(System.lineSeparator());
                 break;
             case "atributo":
-                // Este es un atributo de clase, pero nos referimos a la clase actual y no una instancia
+                // Este es un atributo de clase, pero nos referimos a la clase actual y no una
+                // instancia
                 infoVariable = claseContenedora.obtenerAtributoPorNombre(nombreVariable);
                 // La variable es un atributo de la clase
                 int offsetSelf = infoMetodo.offsetSelf();
@@ -152,6 +153,20 @@ public class NodoAsignacion extends NodoExpresion {
                         .append(System.lineSeparator());
                 int offset = claseContenedora.offsetAtributo(nombreVariable);
                 sb.append("sw $a0, -" + offset
+                        + "($t1) # Guardamos en el CIR el valor asignado")
+                        .append(System.lineSeparator());
+            case "arreglo":
+                // Por ser un arreglo, calculamos el offset en funcion del parametro dentro 
+                // de los corchetes a partir de su CIR que se encuentra en el heap
+                sb.append("lw $t1, -" + infoMetodo.offsetVariable(nombreVariable)
+                        + "($fp) # Cargamos el puntero al CIR de " + nombreVariable)
+                        .append(System.lineSeparator());
+
+                // Obtenemos el nodo literal donde se encuentra el indice de acceso
+                NodoLiteral indiceArreglo = ladoIzqNodoVariable.encadenado.encadenado.obtenerNodoLiteral();
+                // Los arreglos tienen tamaño de memoria de atributos fija, el calculo de memoria es trivial
+                int posicion = Integer.parseInt(indiceArreglo.obtenerToken().obtenerLexema());
+                sb.append("sw $a0, -" + posicion*4
                         + "($t1) # Guardamos en el CIR el valor asignado")
                         .append(System.lineSeparator());
             default:
@@ -179,6 +194,10 @@ public class NodoAsignacion extends NodoExpresion {
                 // infoVariable.obtenerNombre())
                 // .append(System.lineSeparator());
                 if (ladoIzq.encadenado != null) {
+                    // Si el encadenado es un arreglo, la variable es local y de tipo arreglo
+                    if (ladoIzq.encadenado instanceof NodoArreglo) {
+                        return "arreglo";
+                    }
                     return "clase";
                 } else {
                     return "local";
