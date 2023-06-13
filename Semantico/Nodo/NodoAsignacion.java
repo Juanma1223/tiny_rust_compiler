@@ -155,6 +155,7 @@ public class NodoAsignacion extends NodoExpresion {
                 sb.append("sw $a0, -" + offset
                         + "($t1) # Guardamos en el CIR el valor asignado")
                         .append(System.lineSeparator());
+                break;
             case "arreglo":
                 // Por ser un arreglo, calculamos el offset en funcion del parametro dentro 
                 // de los corchetes a partir de su CIR que se encuentra en el heap
@@ -169,6 +170,7 @@ public class NodoAsignacion extends NodoExpresion {
                 sb.append("sw $a0, -" + posicion*4
                         + "($t1) # Guardamos en el CIR el valor asignado")
                         .append(System.lineSeparator());
+                break;
             default:
                 break;
         }

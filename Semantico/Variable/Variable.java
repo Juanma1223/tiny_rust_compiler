@@ -54,4 +54,9 @@ public class Variable {
     public int obtenerColumna(){
         return this.columna;
     }
+
+    // En caso de querer obtener una instancia de una subclase
+    public Atributo obtenerAtributo(){
+        return new Atributo(nombre, tipo, false);
+    }
 }

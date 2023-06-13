@@ -46,6 +46,18 @@ public class NodoVariable extends NodoExpresion {
                 Variable infoVariable = this.tablaDeSimbolos.obtenerVarEnAlcanceActual(metodoContenedor,
                         claseContenedora,
                         token);
+                // En caso de estar tratando con un atributo debemos saber si es privado en la
+                // superclase
+                if (infoVariable instanceof Atributo) {
+                    Atributo infoAtributo = infoVariable.obtenerAtributo();
+                    if (infoAtributo.esHeredado() && !infoAtributo.obtenerVisibilidad()) {
+                        // Si el atributo es privado entonces no se puede acceder
+                        new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
+                                "El atributo " + token.obtenerLexema() + " no se puede acceder porque es privado",
+                                true);
+                        return new Tipo(null);
+                    }
+                }
                 if (infoVariable.obtenerTipo() == null) {
                     // Si el tipo sigue siendo nulo, entonces la variable no se encuentra definida
                     new ErrorSemantico(token.obtenerFila(), token.obtenerColumna(),
@@ -142,17 +154,19 @@ public class NodoVariable extends NodoExpresion {
         Variable infoVariable = metodoContenedor.obtenerParametroPorNombre(token.obtenerLexema());
         // Si la variable tiene encadenado
         if (this.encadenado != null) {
-            // Si la variable es de tipo arreglo, debemos accederlo de manera especial, caso contrario generamos codigo
+            // Si la variable es de tipo arreglo, debemos accederlo de manera especial, caso
+            // contrario generamos codigo
             // para el encadenado correspondiente
-            if(this.encadenado instanceof NodoArreglo){
+            if (this.encadenado instanceof NodoArreglo) {
                 // Accedemos al CIR mediante el nombre de la variable que es instancia de Array
                 int offsetVariable = metodoContenedor.offsetVariable(this.token.obtenerLexema());
-                sb.append("lw $t1, -" + offsetVariable + "($fp) # Acceso a CIR de arreglo").append(System.lineSeparator());
+                sb.append("lw $t1, -" + offsetVariable + "($fp) # Acceso a CIR de arreglo")
+                        .append(System.lineSeparator());
                 NodoLiteral nodoindiceAcceso = this.encadenado.encadenado.obtenerNodoLiteral();
                 int indiceAcceso = Integer.parseInt(nodoindiceAcceso.obtenerToken().obtenerLexema());
                 // Devolvemos mediante $a0 el valor que se encuentra dentro del arreglo
-                sb.append("lw $a0, -" + 4*indiceAcceso + "($t1)").append(System.lineSeparator());
-            }else{
+                sb.append("lw $a0, -" + 4 * indiceAcceso + "($t1)").append(System.lineSeparator());
+            } else {
                 // Redireccionamos la ejecucion al metodo correspondiente
                 sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
             }

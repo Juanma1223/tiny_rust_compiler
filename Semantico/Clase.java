@@ -99,7 +99,11 @@ public class Clase {
                                     + this.obtenerNombre()
                                     + " ya que ya se encuentra definido en su superclase.");
                 } else {
-                    this.atributos.put(atributo.getValue().obtenerNombre(), atributo.getValue());
+                    Atributo atributoActual = atributo.getValue();
+                    // Hacemos una copia exacta del atributo, pero lo creamos como un atributo heredado
+                    Atributo atributoHeredado = new Atributo(atributoActual.obtenerNombre(), atributoActual.obtenerTipo(), atributoActual.obtenerVisibilidad());
+                    atributoHeredado.establecerHeredado();
+                    this.atributos.put(atributo.getValue().obtenerNombre(), atributoHeredado);
                 }
             }
             offset = superClase.metodos.size();

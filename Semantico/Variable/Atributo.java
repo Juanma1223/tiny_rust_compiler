@@ -5,6 +5,7 @@ import Semantico.Tipo.Tipo;
 public class Atributo extends Variable {
 
     private boolean esPublico;
+    private boolean esHeredado;
 
     public Atributo(String nombre, Tipo tipo, boolean esPublico) {
         super(nombre, tipo);
@@ -30,6 +31,19 @@ public class Atributo extends Variable {
 
     public boolean obtenerVisibilidad() {
         return this.esPublico;
+    }
+
+    public void establecerHeredado(){
+        this.esHeredado = true;
+    }
+
+    public boolean esHeredado(){
+        return this.esHeredado;
+    }
+
+    @Override
+    public Atributo obtenerAtributo(){
+        return this;
     }
 
 }
