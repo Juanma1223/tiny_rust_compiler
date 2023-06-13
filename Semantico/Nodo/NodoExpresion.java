@@ -26,4 +26,13 @@ public class NodoExpresion extends NodoSentencia {
         }
     }
 
+    // @Override
+    // public String genCodigo() {
+    //     StringBuilder sb = new StringBuilder();
+    //     if(encadenado != null){
+    //         sb.append(this.encadenado.genCodigo()).append(System.lineSeparator());
+    //     }
+    //     return sb.toString();
+    // }
+
 }

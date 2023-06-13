@@ -37,13 +37,13 @@ public class Semantico {
         this.AST.checkeoTipos();
         // Creamos el json de la Tabla de Simbolos
         try (FileWriter escritorTDS = new FileWriter(ruta + ".ts.json")) {
-            escritorTDS.write(this.tablaDeSimbolos.toJson(ruta + ".ts.json"));
+            escritorTDS.write(this.tablaDeSimbolos.toJson(archivo.getName()));
         } catch (IOException e) {
             System.out.println("Error al intentar escribir el json de la TDS");
         }
         // Creamos el json del AST
         try (FileWriter escritorAST = new FileWriter(ruta + ".ast.json")) {
-            escritorAST.write(this.AST.toJson(ruta + ".ast.json"));
+            escritorAST.write(this.AST.toJson(archivo.getName()));
         } catch (IOException e) {
             System.out.println("Error al intentar escribir el json del AST");
         }
