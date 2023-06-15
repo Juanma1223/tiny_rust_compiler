@@ -108,7 +108,12 @@ public class NodoAsignacion extends NodoExpresion {
         NodoVariable ladoIzqNodoVariable = ladoIzq.obtenerNodoVariable();
         String nombreVariable = ladoIzqNodoVariable.token.obtenerLexema();
         String alcanceVariable = this.alcanceVariable(nombreVariable, ladoIzqNodoVariable);
-        Metodo infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
+        //Obtenemos informacion de la funcion segun si es un constructor o un metodo
+        Funcion infoMetodo;
+        infoMetodo = claseContenedora.obtenerMetodoPorNombre(metodoContenedor.obtenerNombre());
+        if (infoMetodo==null){
+            infoMetodo = claseContenedora.obtenerConstructor();
+        }
         Variable infoVariable;
         sb.append("sw $a0, 0($sp) # Comienzo asignacion").append(System.lineSeparator());
         sb.append("subu $sp, $sp, 4").append(System.lineSeparator());
