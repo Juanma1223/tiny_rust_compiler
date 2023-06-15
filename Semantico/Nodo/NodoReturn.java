@@ -54,11 +54,13 @@ public class NodoReturn extends NodoSentencia {
                 }
             } else if(tipoMetodo instanceof TipoReferencia) {
                 if(tipoRetorno instanceof TipoReferencia) {
-                    Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoRetorno.obtenerTipo());
-                    if (!infoClase.esSubclaseDe(tipoMetodo.obtenerTipo())) {
+                    if(!tipoRetorno.obtenerTipo().equals("nil")){
+                        Clase infoClase = tablaDeSimbolos.obtenerClasePorNombre(tipoRetorno.obtenerTipo());
                         if(!tipoMetodo.obtenerTipo().equals(tipoRetorno.obtenerTipo())){
-                            new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
-                            "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+                            if (!infoClase.esSubclaseDe(tipoMetodo.obtenerTipo())) {
+                                new ErrorSemantico(this.aux.obtenerFila(), this.aux.obtenerColumna(),
+                                "El retorno del metodo "+metodoContenedor.obtenerNombre()+" no coincide con su tipo de retorno",true);
+                            }
                         }
                     }
                 } else {

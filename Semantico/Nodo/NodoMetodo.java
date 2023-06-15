@@ -122,16 +122,17 @@ public class NodoMetodo extends NodoBloque {
 
     @Override
     public String genCodigo() {
-
-        // El codigo del constructor es distinto a una llamada de metodo
-        if (this.aux != null) {
-            return "";
-        }
         StringBuilder sb = new StringBuilder();
-        // Usamos la tabla de simbolos para obtener informacion acerca del metodo
-        Metodo infoMetodo = this.claseContenedora.obtenerMetodoPorNombre(this.nombre);
 
-        // Generamos el registro de activacion del metodo que estamos llamando
+        //Obtenemos informacion de la funcion segun si es un constructor o un metodo
+        Funcion infoMetodo;
+        if (this.nombre=="constructor") {
+            infoMetodo = this.claseContenedora.obtenerConstructor();
+        } else {
+            infoMetodo = this.claseContenedora.obtenerMetodoPorNombre(this.nombre);
+        }
+
+        // Generamos el registro de activacion de la funcion
         String nombreEtiqueta = "";
         if (claseContenedora.obtenerNombre() == "Fantasma") {
             nombreEtiqueta = "main:";
@@ -158,6 +159,7 @@ public class NodoMetodo extends NodoBloque {
         sb.append("lw $fp, 0($sp)").append(System.lineSeparator());
         // Retornamos la ejecucion al punto posterior de la llamada
         sb.append("jr $ra").append(System.lineSeparator());
+        
         return sb.toString();
     }
 }

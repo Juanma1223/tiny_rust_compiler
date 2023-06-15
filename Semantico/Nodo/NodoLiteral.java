@@ -5,6 +5,7 @@ import Semantico.Clase;
 import Semantico.Funcion.Funcion;
 import Semantico.Tipo.Tipo;
 import Semantico.Tipo.TipoPrimitivo;
+import Semantico.Tipo.TipoReferencia;
 
 public class NodoLiteral extends NodoExpresion{
 
@@ -40,6 +41,9 @@ public class NodoLiteral extends NodoExpresion{
             break;
             case "p_false":
             tLit = new TipoPrimitivo("Bool");
+            break;
+            case "p_nil":
+            tLit = new TipoReferencia("nil");
             break;
             default:
             tLit = new Tipo("");

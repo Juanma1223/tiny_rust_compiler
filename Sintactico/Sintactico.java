@@ -482,6 +482,7 @@ public class Sintactico {
         } else if (aux.verifico("(")) {
             NodoExpresion expresion = sentenciaSimple();
             ASTBloque.agregarExpresion(expresion);
+            
         } else if (aux.verifico("if")) {
             NodoIf ASTIf = ASTBloque.agregarIf();
             ASTIf.aux = aux.tokenActual;
@@ -625,6 +626,7 @@ public class Sintactico {
         aux.matcheo("(");
         NodoExpresion retorno = expresion();
         aux.matcheo(")");
+        aux.matcheo(";");
         return retorno;
     }
 

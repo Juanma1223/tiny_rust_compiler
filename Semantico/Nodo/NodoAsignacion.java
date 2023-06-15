@@ -56,11 +56,13 @@ public class NodoAsignacion extends NodoExpresion {
             }
         } else if (tipoIzq instanceof TipoReferencia) {
             if (tipoDer instanceof TipoReferencia) {
-                Clase infoClaseDer = tablaDeSimbolos.obtenerClasePorNombre(tipoDer.obtenerTipo());
-                if (!infoClaseDer.esSubclaseDe(tipoIzq.obtenerTipo())) {
+                if(!tipoDer.obtenerTipo().equals("nil")){
+                    Clase infoClaseDer = tablaDeSimbolos.obtenerClasePorNombre(tipoDer.obtenerTipo());
                     if (!tipoIzq.obtenerTipo().equals(tipoDer.obtenerTipo())) {
-                        new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
+                        if (!infoClaseDer.esSubclaseDe(tipoIzq.obtenerTipo())) {
+                            new ErrorSemantico(operador.obtenerFila(), operador.obtenerColumna(),
                                 "Los tipos de la asignacion no coinciden!", true);
+                        }
                     }
                 }
             } else {

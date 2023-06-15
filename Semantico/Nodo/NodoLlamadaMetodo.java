@@ -241,20 +241,36 @@ public class NodoLlamadaMetodo extends NodoExpresion {
         if (this.token != null) {
             if (this.token.obtenerToken() == "id_clase") {
                 Clase infoClase = this.tablaDeSimbolos.obtenerClasePorNombre(this.token.obtenerLexema());
+                Constructor infoConstructor = infoClase.obtenerConstructor();
                 // Generamos el espacio en el heap para el CIR
-                // Aca falta el manejo de envio de parametros al constructor
                 StringBuilder sb = new StringBuilder();
                 // Para generar un nuevo CIR, debemos guardar espacio en el heap y devolver un puntero en $a0
                 sb.append("li $v0, 9 # Alocamos en el heap el constructor de "+this.token.obtenerLexema()).append(System.lineSeparator());
                 sb.append("li $a0,"+infoClase.obtenerTamMemoria()).append(System.lineSeparator());
                 sb.append("syscall").append(System.lineSeparator());
                 // Guardamos en la ultima posicion del CIR 
-
                 // Por ser esto una instanciacion, estamos en el lado derecho de una asignacion
                 // por tanto, cargamos en el acumulador la posicion donde comienza el nuevo CIR
                 sb.append("move $a0, $v0 # $a0 contiene el puntero al CIR de "+this.token.obtenerLexema()).append(System.lineSeparator());
                 // Luego de haber creado el CIR, queda en $a0 una referencia al inicio de la posicion del mismo
-                return sb.toString();
+                if(infoClase.tieneConstructor()==true){ //Si el constructor esta declarado se lo llama 
+                    // El llamador gurada su valor de $fp
+                    sb.append("sw $fp, 0($sp)").append(System.lineSeparator());
+                    // Guradamos el puntero al objeto en el RA del constructor
+                    int offsetSelf = infoConstructor.offsetSelf();
+                    sb.append("sw $a0,-"+offsetSelf+"($sp)").append(System.lineSeparator());
+                    // Luego, almacenamos los argumentos en la pila
+                    for (int i = 0; i < argumentos.size(); i++) {
+                        NodoExpresion argumento = argumentos.get(i);
+                        sb.append(argumento.genCodigo()).append(System.lineSeparator());
+                        int offset = infoConstructor.offsetParametro(i);
+                        sb.append("sw $a0, -" + offset + "($sp) # Guardamos el parameotro "+i+" en el RA").append(System.lineSeparator());
+                    }
+                    String prefijo = this.token.obtenerLexema();
+                    // LLamamos al constructor
+                    sb.append("jal " + prefijo + "_constructor");
+                    return sb.toString();
+                }
             }
         }
         if (this.tipoPadre == null) {
