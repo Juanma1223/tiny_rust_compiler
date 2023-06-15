@@ -16,5 +16,5 @@ fn main () {
     v2 = true;
     //Test operaciones logicas y aritmeticas
 	v3 = ((p1.m1()+ v1 - -p1.m2() > 12) || p1.m1()*15 == p1.m2() && 97<=+12 || !v2 && v1/2 !=1 || v2);
-    (IO.out_bool(v3));
+    (IO.out_bool(v3)); //Imprime 1
 }

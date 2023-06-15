@@ -269,8 +269,8 @@ public class NodoLlamadaMetodo extends NodoExpresion {
                     String prefijo = this.token.obtenerLexema();
                     // LLamamos al constructor
                     sb.append("jal " + prefijo + "_constructor");
-                    return sb.toString();
                 }
+                return sb.toString();
             }
         }
         if (this.tipoPadre == null) {

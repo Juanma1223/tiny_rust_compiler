@@ -6,6 +6,6 @@ fn main(){
     a = new I32[3];
     a[0] = 3;
     a[1] = 7;
-    (IO.out_i32(a[0]))
-    (IO.out_i32(a[1]))
+    (IO.out_i32(a[0])); //Imprime 3
+    (IO.out_i32(a[1])); //Imprime 7
 }

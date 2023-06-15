@@ -5,5 +5,5 @@ fn main(){
     a = "hola";
     //Test length
     l = a.length();
-    (IO.out_i32(l));
+    (IO.out_i32(l)); //Imprime 4
 }
